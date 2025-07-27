@@ -283,10 +283,19 @@ export function Dashboard({ onLogout }: DashboardProps) {
     }
   };
 
+  const getTabButtonClass = (tabName: string) => {
+    const isActive = activeTab === tabName;
+    return `flex flex-col items-center justify-center p-3 lg:p-4 lg:w-full lg:justify-start lg:flex-row font-black text-black border-4 border-black transition-all duration-300 ${
+      isActive
+        ? "bg-gradient-to-br from-blue-400 via-purple-500 to-pink-500 shadow-[4px_4px_0px_0px_#000000] lg:shadow-[6px_6px_0px_0px_#000000] text-white"
+        : "bg-white hover:bg-gradient-to-br hover:from-blue-300 hover:via-purple-400 hover:to-pink-400 hover:text-white shadow-[2px_2px_0px_0px_#000000] lg:shadow-[4px_4px_0px_0px_#000000] hover:shadow-[2px_2px_0px_0px_#000000] lg:hover:shadow-[2px_2px_0px_0px_#000000] hover:translate-x-1 hover:translate-y-1"
+    }`;
+  };
+
   return (
-    <div className="h-screen bg-cyan-300 flex overflow-hidden">
-      {/* Sidebar */}
-      <div className="w-80 bg-yellow-400 border-r-8 border-black flex flex-col h-full">
+    <div className="h-screen bg-cyan-300 flex flex-col lg:flex-row overflow-hidden">
+      {/* Desktop Sidebar - Hidden on mobile/tablet */}
+      <div className="hidden lg:flex w-80 bg-yellow-400 border-r-8 border-black flex-col h-full">
         {/* Header */}
         <div className="p-6 border-b-4 border-black">
           <div className="flex items-center space-x-3 mb-4">
@@ -295,7 +304,7 @@ export function Dashboard({ onLogout }: DashboardProps) {
             </div>
             <div>
               <h1 className="text-2xl font-black text-black transform -rotate-2">
-                FEED INVENTORY
+                INVENTORY SYSTEM
               </h1>
               <p className="text-sm text-black font-bold">
                 MANAGE YOUR ANIMAL FEEDS
@@ -309,36 +318,24 @@ export function Dashboard({ onLogout }: DashboardProps) {
           <div className="space-y-4">
             <Button
               onClick={() => setActiveTab("dashboard")}
-              className={`w-full justify-start font-black text-black border-4 border-black shadow-[4px_4px_0px_0px_#000000] hover:shadow-[2px_2px_0px_0px_#000000] hover:translate-x-1 hover:translate-y-1 transition-all ${
-                activeTab === "dashboard"
-                  ? "bg-green-400"
-                  : "bg-white hover:bg-green-400"
-              }`}
+              className={getTabButtonClass("dashboard")}
             >
-              <BarChart3 className="h-4 w-4 mr-2" />
-              DASHBOARD
+              <BarChart3 className="h-4 w-4 lg:mr-2" />
+              <span className="text-xs lg:text-base">DASHBOARD</span>
             </Button>
             <Button
               onClick={() => setActiveTab("items")}
-              className={`w-full justify-start font-black text-black border-4 border-black shadow-[4px_4px_0px_0px_#000000] hover:shadow-[2px_2px_0px_0px_#000000] hover:translate-x-1 hover:translate-y-1 transition-all ${
-                activeTab === "items"
-                  ? "bg-green-400"
-                  : "bg-white hover:bg-green-400"
-              }`}
+              className={getTabButtonClass("items")}
             >
-              <Box className="h-4 w-4 mr-2" />
-              ITEMS
+              <Box className="h-4 w-4 lg:mr-2" />
+              <span className="text-xs lg:text-base">ITEMS</span>
             </Button>
             <Button
               onClick={() => setActiveTab("print")}
-              className={`w-full justify-start font-black text-black border-4 border-black shadow-[4px_4px_0px_0px_#000000] hover:shadow-[2px_2px_0px_0px_#000000] hover:translate-x-1 hover:translate-y-1 transition-all ${
-                activeTab === "print"
-                  ? "bg-green-400"
-                  : "bg-white hover:bg-green-400"
-              }`}
+              className={getTabButtonClass("print")}
             >
-              <Printer className="h-4 w-4 mr-2" />
-              PRINT
+              <Printer className="h-4 w-4 lg:mr-2" />
+              <span className="text-xs lg:text-base">PRINT</span>
             </Button>
           </div>
         </div>
@@ -419,24 +416,49 @@ export function Dashboard({ onLogout }: DashboardProps) {
         </div>
       </div>
 
+      {/* Mobile/Tablet Header */}
+      <div className="lg:hidden bg-yellow-400 border-b-4 border-black p-4">
+        <div className="flex items-center justify-between">
+          <div className="flex items-center space-x-3">
+            <div className="w-10 h-10 bg-black border-4 border-white flex items-center justify-center transform rotate-12">
+              <Package className="h-5 w-5 text-white" />
+            </div>
+            <div>
+              <h1 className="text-lg md:text-xl font-black text-black transform -rotate-2">
+                FEED INVENTORY
+              </h1>
+              <p className="text-xs md:text-sm text-black font-bold">
+                MANAGE YOUR ANIMAL FEEDS
+              </p>
+            </div>
+          </div>
+          <Button
+            onClick={onLogout}
+            className="bg-red-400 hover:bg-red-500 text-black font-black border-4 border-black shadow-[4px_4px_0px_0px_#000000] hover:shadow-[2px_2px_0px_0px_#000000] hover:translate-x-1 hover:translate-y-1 transition-all px-3 py-2"
+          >
+            <LogOut className="h-4 w-4" />
+          </Button>
+        </div>
+      </div>
+
       {/* Main Content */}
-      <div className="flex-1 p-8 overflow-y-auto">
+      <div className="flex-1 p-4 md:p-6 lg:p-8 overflow-y-auto pb-20 lg:pb-8">
         {activeTab === "dashboard" && (
-          <div className="space-y-6">
+          <div className="space-y-4 md:space-y-6">
             {/* Statistics Cards */}
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-8">
               <Card className="bg-green-400 border-4 border-black shadow-[8px_8px_0px_0px_#000000] transform hover:translate-x-2 hover:translate-y-2 hover:shadow-[4px_4px_0px_0px_#000000] transition-all">
                 <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                  <CardTitle className="text-lg font-black text-black">
+                  <CardTitle className="text-base md:text-lg font-black text-black">
                     TOTAL ITEMS
                   </CardTitle>
-                  <Package className="h-8 w-8 text-black" />
+                  <Package className="h-6 w-6 md:h-8 md:w-8 text-black" />
                 </CardHeader>
                 <CardContent>
-                  <div className="text-5xl font-black text-black transform -rotate-3">
+                  <div className="text-3xl md:text-5xl font-black text-black transform -rotate-3">
                     {totalItems}
                   </div>
-                  <p className="text-sm text-black font-bold mt-2">
+                  <p className="text-xs md:text-sm text-black font-bold mt-2">
                     ITEMS IN INVENTORY
                   </p>
                 </CardContent>
@@ -444,16 +466,16 @@ export function Dashboard({ onLogout }: DashboardProps) {
 
               <Card className="bg-red-400 border-4 border-black shadow-[8px_8px_0px_0px_#000000] transform hover:translate-x-2 hover:translate-y-2 hover:shadow-[4px_4px_0px_0px_#000000] transition-all">
                 <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                  <CardTitle className="text-lg font-black text-black">
+                  <CardTitle className="text-base md:text-lg font-black text-black">
                     OUT OF STOCK
                   </CardTitle>
-                  <AlertTriangle className="h-8 w-8 text-black" />
+                  <AlertTriangle className="h-6 w-6 md:h-8 md:w-8 text-black" />
                 </CardHeader>
                 <CardContent>
-                  <div className="text-5xl font-black text-black transform rotate-3">
+                  <div className="text-3xl md:text-5xl font-black text-black transform rotate-3">
                     {outOfStockItems}
                   </div>
-                  <p className="text-sm text-black font-bold mt-2">
+                  <p className="text-xs md:text-sm text-black font-bold mt-2">
                     ITEMS NEED RESTOCKING
                   </p>
                 </CardContent>
@@ -463,16 +485,16 @@ export function Dashboard({ onLogout }: DashboardProps) {
             {/* Category Overview */}
             <Card className="bg-white border-4 border-black shadow-[8px_8px_0px_0px_#000000]">
               <CardHeader className="bg-gradient-to-r from-blue-500 to-purple-600 border-b-4 border-black">
-                <CardTitle className="text-2xl font-black text-black">
+                <CardTitle className="text-xl md:text-2xl font-black text-black">
                   📊 CATEGORY ANALYTICS
                 </CardTitle>
-                <CardDescription className="text-white font-bold opacity-90">
+                <CardDescription className="text-white font-bold opacity-90 text-sm md:text-base">
                   Comprehensive inventory distribution across all product
                   categories
                 </CardDescription>
               </CardHeader>
-              <CardContent className="p-6">
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+              <CardContent className="p-4 md:p-6">
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6">
                   {Object.entries(categoryColors).map(
                     ([category, colorClass]) => {
                       const categoryItems = items.filter(
@@ -496,20 +518,20 @@ export function Dashboard({ onLogout }: DashboardProps) {
                             className={`${colorClass} p-3 border-b-4 border-black`}
                           >
                             <div className="flex items-center justify-between">
-                              <h3 className="font-black text-white text-sm tracking-wide">
+                              <h3 className="font-black text-white text-xs md:text-sm tracking-wide">
                                 {category.toUpperCase()}
                               </h3>
-                              <div className="w-8 h-8 bg-white border-2 border-black rounded-full flex items-center justify-center">
-                                <Package className="w-4 h-4 text-black" />
+                              <div className="w-6 h-6 md:w-8 md:h-8 bg-white border-2 border-black rounded-full flex items-center justify-center">
+                                <Package className="w-3 h-3 md:w-4 md:h-4 text-black" />
                               </div>
                             </div>
                           </div>
 
                           {/* Stats Grid */}
-                          <div className="p-4">
-                            <div className="grid grid-cols-2 gap-3 mb-3">
+                          <div className="p-3 md:p-4">
+                            <div className="grid grid-cols-2 gap-2 md:gap-3 mb-3">
                               <div className="text-center p-2 bg-blue-50 border-2 border-black">
-                                <div className="font-black text-blue-600 text-xl">
+                                <div className="font-black text-blue-600 text-lg md:text-xl">
                                   {categoryItems.length}
                                 </div>
                                 <div className="font-bold text-black text-xs">
@@ -517,7 +539,7 @@ export function Dashboard({ onLogout }: DashboardProps) {
                                 </div>
                               </div>
                               <div className="text-center p-2 bg-green-50 border-2 border-black">
-                                <div className="font-black text-green-600 text-xl">
+                                <div className="font-black text-green-600 text-lg md:text-xl">
                                   {totalStock}
                                 </div>
                                 <div className="font-bold text-black text-xs">
@@ -584,19 +606,19 @@ export function Dashboard({ onLogout }: DashboardProps) {
         )}
 
         {activeTab === "items" && (
-          <div className="space-y-6">
+          <div className="space-y-4 md:space-y-6">
             {/* Search and Filters */}
             <Card className="bg-white border-4 border-black shadow-[8px_8px_0px_0px_#000000]">
               <CardHeader className="bg-blue-400 border-b-4 border-black">
-                <CardTitle className="text-xl font-black text-black">
+                <CardTitle className="text-lg md:text-xl font-black text-black">
                   🔍 SEARCH & FILTERS
                 </CardTitle>
               </CardHeader>
-              <CardContent className="p-6">
+              <CardContent className="p-4 md:p-6">
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                   {/* Search */}
                   <div>
-                    <Label className="font-black text-black mb-2 block">
+                    <Label className="font-black text-black mb-2 block text-sm">
                       SEARCH PRODUCTS
                     </Label>
                     <Input
@@ -609,7 +631,7 @@ export function Dashboard({ onLogout }: DashboardProps) {
 
                   {/* Category Filter */}
                   <div>
-                    <Label className="font-black text-black mb-2 block">
+                    <Label className="font-black text-black mb-2 block text-sm">
                       FILTER BY CATEGORY
                     </Label>
                     <Select
@@ -638,7 +660,7 @@ export function Dashboard({ onLogout }: DashboardProps) {
 
                   {/* Stock Filter */}
                   <div>
-                    <Label className="font-black text-black mb-2 block">
+                    <Label className="font-black text-black mb-2 block text-sm">
                       FILTER BY STOCK
                     </Label>
                     <Select value={stockFilter} onValueChange={setStockFilter}>
@@ -664,12 +686,12 @@ export function Dashboard({ onLogout }: DashboardProps) {
 
             <Card className="bg-white border-4 border-black shadow-[8px_8px_0px_0px_#000000]">
               <CardHeader className="bg-green-400 border-b-4 border-black">
-                <div className="flex justify-between items-center">
+                <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
                   <div>
-                    <CardTitle className="text-2xl font-black text-black">
+                    <CardTitle className="text-xl md:text-2xl font-black text-black">
                       INVENTORY ITEMS
                     </CardTitle>
-                    <CardDescription className="text-black font-bold">
+                    <CardDescription className="text-black font-bold text-sm md:text-base">
                       MANAGE YOUR PRODUCT INVENTORY ({filteredItems.length}{" "}
                       items found)
                     </CardDescription>
@@ -684,7 +706,7 @@ export function Dashboard({ onLogout }: DashboardProps) {
                         ADD ITEM
                       </Button>
                     </DialogTrigger>
-                    <DialogContent className="bg-white border-4 border-black shadow-[8px_8px_0px_0px_#000000]">
+                    <DialogContent className="bg-white border-4 border-black shadow-[8px_8px_0px_0px_#000000] max-w-md mx-4">
                       <DialogHeader>
                         <DialogTitle className="font-black text-black">
                           ADD NEW ITEM
@@ -697,7 +719,7 @@ export function Dashboard({ onLogout }: DashboardProps) {
                         <div className="grid grid-cols-4 items-center gap-4">
                           <Label
                             htmlFor="name"
-                            className="text-right font-black text-black"
+                            className="text-right font-black text-black text-sm"
                           >
                             Name
                           </Label>
@@ -714,7 +736,7 @@ export function Dashboard({ onLogout }: DashboardProps) {
                         <div className="grid grid-cols-4 items-center gap-4">
                           <Label
                             htmlFor="category"
-                            className="text-right font-black text-black"
+                            className="text-right font-black text-black text-sm"
                           >
                             Category
                           </Label>
@@ -743,7 +765,7 @@ export function Dashboard({ onLogout }: DashboardProps) {
                         <div className="grid grid-cols-4 items-center gap-4">
                           <Label
                             htmlFor="stock"
-                            className="text-right font-black text-black"
+                            className="text-right font-black text-black text-sm"
                           >
                             Stock
                           </Label>
@@ -781,111 +803,217 @@ export function Dashboard({ onLogout }: DashboardProps) {
                   </Dialog>
                 </div>
               </CardHeader>
-              <CardContent className="p-6">
-                <Table>
-                  <TableHeader>
-                    <TableRow className="border-b-4 border-black">
-                      <TableHead className="font-black text-black text-lg">
-                        PRODUCT NAME
-                      </TableHead>
-                      <TableHead className="font-black text-black text-lg">
-                        CATEGORY
-                      </TableHead>
-                      <TableHead className="font-black text-black text-lg">
-                        STOCK
-                      </TableHead>
-                      <TableHead className="font-black text-black text-lg">
-                        ACTIONS
-                      </TableHead>
-                    </TableRow>
-                  </TableHeader>
-                  <TableBody>
-                    {currentItems.map((item) => (
-                      <TableRow
-                        key={item.id}
-                        className="border-b-2 border-black"
-                      >
-                        <TableCell className="font-bold text-black">
-                          {item.name}
-                        </TableCell>
-                        <TableCell>
-                          <span
-                            className={`px-2 py-1 border-2 border-black font-black text-black text-xs ${
-                              categoryColors[
-                                item.category as keyof typeof categoryColors
-                              ]
-                            }`}
-                          >
-                            {item.category}
-                          </span>
-                        </TableCell>
-                        <TableCell className="font-black text-black text-lg">
-                          {item.stock === 0 ? (
-                            <span className="text-red-600">OUT OF STOCK</span>
-                          ) : (
-                            item.stock
-                          )}
-                        </TableCell>
-                        <TableCell>
-                          <div className="flex space-x-2">
-                            <Button
-                              onClick={() => openStockDialog(item, "add")}
-                              size="sm"
-                              className="bg-green-400 hover:bg-green-500 text-black font-black border-2 border-black shadow-[2px_2px_0px_0px_#000000] hover:shadow-[1px_1px_0px_0px_#000000] hover:translate-x-0.5 hover:translate-y-0.5 transition-all"
-                            >
-                              <Plus className="h-3 w-3" />
-                            </Button>
-                            <Button
-                              onClick={() => openStockDialog(item, "minus")}
-                              disabled={item.stock === 0}
-                              size="sm"
-                              className="bg-yellow-400 hover:bg-yellow-500 disabled:bg-gray-300 disabled:cursor-not-allowed text-black font-black border-2 border-black shadow-[2px_2px_0px_0px_#000000] hover:shadow-[1px_1px_0px_0px_#000000] hover:translate-x-0.5 hover:translate-y-0.5 transition-all disabled:shadow-none disabled:translate-x-0 disabled:translate-y-0"
-                            >
-                              <Minus className="h-3 w-3" />
-                            </Button>
-                            <AlertDialog>
-                              <AlertDialogTrigger asChild>
-                                <Button
-                                  size="sm"
-                                  className="bg-red-400 hover:bg-red-500 text-black font-black border-2 border-black shadow-[2px_2px_0px_0px_#000000] hover:shadow-[1px_1px_0px_0px_#000000] hover:translate-x-0.5 hover:translate-y-0.5 transition-all"
-                                >
-                                  <Trash2 className="h-3 w-3" />
-                                </Button>
-                              </AlertDialogTrigger>
-                              <AlertDialogContent className="bg-white border-4 border-black shadow-[8px_8px_0px_0px_#000000]">
-                                <AlertDialogHeader>
-                                  <AlertDialogTitle className="font-black text-black">
-                                    CONFIRM DELETION
-                                  </AlertDialogTitle>
-                                  <AlertDialogDescription className="font-bold text-black">
-                                    Are you sure you want to permanently remove
-                                    "{item.name}" from the inventory system?
-                                    This action cannot be undone.
-                                  </AlertDialogDescription>
-                                </AlertDialogHeader>
-                                <AlertDialogFooter>
-                                  <AlertDialogCancel className="bg-gray-400 hover:bg-gray-500 text-black font-black border-4 border-black shadow-[4px_4px_0px_0px_#000000] hover:shadow-[2px_2px_0px_0px_#000000] hover:translate-x-1 hover:translate-y-1 transition-all">
-                                    NO
-                                  </AlertDialogCancel>
-                                  <AlertDialogAction
-                                    onClick={() => handleDeleteItem(item)}
-                                    className="bg-red-400 hover:bg-red-500 text-black font-black border-4 border-black shadow-[4px_4px_0px_0px_#000000] hover:shadow-[2px_2px_0px_0px_#000000] hover:translate-x-1 hover:translate-y-1 transition-all"
-                                  >
-                                    YES
-                                  </AlertDialogAction>
-                                </AlertDialogFooter>
-                              </AlertDialogContent>
-                            </AlertDialog>
-                          </div>
-                        </TableCell>
+              <CardContent className="p-4 md:p-6">
+                {/* Desktop Table View */}
+                <div className="hidden md:block">
+                  <Table>
+                    <TableHeader>
+                      <TableRow className="border-b-4 border-black">
+                        <TableHead className="font-black text-black text-lg">
+                          PRODUCT NAME
+                        </TableHead>
+                        <TableHead className="font-black text-black text-lg">
+                          CATEGORY
+                        </TableHead>
+                        <TableHead className="font-black text-black text-lg">
+                          STOCK
+                        </TableHead>
+                        <TableHead className="font-black text-black text-lg">
+                          ACTIONS
+                        </TableHead>
                       </TableRow>
-                    ))}
-                  </TableBody>
-                </Table>
+                    </TableHeader>
+                    <TableBody>
+                      {currentItems.map((item) => (
+                        <TableRow
+                          key={item.id}
+                          className="border-b-2 border-black"
+                        >
+                          <TableCell className="font-bold text-black">
+                            {item.name}
+                          </TableCell>
+                          <TableCell>
+                            <span
+                              className={`px-2 py-1 border-2 border-black font-black text-black text-xs ${
+                                categoryColors[
+                                  item.category as keyof typeof categoryColors
+                                ]
+                              }`}
+                            >
+                              {item.category}
+                            </span>
+                          </TableCell>
+                          <TableCell className="font-black text-black text-lg">
+                            {item.stock === 0 ? (
+                              <span className="text-red-600">OUT OF STOCK</span>
+                            ) : (
+                              item.stock
+                            )}
+                          </TableCell>
+                          <TableCell>
+                            <div className="flex space-x-2">
+                              <Button
+                                onClick={() => openStockDialog(item, "add")}
+                                size="sm"
+                                className="bg-green-400 hover:bg-green-500 text-black font-black border-2 border-black shadow-[2px_2px_0px_0px_#000000] hover:shadow-[1px_1px_0px_0px_#000000] hover:translate-x-0.5 hover:translate-y-0.5 transition-all"
+                              >
+                                <Plus className="h-3 w-3" />
+                              </Button>
+                              <Button
+                                onClick={() => openStockDialog(item, "minus")}
+                                disabled={item.stock === 0}
+                                size="sm"
+                                className="bg-yellow-400 hover:bg-yellow-500 disabled:bg-gray-300 disabled:cursor-not-allowed text-black font-black border-2 border-black shadow-[2px_2px_0px_0px_#000000] hover:shadow-[1px_1px_0px_0px_#000000] hover:translate-x-0.5 hover:translate-y-0.5 transition-all disabled:shadow-none disabled:translate-x-0 disabled:translate-y-0"
+                              >
+                                <Minus className="h-3 w-3" />
+                              </Button>
+                              <AlertDialog>
+                                <AlertDialogTrigger asChild>
+                                  <Button
+                                    size="sm"
+                                    className="bg-red-400 hover:bg-red-500 text-black font-black border-2 border-black shadow-[2px_2px_0px_0px_#000000] hover:shadow-[1px_1px_0px_0px_#000000] hover:translate-x-0.5 hover:translate-y-0.5 transition-all"
+                                  >
+                                    <Trash2 className="h-3 w-3" />
+                                  </Button>
+                                </AlertDialogTrigger>
+                                <AlertDialogContent className="bg-white border-4 border-black shadow-[8px_8px_0px_0px_#000000] max-w-md mx-4">
+                                  <AlertDialogHeader>
+                                    <AlertDialogTitle className="font-black text-black">
+                                      CONFIRM DELETION
+                                    </AlertDialogTitle>
+                                    <AlertDialogDescription className="font-bold text-black">
+                                      Are you sure you want to permanently
+                                      remove "{item.name}" from the inventory
+                                      system? This action cannot be undone.
+                                    </AlertDialogDescription>
+                                  </AlertDialogHeader>
+                                  <AlertDialogFooter>
+                                    <AlertDialogCancel className="bg-gray-400 hover:bg-gray-500 text-black font-black border-4 border-black shadow-[4px_4px_0px_0px_#000000] hover:shadow-[2px_2px_0px_0px_#000000] hover:translate-x-1 hover:translate-y-1 transition-all">
+                                      NO
+                                    </AlertDialogCancel>
+                                    <AlertDialogAction
+                                      onClick={() => handleDeleteItem(item)}
+                                      className="bg-red-400 hover:bg-red-500 text-black font-black border-4 border-black shadow-[4px_4px_0px_0px_#000000] hover:shadow-[2px_2px_0px_0px_#000000] hover:translate-x-1 hover:translate-y-1 transition-all"
+                                    >
+                                      YES
+                                    </AlertDialogAction>
+                                  </AlertDialogFooter>
+                                </AlertDialogContent>
+                              </AlertDialog>
+                            </div>
+                          </TableCell>
+                        </TableRow>
+                      ))}
+                    </TableBody>
+                  </Table>
+                </div>
+
+                {/* Mobile Card View */}
+                <div className="md:hidden space-y-4">
+                  {currentItems.map((item) => (
+                    <Card
+                      key={item.id}
+                      className="bg-gradient-to-br from-white to-gray-50 border-4 border-black shadow-[6px_6px_0px_0px_#000000] hover:shadow-[8px_8px_0px_0px_#000000] hover:translate-x-[-2px] hover:translate-y-[-2px] transition-all duration-200"
+                    >
+                      <CardContent className="p-4">
+                        {/* First Row - Product Name */}
+                        <div className="mb-3">
+                          <h3 className="font-black text-black text-lg leading-tight">
+                            {item.name}
+                          </h3>
+                        </div>
+
+                        {/* Second Row - Category and Stock */}
+                        <div className="flex justify-between items-center mb-4">
+                          <div>
+                            <span
+                              className={`px-3 py-1 border-2 border-black font-black text-black text-xs ${
+                                categoryColors[
+                                  item.category as keyof typeof categoryColors
+                                ]
+                              }`}
+                            >
+                              {item.category}
+                            </span>
+                          </div>
+                          <div className="text-right">
+                            <div className="text-xs font-bold text-gray-600 mb-1">
+                              STOCK
+                            </div>
+                            <div className="font-black text-black text-lg">
+                              {item.stock === 0 ? (
+                                <span className="text-red-600 text-sm">
+                                  OUT OF STOCK
+                                </span>
+                              ) : (
+                                item.stock
+                              )}
+                            </div>
+                          </div>
+                        </div>
+
+                        {/* Third Row - Action Buttons */}
+                        <div className="flex justify-center space-x-3">
+                          <Button
+                            onClick={() => openStockDialog(item, "add")}
+                            size="sm"
+                            className="bg-green-400 hover:bg-green-500 text-black font-black border-2 border-black shadow-[3px_3px_0px_0px_#000000] hover:shadow-[1px_1px_0px_0px_#000000] hover:translate-x-1 hover:translate-y-1 transition-all px-4 py-2"
+                          >
+                            <Plus className="h-4 w-4 mr-1" />
+                            ADD
+                          </Button>
+                          <Button
+                            onClick={() => openStockDialog(item, "minus")}
+                            disabled={item.stock === 0}
+                            size="sm"
+                            className="bg-yellow-400 hover:bg-yellow-500 disabled:bg-gray-300 disabled:cursor-not-allowed text-black font-black border-2 border-black shadow-[3px_3px_0px_0px_#000000] hover:shadow-[1px_1px_0px_0px_#000000] hover:translate-x-1 hover:translate-y-1 transition-all disabled:shadow-none disabled:translate-x-0 disabled:translate-y-0 px-4 py-2"
+                          >
+                            <Minus className="h-4 w-4 mr-1" />
+                            MINUS
+                          </Button>
+                          <AlertDialog>
+                            <AlertDialogTrigger asChild>
+                              <Button
+                                size="sm"
+                                className="bg-red-400 hover:bg-red-500 text-black font-black border-2 border-black shadow-[3px_3px_0px_0px_#000000] hover:shadow-[1px_1px_0px_0px_#000000] hover:translate-x-1 hover:translate-y-1 transition-all px-4 py-2"
+                              >
+                                <Trash2 className="h-4 w-4 mr-1" />
+                                DELETE
+                              </Button>
+                            </AlertDialogTrigger>
+                            <AlertDialogContent className="bg-white border-4 border-black shadow-[8px_8px_0px_0px_#000000] max-w-sm mx-4">
+                              <AlertDialogHeader>
+                                <AlertDialogTitle className="font-black text-black">
+                                  CONFIRM DELETION
+                                </AlertDialogTitle>
+                                <AlertDialogDescription className="font-bold text-black">
+                                  Are you sure you want to permanently remove "
+                                  {item.name}" from the inventory system? This
+                                  action cannot be undone.
+                                </AlertDialogDescription>
+                              </AlertDialogHeader>
+                              <AlertDialogFooter>
+                                <AlertDialogCancel className="bg-gray-400 hover:bg-gray-500 text-black font-black border-4 border-black shadow-[4px_4px_0px_0px_#000000] hover:shadow-[2px_2px_0px_0px_#000000] hover:translate-x-1 hover:translate-y-1 transition-all">
+                                  NO
+                                </AlertDialogCancel>
+                                <AlertDialogAction
+                                  onClick={() => handleDeleteItem(item)}
+                                  className="bg-red-400 hover:bg-red-500 text-black font-black border-4 border-black shadow-[4px_4px_0px_0px_#000000] hover:shadow-[2px_2px_0px_0px_#000000] hover:translate-x-1 hover:translate-y-1 transition-all"
+                                >
+                                  YES
+                                </AlertDialogAction>
+                              </AlertDialogFooter>
+                            </AlertDialogContent>
+                          </AlertDialog>
+                        </div>
+                      </CardContent>
+                    </Card>
+                  ))}
+                </div>
 
                 {/* Pagination Controls */}
                 {totalPages > 1 && (
-                  <div className="flex justify-center items-center space-x-4 mt-6 p-4 bg-gray-100 border-4 border-black">
+                  <div className="flex flex-col sm:flex-row justify-center items-center space-y-4 sm:space-y-0 sm:space-x-4 mt-6 p-4 bg-gray-100 border-4 border-black">
                     <Button
                       onClick={() =>
                         setCurrentPage(Math.max(1, currentPage - 1))
@@ -896,13 +1024,13 @@ export function Dashboard({ onLogout }: DashboardProps) {
                       PREVIOUS
                     </Button>
 
-                    <div className="flex items-center space-x-2">
+                    <div className="flex items-center space-x-2 overflow-x-auto">
                       {Array.from({ length: totalPages }, (_, i) => i + 1).map(
                         (page) => (
                           <Button
                             key={page}
                             onClick={() => setCurrentPage(page)}
-                            className={`w-12 h-12 font-black border-4 border-black shadow-[4px_4px_0px_0px_#000000] hover:shadow-[2px_2px_0px_0px_#000000] hover:translate-x-1 hover:translate-y-1 transition-all ${
+                            className={`w-10 h-10 md:w-12 md:h-12 font-black border-4 border-black shadow-[4px_4px_0px_0px_#000000] hover:shadow-[2px_2px_0px_0px_#000000] hover:translate-x-1 hover:translate-y-1 transition-all ${
                               currentPage === page
                                 ? "bg-green-400 text-black"
                                 : "bg-white hover:bg-green-400 text-black"
@@ -928,7 +1056,7 @@ export function Dashboard({ onLogout }: DashboardProps) {
 
                 {/* Items count info */}
                 <div className="mt-4 text-center">
-                  <p className="font-bold text-black">
+                  <p className="font-bold text-black text-sm">
                     Showing {startIndex + 1}-
                     {Math.min(endIndex, filteredItems.length)} of{" "}
                     {filteredItems.length} items
@@ -941,29 +1069,29 @@ export function Dashboard({ onLogout }: DashboardProps) {
 
         {activeTab === "print" && (
           <div className="flex items-center justify-center h-full">
-            <Card className="bg-white border-4 border-black shadow-[8px_8px_0px_0px_#000000] max-w-md">
+            <Card className="bg-white border-4 border-black shadow-[8px_8px_0px_0px_#000000] max-w-md mx-4">
               <CardHeader className="bg-orange-400 border-b-4 border-black text-center">
                 <div className="flex justify-center mb-4">
-                  <div className="w-16 h-16 bg-black border-4 border-white flex items-center justify-center transform rotate-12">
-                    <Printer className="h-8 w-8 text-white" />
+                  <div className="w-12 h-12 md:w-16 md:h-16 bg-black border-4 border-white flex items-center justify-center transform rotate-12">
+                    <Printer className="h-6 w-6 md:h-8 md:w-8 text-white" />
                   </div>
                 </div>
-                <CardTitle className="text-2xl font-black text-black transform -rotate-1">
+                <CardTitle className="text-xl md:text-2xl font-black text-black transform -rotate-1">
                   PRINT FEATURE
                 </CardTitle>
                 <CardDescription className="text-black font-bold">
                   COMING SOON
                 </CardDescription>
               </CardHeader>
-              <CardContent className="p-8 text-center">
+              <CardContent className="p-6 md:p-8 text-center">
                 <div className="space-y-4">
-                  <div className="text-6xl font-black text-gray-400 transform rotate-3">
+                  <div className="text-4xl md:text-6xl font-black text-gray-400 transform rotate-3">
                     🚧
                   </div>
-                  <h3 className="text-xl font-black text-black">
+                  <h3 className="text-lg md:text-xl font-black text-black">
                     TO BE ADDED LATER
                   </h3>
-                  <p className="text-black font-bold">
+                  <p className="text-black font-bold text-sm md:text-base">
                     This feature is currently under development and will be
                     available in a future update.
                   </p>
@@ -984,9 +1112,36 @@ export function Dashboard({ onLogout }: DashboardProps) {
         )}
       </div>
 
+      {/* Mobile Bottom Navigation - Instagram Style */}
+      <div className="lg:hidden fixed bottom-0 left-0 right-0 bg-yellow-400 border-t-4 border-black p-2">
+        <div className="flex justify-around items-center">
+          <Button
+            onClick={() => setActiveTab("dashboard")}
+            className={getTabButtonClass("dashboard")}
+          >
+            <BarChart3 className="h-5 w-5 mb-1" />
+            <span className="text-xs font-black">DASHBOARD</span>
+          </Button>
+          <Button
+            onClick={() => setActiveTab("items")}
+            className={getTabButtonClass("items")}
+          >
+            <Box className="h-5 w-5 mb-1" />
+            <span className="text-xs font-black">ITEMS</span>
+          </Button>
+          <Button
+            onClick={() => setActiveTab("print")}
+            className={getTabButtonClass("print")}
+          >
+            <Printer className="h-5 w-5 mb-1" />
+            <span className="text-xs font-black">PRINT</span>
+          </Button>
+        </div>
+      </div>
+
       {/* Stock Change Dialog */}
       <Dialog open={isStockDialogOpen} onOpenChange={setIsStockDialogOpen}>
-        <DialogContent className="bg-white border-4 border-black shadow-[8px_8px_0px_0px_#000000] max-w-md">
+        <DialogContent className="bg-white border-4 border-black shadow-[8px_8px_0px_0px_#000000] max-w-md mx-4">
           <DialogHeader>
             <DialogTitle className="font-black text-black">
               {stockOperation === "add" ? "ADD STOCK" : "REDUCE STOCK"}
@@ -1052,7 +1207,7 @@ export function Dashboard({ onLogout }: DashboardProps) {
             <div className="grid grid-cols-4 items-center gap-4">
               <Label
                 htmlFor="stockChange"
-                className="text-right font-black text-black"
+                className="text-right font-black text-black text-sm"
               >
                 Quantity
               </Label>
