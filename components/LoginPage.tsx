@@ -13,6 +13,7 @@ import {
 } from "@/components/ui/card";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Package, AlertCircle } from "lucide-react";
+import { useToast } from "@/hooks/use-toast";
 
 interface LoginPageProps {
   onLogin: (username: string, password: string) => boolean;
@@ -23,6 +24,7 @@ export function LoginPage({ onLogin }: LoginPageProps) {
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+  const { toast } = useToast();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -35,6 +37,11 @@ export function LoginPage({ onLogin }: LoginPageProps) {
     const success = onLogin(username, password);
     if (!success) {
       setError("Invalid username or password. Try admin/password");
+    } else {
+      toast({
+        title: "LOGIN SUCCESSFUL",
+        description: "Welcome back! Access granted to inventory management system",
+      });
     }
     setIsLoading(false);
   };

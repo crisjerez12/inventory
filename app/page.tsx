@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react';
 import { LoginPage } from '@/components/LoginPage';
 import { Dashboard } from '@/components/Dashboard';
+import { Toaster } from '@/components/ui/toaster';
 
 export default function Home() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
@@ -47,6 +48,7 @@ export default function Home() {
       ) : (
         <Dashboard onLogout={handleLogout} />
       )}
+      <Toaster />
     </div>
   );
 }
