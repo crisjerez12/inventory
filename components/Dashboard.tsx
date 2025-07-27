@@ -56,6 +56,7 @@ import {
   Minus,
   Trash2,
   Clock,
+  Printer,
 } from "lucide-react";
 import { inventoryData, type InventoryItem } from "@/lib/inventory-data";
 import { useToast } from "@/hooks/use-toast";
@@ -82,13 +83,18 @@ export function Dashboard({ onLogout }: DashboardProps) {
   const [isAddDialogOpen, setIsAddDialogOpen] = useState(false);
   const [isStockDialogOpen, setIsStockDialogOpen] = useState(false);
   const [selectedItem, setSelectedItem] = useState<InventoryItem | null>(null);
-  const [stockOperation, setStockOperation] = useState<'add' | 'minus'>('add');
+  const [stockOperation, setStockOperation] = useState<"add" | "minus">("add");
   const [newItem, setNewItem] = useState({
     name: "",
     category: "Pig Feeds",
-    stock: 0,
+    stock: "" as string | number,
   });
-  const [stockChange, setStockChange] = useState(0);
+  const [stockChange, setStockChange] = useState("" as string | number);
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 10;
+  const [searchTerm, setSearchTerm] = useState("");
+  const [categoryFilter, setCategoryFilter] = useState("All");
+  const [stockFilter, setStockFilter] = useState("All");
   const { toast } = useToast();
 
   // Update time every second
@@ -100,8 +106,34 @@ export function Dashboard({ onLogout }: DashboardProps) {
     return () => clearInterval(timer);
   }, []);
 
+  // Filter items based on search and filters
+  const filteredItems = useMemo(() => {
+    return items.filter((item) => {
+      const matchesSearch = item.name
+        .toLowerCase()
+        .includes(searchTerm.toLowerCase());
+      const matchesCategory =
+        categoryFilter === "All" || item.category === categoryFilter;
+      const matchesStock =
+        stockFilter === "All" ||
+        (stockFilter === "In Stock" && item.stock > 0) ||
+        (stockFilter === "Out of Stock" && item.stock === 0);
+
+      return matchesSearch && matchesCategory && matchesStock;
+    });
+  }, [items, searchTerm, categoryFilter, stockFilter]);
+
   const totalItems = items.length;
   const outOfStockItems = items.filter((item) => item.stock === 0).length;
+  const totalPages = Math.ceil(filteredItems.length / itemsPerPage);
+  const startIndex = (currentPage - 1) * itemsPerPage;
+  const endIndex = startIndex + itemsPerPage;
+  const currentItems = filteredItems.slice(startIndex, endIndex);
+
+  // Reset to first page when filters change
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [searchTerm, categoryFilter, stockFilter]);
 
   const handleAddItem = () => {
     if (!newItem.name.trim()) {
@@ -113,18 +145,24 @@ export function Dashboard({ onLogout }: DashboardProps) {
       return;
     }
 
-    const newId = Math.max(...items.map(item => item.id)) + 1;
+    const newId = Math.max(...items.map((item) => item.id)) + 1;
     const itemToAdd: InventoryItem = {
       id: newId,
       name: newItem.name,
       category: newItem.category,
-      stock: newItem.stock,
+      stock:
+        typeof newItem.stock === "string"
+          ? parseInt(newItem.stock) || 0
+          : newItem.stock,
     };
 
     setItems([...items, itemToAdd]);
-    setNewItem({ name: "", category: "Pig Feeds", stock: 0 });
+    setNewItem({ name: "", category: "Pig Feeds", stock: "" });
     setIsAddDialogOpen(false);
-    
+
+    // Reset to first page if we're adding items
+    setCurrentPage(1);
+
     toast({
       title: "INVENTORY UPDATED",
       description: `New product "${newItem.name}" successfully added to inventory system`,
@@ -134,20 +172,27 @@ export function Dashboard({ onLogout }: DashboardProps) {
   const handleStockChange = () => {
     if (!selectedItem) return;
 
-    if (stockOperation === 'minus' && stockChange > selectedItem.stock) {
+    const changeAmount =
+      typeof stockChange === "string"
+        ? parseInt(stockChange) || 0
+        : stockChange;
+
+    if (stockOperation === "minus" && changeAmount > selectedItem.stock) {
       toast({
         title: "INSUFFICIENT INVENTORY",
-        description: "Cannot reduce stock below zero. Please adjust quantity accordingly",
+        description:
+          "Cannot reduce stock below zero. Please adjust quantity accordingly",
         variant: "destructive",
       });
       return;
     }
 
-    const updatedItems = items.map(item => {
+    const updatedItems = items.map((item) => {
       if (item.id === selectedItem.id) {
-        const newStock = stockOperation === 'add' 
-          ? item.stock + stockChange 
-          : item.stock - stockChange;
+        const newStock =
+          stockOperation === "add"
+            ? item.stock + changeAmount
+            : item.stock - changeAmount;
         return { ...item, stock: Math.max(0, newStock) };
       }
       return item;
@@ -155,36 +200,93 @@ export function Dashboard({ onLogout }: DashboardProps) {
 
     setItems(updatedItems);
     setIsStockDialogOpen(false);
-    setStockChange(0);
-    
-    const action = stockOperation === 'add' ? 'increased' : 'decreased';
+    setStockChange("");
+
+    const action = stockOperation === "add" ? "increased" : "decreased";
     toast({
       title: "STOCK ADJUSTMENT COMPLETED",
-      description: `Inventory for "${selectedItem.name}" successfully ${action} by ${stockChange} units`,
+      description: `Inventory for "${selectedItem.name}" successfully ${action} by ${changeAmount} units`,
     });
   };
 
   const handleDeleteItem = (item: InventoryItem) => {
-    const updatedItems = items.filter(i => i.id !== item.id);
+    const updatedItems = items.filter((i) => i.id !== item.id);
     setItems(updatedItems);
-    
+
+    // Adjust current page if we deleted the last item on the current page
+    const newTotalPages = Math.ceil(updatedItems.length / itemsPerPage);
+    if (currentPage > newTotalPages && newTotalPages > 0) {
+      setCurrentPage(newTotalPages);
+    }
+
     toast({
       title: "PRODUCT REMOVED",
       description: `"${item.name}" has been permanently removed from inventory database`,
     });
   };
 
-  const openStockDialog = (item: InventoryItem, operation: 'add' | 'minus') => {
+  // Format time for analog display
+  const formatTime = (date: Date) => {
+    const hours = date.getHours();
+    const minutes = date.getMinutes();
+    const seconds = date.getSeconds();
+    const ampm = hours >= 12 ? "PM" : "AM";
+    const displayHours = hours % 12 || 12;
+
+    const dayNames = [
+      "Sunday",
+      "Monday",
+      "Tuesday",
+      "Wednesday",
+      "Thursday",
+      "Friday",
+      "Saturday",
+    ];
+    const monthNames = [
+      "Jan",
+      "Feb",
+      "Mar",
+      "Apr",
+      "May",
+      "Jun",
+      "Jul",
+      "Aug",
+      "Sep",
+      "Oct",
+      "Nov",
+      "Dec",
+    ];
+
+    return {
+      time: `${displayHours.toString().padStart(2, "0")}:${minutes
+        .toString()
+        .padStart(2, "0")}:${seconds.toString().padStart(2, "0")} ${ampm}`,
+      day: dayNames[date.getDay()],
+      date: `${
+        monthNames[date.getMonth()]
+      } ${date.getDate()}, ${date.getFullYear()}`,
+    };
+  };
+
+  const openStockDialog = (item: InventoryItem, operation: "add" | "minus") => {
     setSelectedItem(item);
     setStockOperation(operation);
-    setStockChange(0);
+    setStockChange("");
     setIsStockDialogOpen(true);
   };
 
+  const handleInputFocus = (inputType: "stock" | "stockChange") => {
+    if (inputType === "stock") {
+      setNewItem({ ...newItem, stock: "" });
+    } else if (inputType === "stockChange") {
+      setStockChange("");
+    }
+  };
+
   return (
-    <div className="min-h-screen bg-cyan-300 flex">
+    <div className="h-screen bg-cyan-300 flex overflow-hidden">
       {/* Sidebar */}
-      <div className="w-80 bg-yellow-400 border-r-8 border-black flex flex-col">
+      <div className="w-80 bg-yellow-400 border-r-8 border-black flex flex-col h-full">
         {/* Header */}
         <div className="p-6 border-b-4 border-black">
           <div className="flex items-center space-x-3 mb-4">
@@ -200,28 +302,17 @@ export function Dashboard({ onLogout }: DashboardProps) {
               </p>
             </div>
           </div>
-          
-          {/* Current Time */}
-          <div className="bg-black text-white p-3 border-4 border-white shadow-[4px_4px_0px_0px_#ffffff] transform -rotate-1">
-            <div className="flex items-center space-x-2">
-              <Clock className="h-4 w-4" />
-              <span className="font-black text-sm">
-                {currentTime.toLocaleTimeString()}
-              </span>
-            </div>
-            <div className="text-xs font-bold mt-1">
-              {currentTime.toLocaleDateString()}
-            </div>
-          </div>
         </div>
 
         {/* Navigation */}
-        <div className="flex-1 p-6">
+        <div className="flex-1 p-6 overflow-y-auto">
           <div className="space-y-4">
             <Button
               onClick={() => setActiveTab("dashboard")}
               className={`w-full justify-start font-black text-black border-4 border-black shadow-[4px_4px_0px_0px_#000000] hover:shadow-[2px_2px_0px_0px_#000000] hover:translate-x-1 hover:translate-y-1 transition-all ${
-                activeTab === "dashboard" ? "bg-green-400" : "bg-white hover:bg-green-400"
+                activeTab === "dashboard"
+                  ? "bg-green-400"
+                  : "bg-white hover:bg-green-400"
               }`}
             >
               <BarChart3 className="h-4 w-4 mr-2" />
@@ -230,17 +321,94 @@ export function Dashboard({ onLogout }: DashboardProps) {
             <Button
               onClick={() => setActiveTab("items")}
               className={`w-full justify-start font-black text-black border-4 border-black shadow-[4px_4px_0px_0px_#000000] hover:shadow-[2px_2px_0px_0px_#000000] hover:translate-x-1 hover:translate-y-1 transition-all ${
-                activeTab === "items" ? "bg-green-400" : "bg-white hover:bg-green-400"
+                activeTab === "items"
+                  ? "bg-green-400"
+                  : "bg-white hover:bg-green-400"
               }`}
             >
               <Box className="h-4 w-4 mr-2" />
               ITEMS
             </Button>
+            <Button
+              onClick={() => setActiveTab("print")}
+              className={`w-full justify-start font-black text-black border-4 border-black shadow-[4px_4px_0px_0px_#000000] hover:shadow-[2px_2px_0px_0px_#000000] hover:translate-x-1 hover:translate-y-1 transition-all ${
+                activeTab === "print"
+                  ? "bg-green-400"
+                  : "bg-white hover:bg-green-400"
+              }`}
+            >
+              <Printer className="h-4 w-4 mr-2" />
+              PRINT
+            </Button>
           </div>
         </div>
 
-        {/* Logout Button */}
-        <div className="p-6 border-t-4 border-black">
+        {/* Time and Logout */}
+        <div className="p-6 border-t-4 border-black space-y-4">
+          {/* Current Time */}
+          <div className="bg-gradient-to-br from-gray-800 to-black text-white p-4 border-4 border-white shadow-[6px_6px_0px_0px_#ffffff] transform -rotate-1">
+            {/* Analog Clock Design */}
+            <div className="text-center space-y-2">
+              {/* Clock Face */}
+              <div className="relative w-16 h-16 mx-auto mb-3">
+                <div className="absolute inset-0 bg-white border-4 border-gray-300 rounded-full"></div>
+                <div className="absolute inset-2 bg-gray-100 border-2 border-gray-400 rounded-full"></div>
+
+                {/* Clock Numbers */}
+                <div className="absolute top-1 left-1/2 transform -translate-x-1/2 text-xs font-black text-black">
+                  12
+                </div>
+                <div className="absolute right-1 top-1/2 transform -translate-y-1/2 text-xs font-black text-black">
+                  3
+                </div>
+                <div className="absolute bottom-1 left-1/2 transform -translate-x-1/2 text-xs font-black text-black">
+                  6
+                </div>
+                <div className="absolute left-1 top-1/2 transform -translate-y-1/2 text-xs font-black text-black">
+                  9
+                </div>
+
+                {/* Clock Hands */}
+                <div
+                  className="absolute top-1/2 left-1/2 w-0.5 bg-black origin-bottom transform -translate-x-1/2 -translate-y-full"
+                  style={{
+                    height: "20px",
+                    transform: `translate(-50%, -100%) rotate(${
+                      (currentTime.getHours() % 12) * 30 +
+                      currentTime.getMinutes() * 0.5
+                    }deg)`,
+                  }}
+                ></div>
+                <div
+                  className="absolute top-1/2 left-1/2 w-0.5 bg-black origin-bottom transform -translate-x-1/2 -translate-y-full"
+                  style={{
+                    height: "24px",
+                    transform: `translate(-50%, -100%) rotate(${
+                      currentTime.getMinutes() * 6
+                    }deg)`,
+                  }}
+                ></div>
+
+                {/* Center Dot */}
+                <div className="absolute top-1/2 left-1/2 w-2 h-2 bg-red-500 border border-black rounded-full transform -translate-x-1/2 -translate-y-1/2"></div>
+              </div>
+
+              {/* Digital Time */}
+              <div className="space-y-1">
+                <div className="font-black text-lg tracking-wider">
+                  {formatTime(currentTime).time}
+                </div>
+                <div className="font-bold text-sm text-yellow-300">
+                  {formatTime(currentTime).day}
+                </div>
+                <div className="font-bold text-xs text-gray-300">
+                  {formatTime(currentTime).date}
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* Logout Button */}
           <Button
             onClick={onLogout}
             className="w-full bg-red-400 hover:bg-red-500 text-black font-black border-4 border-black shadow-[4px_4px_0px_0px_#000000] hover:shadow-[2px_2px_0px_0px_#000000] hover:translate-x-1 hover:translate-y-1 transition-all"
@@ -252,7 +420,7 @@ export function Dashboard({ onLogout }: DashboardProps) {
       </div>
 
       {/* Main Content */}
-      <div className="flex-1 p-8">
+      <div className="flex-1 p-8 overflow-y-auto">
         {activeTab === "dashboard" && (
           <div className="space-y-6">
             {/* Statistics Cards */}
@@ -294,16 +462,17 @@ export function Dashboard({ onLogout }: DashboardProps) {
 
             {/* Category Overview */}
             <Card className="bg-white border-4 border-black shadow-[8px_8px_0px_0px_#000000]">
-              <CardHeader className="bg-purple-400 border-b-4 border-black">
+              <CardHeader className="bg-gradient-to-r from-blue-500 to-purple-600 border-b-4 border-black">
                 <CardTitle className="text-2xl font-black text-black">
-                  CATEGORY OVERVIEW
+                  📊 CATEGORY ANALYTICS
                 </CardTitle>
-                <CardDescription className="text-black font-bold">
-                  STOCK LEVELS BY CATEGORY
+                <CardDescription className="text-white font-bold opacity-90">
+                  Comprehensive inventory distribution across all product
+                  categories
                 </CardDescription>
               </CardHeader>
               <CardContent className="p-6">
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
                   {Object.entries(categoryColors).map(
                     ([category, colorClass]) => {
                       const categoryItems = items.filter(
@@ -312,39 +481,97 @@ export function Dashboard({ onLogout }: DashboardProps) {
                       const outOfStockInCategory = categoryItems.filter(
                         (item) => item.stock === 0
                       ).length;
+                      const totalStock = categoryItems.reduce(
+                        (sum, item) => sum + item.stock,
+                        0
+                      );
 
                       return (
                         <div
                           key={category}
-                          className="p-4 bg-white border-4 border-black shadow-[4px_4px_0px_0px_#000000] hover:translate-x-1 hover:translate-y-1 hover:shadow-[2px_2px_0px_0px_#000000] transition-all"
+                          className="relative overflow-hidden bg-gradient-to-br from-white to-gray-50 border-4 border-black shadow-[6px_6px_0px_0px_#000000] hover:shadow-[8px_8px_0px_0px_#000000] hover:translate-x-[-2px] hover:translate-y-[-2px] transition-all duration-200"
                         >
-                          <div className="flex items-center space-x-3 mb-3">
-                            <div
-                              className={`w-6 h-6 border-2 border-black ${colorClass}`}
-                            ></div>
-                            <h3 className="font-black text-black text-sm">
-                              {category}
-                            </h3>
+                          {/* Category Header */}
+                          <div
+                            className={`${colorClass} p-3 border-b-4 border-black`}
+                          >
+                            <div className="flex items-center justify-between">
+                              <h3 className="font-black text-white text-sm tracking-wide">
+                                {category.toUpperCase()}
+                              </h3>
+                              <div className="w-8 h-8 bg-white border-2 border-black rounded-full flex items-center justify-center">
+                                <Package className="w-4 h-4 text-black" />
+                              </div>
+                            </div>
                           </div>
-                          <div className="grid grid-cols-3 gap-2 text-xs">
-                            <div className="text-center">
-                              <div className="font-black text-black text-lg">
-                                {categoryItems.length}
+
+                          {/* Stats Grid */}
+                          <div className="p-4">
+                            <div className="grid grid-cols-2 gap-3 mb-3">
+                              <div className="text-center p-2 bg-blue-50 border-2 border-black">
+                                <div className="font-black text-blue-600 text-xl">
+                                  {categoryItems.length}
+                                </div>
+                                <div className="font-bold text-black text-xs">
+                                  PRODUCTS
+                                </div>
                               </div>
-                              <div className="font-bold text-black">ITEMS</div>
-                            </div>
-                            <div className="text-center">
-                              <div className="font-black text-green-600 text-lg">
-                                {categoryItems.length - outOfStockInCategory}
+                              <div className="text-center p-2 bg-green-50 border-2 border-black">
+                                <div className="font-black text-green-600 text-xl">
+                                  {totalStock}
+                                </div>
+                                <div className="font-bold text-black text-xs">
+                                  TOTAL STOCK
+                                </div>
                               </div>
-                              <div className="font-bold text-black">IN STOCK</div>
                             </div>
-                            <div className="text-center">
-                              <div className="font-black text-red-600 text-lg">
-                                {outOfStockInCategory}
-                              </div>
-                              <div className="font-bold text-black">OUT</div>
+
+                            {/* Status Bar */}
+                            <div
+                              className={`w-full h-3 border-2 border-black relative overflow-hidden ${
+                                outOfStockInCategory === categoryItems.length
+                                  ? "bg-red-200"
+                                  : "bg-green-200"
+                              }`}
+                            >
+                              <div
+                                className="h-full bg-green-500 transition-all duration-500"
+                                style={{
+                                  width: `${
+                                    categoryItems.length > 0
+                                      ? ((categoryItems.length -
+                                          outOfStockInCategory) /
+                                          categoryItems.length) *
+                                        100
+                                      : 0
+                                  }%`,
+                                }}
+                              ></div>
                             </div>
+
+                            <div className="flex justify-between mt-2 text-xs">
+                              <span className="font-bold text-green-600">
+                                {categoryItems.length - outOfStockInCategory}{" "}
+                                Available
+                              </span>
+                              <span className="font-bold text-red-600">
+                                {outOfStockInCategory} Out
+                              </span>
+                            </div>
+                          </div>
+
+                          {/* Status Indicator */}
+                          <div className="absolute top-2 right-2">
+                            <div
+                              className={`w-3 h-3 rounded-full border-2 border-white ${
+                                outOfStockInCategory === 0
+                                  ? "bg-green-500"
+                                  : outOfStockInCategory ===
+                                    categoryItems.length
+                                  ? "bg-red-500"
+                                  : "bg-yellow-500"
+                              }`}
+                            ></div>
                           </div>
                         </div>
                       );
@@ -358,6 +585,83 @@ export function Dashboard({ onLogout }: DashboardProps) {
 
         {activeTab === "items" && (
           <div className="space-y-6">
+            {/* Search and Filters */}
+            <Card className="bg-white border-4 border-black shadow-[8px_8px_0px_0px_#000000]">
+              <CardHeader className="bg-blue-400 border-b-4 border-black">
+                <CardTitle className="text-xl font-black text-black">
+                  🔍 SEARCH & FILTERS
+                </CardTitle>
+              </CardHeader>
+              <CardContent className="p-6">
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                  {/* Search */}
+                  <div>
+                    <Label className="font-black text-black mb-2 block">
+                      SEARCH PRODUCTS
+                    </Label>
+                    <Input
+                      placeholder="Enter product name..."
+                      value={searchTerm}
+                      onChange={(e) => setSearchTerm(e.target.value)}
+                      className="border-4 border-black font-bold shadow-[4px_4px_0px_0px_#000000]"
+                    />
+                  </div>
+
+                  {/* Category Filter */}
+                  <div>
+                    <Label className="font-black text-black mb-2 block">
+                      FILTER BY CATEGORY
+                    </Label>
+                    <Select
+                      value={categoryFilter}
+                      onValueChange={setCategoryFilter}
+                    >
+                      <SelectTrigger className="border-4 border-black font-bold shadow-[4px_4px_0px_0px_#000000]">
+                        <SelectValue />
+                      </SelectTrigger>
+                      <SelectContent className="border-4 border-black">
+                        <SelectItem value="All" className="font-bold">
+                          All Categories
+                        </SelectItem>
+                        {Object.keys(categoryColors).map((category) => (
+                          <SelectItem
+                            key={category}
+                            value={category}
+                            className="font-bold"
+                          >
+                            {category}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  </div>
+
+                  {/* Stock Filter */}
+                  <div>
+                    <Label className="font-black text-black mb-2 block">
+                      FILTER BY STOCK
+                    </Label>
+                    <Select value={stockFilter} onValueChange={setStockFilter}>
+                      <SelectTrigger className="border-4 border-black font-bold shadow-[4px_4px_0px_0px_#000000]">
+                        <SelectValue />
+                      </SelectTrigger>
+                      <SelectContent className="border-4 border-black">
+                        <SelectItem value="All" className="font-bold">
+                          All Items
+                        </SelectItem>
+                        <SelectItem value="In Stock" className="font-bold">
+                          In Stock Only
+                        </SelectItem>
+                        <SelectItem value="Out of Stock" className="font-bold">
+                          Out of Stock Only
+                        </SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+
             <Card className="bg-white border-4 border-black shadow-[8px_8px_0px_0px_#000000]">
               <CardHeader className="bg-green-400 border-b-4 border-black">
                 <div className="flex justify-between items-center">
@@ -366,10 +670,14 @@ export function Dashboard({ onLogout }: DashboardProps) {
                       INVENTORY ITEMS
                     </CardTitle>
                     <CardDescription className="text-black font-bold">
-                      MANAGE YOUR PRODUCT INVENTORY
+                      MANAGE YOUR PRODUCT INVENTORY ({filteredItems.length}{" "}
+                      items found)
                     </CardDescription>
                   </div>
-                  <Dialog open={isAddDialogOpen} onOpenChange={setIsAddDialogOpen}>
+                  <Dialog
+                    open={isAddDialogOpen}
+                    onOpenChange={setIsAddDialogOpen}
+                  >
                     <DialogTrigger asChild>
                       <Button className="bg-blue-400 hover:bg-blue-500 text-black font-black border-4 border-black shadow-[4px_4px_0px_0px_#000000] hover:shadow-[2px_2px_0px_0px_#000000] hover:translate-x-1 hover:translate-y-1 transition-all">
                         <Plus className="h-4 w-4 mr-2" />
@@ -378,38 +686,54 @@ export function Dashboard({ onLogout }: DashboardProps) {
                     </DialogTrigger>
                     <DialogContent className="bg-white border-4 border-black shadow-[8px_8px_0px_0px_#000000]">
                       <DialogHeader>
-                        <DialogTitle className="font-black text-black">ADD NEW ITEM</DialogTitle>
+                        <DialogTitle className="font-black text-black">
+                          ADD NEW ITEM
+                        </DialogTitle>
                         <DialogDescription className="font-bold text-black">
                           Enter product details for inventory registration
                         </DialogDescription>
                       </DialogHeader>
                       <div className="grid gap-4 py-4">
                         <div className="grid grid-cols-4 items-center gap-4">
-                          <Label htmlFor="name" className="text-right font-black text-black">
+                          <Label
+                            htmlFor="name"
+                            className="text-right font-black text-black"
+                          >
                             Name
                           </Label>
                           <Input
                             id="name"
                             value={newItem.name}
-                            onChange={(e) => setNewItem({ ...newItem, name: e.target.value })}
+                            onChange={(e) =>
+                              setNewItem({ ...newItem, name: e.target.value })
+                            }
                             className="col-span-3 border-4 border-black font-bold"
                             placeholder="Enter product name"
                           />
                         </div>
                         <div className="grid grid-cols-4 items-center gap-4">
-                          <Label htmlFor="category" className="text-right font-black text-black">
+                          <Label
+                            htmlFor="category"
+                            className="text-right font-black text-black"
+                          >
                             Category
                           </Label>
                           <Select
                             value={newItem.category}
-                            onValueChange={(value) => setNewItem({ ...newItem, category: value })}
+                            onValueChange={(value) =>
+                              setNewItem({ ...newItem, category: value })
+                            }
                           >
                             <SelectTrigger className="col-span-3 border-4 border-black font-bold">
                               <SelectValue />
                             </SelectTrigger>
                             <SelectContent className="border-4 border-black">
                               {Object.keys(categoryColors).map((category) => (
-                                <SelectItem key={category} value={category} className="font-bold">
+                                <SelectItem
+                                  key={category}
+                                  value={category}
+                                  className="font-bold"
+                                >
                                   {category}
                                 </SelectItem>
                               ))}
@@ -417,14 +741,23 @@ export function Dashboard({ onLogout }: DashboardProps) {
                           </Select>
                         </div>
                         <div className="grid grid-cols-4 items-center gap-4">
-                          <Label htmlFor="stock" className="text-right font-black text-black">
+                          <Label
+                            htmlFor="stock"
+                            className="text-right font-black text-black"
+                          >
                             Stock
                           </Label>
                           <Input
                             id="stock"
                             type="number"
                             value={newItem.stock}
-                            onChange={(e) => setNewItem({ ...newItem, stock: parseInt(e.target.value) || 0 })}
+                            onChange={(e) =>
+                              setNewItem({
+                                ...newItem,
+                                stock: e.target.value,
+                              })
+                            }
+                            onFocus={() => handleInputFocus("stock")}
                             className="col-span-3 border-4 border-black font-bold"
                             placeholder="Enter initial stock"
                           />
@@ -452,18 +785,37 @@ export function Dashboard({ onLogout }: DashboardProps) {
                 <Table>
                   <TableHeader>
                     <TableRow className="border-b-4 border-black">
-                      <TableHead className="font-black text-black text-lg">PRODUCT NAME</TableHead>
-                      <TableHead className="font-black text-black text-lg">CATEGORY</TableHead>
-                      <TableHead className="font-black text-black text-lg">STOCK</TableHead>
-                      <TableHead className="font-black text-black text-lg">ACTIONS</TableHead>
+                      <TableHead className="font-black text-black text-lg">
+                        PRODUCT NAME
+                      </TableHead>
+                      <TableHead className="font-black text-black text-lg">
+                        CATEGORY
+                      </TableHead>
+                      <TableHead className="font-black text-black text-lg">
+                        STOCK
+                      </TableHead>
+                      <TableHead className="font-black text-black text-lg">
+                        ACTIONS
+                      </TableHead>
                     </TableRow>
                   </TableHeader>
                   <TableBody>
-                    {items.map((item) => (
-                      <TableRow key={item.id} className="border-b-2 border-black">
-                        <TableCell className="font-bold text-black">{item.name}</TableCell>
+                    {currentItems.map((item) => (
+                      <TableRow
+                        key={item.id}
+                        className="border-b-2 border-black"
+                      >
+                        <TableCell className="font-bold text-black">
+                          {item.name}
+                        </TableCell>
                         <TableCell>
-                          <span className={`px-2 py-1 border-2 border-black font-black text-black text-xs ${categoryColors[item.category as keyof typeof categoryColors]}`}>
+                          <span
+                            className={`px-2 py-1 border-2 border-black font-black text-black text-xs ${
+                              categoryColors[
+                                item.category as keyof typeof categoryColors
+                              ]
+                            }`}
+                          >
                             {item.category}
                           </span>
                         </TableCell>
@@ -477,16 +829,17 @@ export function Dashboard({ onLogout }: DashboardProps) {
                         <TableCell>
                           <div className="flex space-x-2">
                             <Button
-                              onClick={() => openStockDialog(item, 'add')}
+                              onClick={() => openStockDialog(item, "add")}
                               size="sm"
                               className="bg-green-400 hover:bg-green-500 text-black font-black border-2 border-black shadow-[2px_2px_0px_0px_#000000] hover:shadow-[1px_1px_0px_0px_#000000] hover:translate-x-0.5 hover:translate-y-0.5 transition-all"
                             >
                               <Plus className="h-3 w-3" />
                             </Button>
                             <Button
-                              onClick={() => openStockDialog(item, 'minus')}
+                              onClick={() => openStockDialog(item, "minus")}
+                              disabled={item.stock === 0}
                               size="sm"
-                              className="bg-yellow-400 hover:bg-yellow-500 text-black font-black border-2 border-black shadow-[2px_2px_0px_0px_#000000] hover:shadow-[1px_1px_0px_0px_#000000] hover:translate-x-0.5 hover:translate-y-0.5 transition-all"
+                              className="bg-yellow-400 hover:bg-yellow-500 disabled:bg-gray-300 disabled:cursor-not-allowed text-black font-black border-2 border-black shadow-[2px_2px_0px_0px_#000000] hover:shadow-[1px_1px_0px_0px_#000000] hover:translate-x-0.5 hover:translate-y-0.5 transition-all disabled:shadow-none disabled:translate-x-0 disabled:translate-y-0"
                             >
                               <Minus className="h-3 w-3" />
                             </Button>
@@ -505,7 +858,9 @@ export function Dashboard({ onLogout }: DashboardProps) {
                                     CONFIRM DELETION
                                   </AlertDialogTitle>
                                   <AlertDialogDescription className="font-bold text-black">
-                                    Are you sure you want to permanently remove "{item.name}" from the inventory system? This action cannot be undone.
+                                    Are you sure you want to permanently remove
+                                    "{item.name}" from the inventory system?
+                                    This action cannot be undone.
                                   </AlertDialogDescription>
                                 </AlertDialogHeader>
                                 <AlertDialogFooter>
@@ -527,6 +882,102 @@ export function Dashboard({ onLogout }: DashboardProps) {
                     ))}
                   </TableBody>
                 </Table>
+
+                {/* Pagination Controls */}
+                {totalPages > 1 && (
+                  <div className="flex justify-center items-center space-x-4 mt-6 p-4 bg-gray-100 border-4 border-black">
+                    <Button
+                      onClick={() =>
+                        setCurrentPage(Math.max(1, currentPage - 1))
+                      }
+                      disabled={currentPage === 1}
+                      className="bg-blue-400 hover:bg-blue-500 disabled:bg-gray-300 disabled:cursor-not-allowed text-black font-black border-4 border-black shadow-[4px_4px_0px_0px_#000000] hover:shadow-[2px_2px_0px_0px_#000000] hover:translate-x-1 hover:translate-y-1 transition-all disabled:shadow-none disabled:translate-x-0 disabled:translate-y-0"
+                    >
+                      PREVIOUS
+                    </Button>
+
+                    <div className="flex items-center space-x-2">
+                      {Array.from({ length: totalPages }, (_, i) => i + 1).map(
+                        (page) => (
+                          <Button
+                            key={page}
+                            onClick={() => setCurrentPage(page)}
+                            className={`w-12 h-12 font-black border-4 border-black shadow-[4px_4px_0px_0px_#000000] hover:shadow-[2px_2px_0px_0px_#000000] hover:translate-x-1 hover:translate-y-1 transition-all ${
+                              currentPage === page
+                                ? "bg-green-400 text-black"
+                                : "bg-white hover:bg-green-400 text-black"
+                            }`}
+                          >
+                            {page}
+                          </Button>
+                        )
+                      )}
+                    </div>
+
+                    <Button
+                      onClick={() =>
+                        setCurrentPage(Math.min(totalPages, currentPage + 1))
+                      }
+                      disabled={currentPage === totalPages}
+                      className="bg-blue-400 hover:bg-blue-500 disabled:bg-gray-300 disabled:cursor-not-allowed text-black font-black border-4 border-black shadow-[4px_4px_0px_0px_#000000] hover:shadow-[2px_2px_0px_0px_#000000] hover:translate-x-1 hover:translate-y-1 transition-all disabled:shadow-none disabled:translate-x-0 disabled:translate-y-0"
+                    >
+                      NEXT
+                    </Button>
+                  </div>
+                )}
+
+                {/* Items count info */}
+                <div className="mt-4 text-center">
+                  <p className="font-bold text-black">
+                    Showing {startIndex + 1}-
+                    {Math.min(endIndex, filteredItems.length)} of{" "}
+                    {filteredItems.length} items
+                  </p>
+                </div>
+              </CardContent>
+            </Card>
+          </div>
+        )}
+
+        {activeTab === "print" && (
+          <div className="flex items-center justify-center h-full">
+            <Card className="bg-white border-4 border-black shadow-[8px_8px_0px_0px_#000000] max-w-md">
+              <CardHeader className="bg-orange-400 border-b-4 border-black text-center">
+                <div className="flex justify-center mb-4">
+                  <div className="w-16 h-16 bg-black border-4 border-white flex items-center justify-center transform rotate-12">
+                    <Printer className="h-8 w-8 text-white" />
+                  </div>
+                </div>
+                <CardTitle className="text-2xl font-black text-black transform -rotate-1">
+                  PRINT FEATURE
+                </CardTitle>
+                <CardDescription className="text-black font-bold">
+                  COMING SOON
+                </CardDescription>
+              </CardHeader>
+              <CardContent className="p-8 text-center">
+                <div className="space-y-4">
+                  <div className="text-6xl font-black text-gray-400 transform rotate-3">
+                    🚧
+                  </div>
+                  <h3 className="text-xl font-black text-black">
+                    TO BE ADDED LATER
+                  </h3>
+                  <p className="text-black font-bold">
+                    This feature is currently under development and will be
+                    available in a future update.
+                  </p>
+                  <div className="mt-6 p-4 bg-yellow-100 border-4 border-black">
+                    <p className="text-sm font-bold text-black">
+                      📋 PLANNED FEATURES:
+                    </p>
+                    <ul className="text-xs font-bold text-black mt-2 space-y-1">
+                      <li>•Print Inventory Reports</li>
+                      <li>•Inventory History</li>
+                      <li>•Category Summaries</li>
+                    </ul>
+                  </div>
+                </div>
               </CardContent>
             </Card>
           </div>
@@ -535,33 +986,88 @@ export function Dashboard({ onLogout }: DashboardProps) {
 
       {/* Stock Change Dialog */}
       <Dialog open={isStockDialogOpen} onOpenChange={setIsStockDialogOpen}>
-        <DialogContent className="bg-white border-4 border-black shadow-[8px_8px_0px_0px_#000000]">
+        <DialogContent className="bg-white border-4 border-black shadow-[8px_8px_0px_0px_#000000] max-w-md">
           <DialogHeader>
             <DialogTitle className="font-black text-black">
-              {stockOperation === 'add' ? 'ADD STOCK' : 'REDUCE STOCK'}
+              {stockOperation === "add" ? "ADD STOCK" : "REDUCE STOCK"}
             </DialogTitle>
             <DialogDescription className="font-bold text-black">
               {selectedItem && (
-                <>
-                  Current stock for "{selectedItem.name}": {selectedItem.stock} units
-                </>
+                <div className="space-y-2">
+                  <div className="p-3 bg-blue-50 border-2 border-black">
+                    <div className="font-black text-black">📦 PRODUCT INFO</div>
+                    <div className="text-sm">
+                      <strong>Name:</strong> {selectedItem.name}
+                    </div>
+                    <div className="text-sm">
+                      <strong>Category:</strong> {selectedItem.category}
+                    </div>
+                  </div>
+                  <div className="p-3 bg-green-50 border-2 border-black">
+                    <div className="font-black text-black">
+                      📊 CURRENT STOCK
+                    </div>
+                    <div className="text-2xl font-black text-green-600">
+                      {selectedItem.stock} units
+                    </div>
+                  </div>
+                  {stockOperation === "add" && (
+                    <div className="p-3 bg-blue-50 border-2 border-black">
+                      <div className="font-black text-black">📈 IMPACT</div>
+                      <div className="text-sm">
+                        New stock will be:{" "}
+                        <strong>
+                          {selectedItem.stock +
+                            (typeof stockChange === "string"
+                              ? parseInt(stockChange) || 0
+                              : stockChange)}{" "}
+                          units
+                        </strong>
+                      </div>
+                    </div>
+                  )}
+                  {stockOperation === "minus" && (
+                    <div className="p-3 bg-yellow-50 border-2 border-black">
+                      <div className="font-black text-black">📉 IMPACT</div>
+                      <div className="text-sm">
+                        New stock will be:{" "}
+                        <strong>
+                          {Math.max(
+                            0,
+                            selectedItem.stock -
+                              (typeof stockChange === "string"
+                                ? parseInt(stockChange) || 0
+                                : stockChange)
+                          )}{" "}
+                          units
+                        </strong>
+                      </div>
+                    </div>
+                  )}
+                </div>
               )}
             </DialogDescription>
           </DialogHeader>
           <div className="grid gap-4 py-4">
             <div className="grid grid-cols-4 items-center gap-4">
-              <Label htmlFor="stockChange" className="text-right font-black text-black">
+              <Label
+                htmlFor="stockChange"
+                className="text-right font-black text-black"
+              >
                 Quantity
               </Label>
               <Input
                 id="stockChange"
                 type="number"
                 value={stockChange}
-                onChange={(e) => setStockChange(parseInt(e.target.value) || 0)}
+                onChange={(e) => setStockChange(e.target.value)}
+                onFocus={() => handleInputFocus("stockChange")}
                 className="col-span-3 border-4 border-black font-bold"
                 placeholder={`Enter quantity to ${stockOperation}`}
                 min="0"
-                max={stockOperation === 'minus' ? selectedItem?.stock : undefined}
+                max={
+                  stockOperation === "minus" ? selectedItem?.stock : undefined
+                }
               />
             </div>
           </div>
