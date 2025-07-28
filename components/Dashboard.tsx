@@ -57,12 +57,22 @@ import {
   Trash2,
   Clock,
   Printer,
+  User,
 } from "lucide-react";
 import { inventoryData, type InventoryItem } from "@/lib/inventory-data";
 import { useToast } from "@/hooks/use-toast";
 
+interface User {
+  id: number;
+  username: string;
+  role: string;
+  createdAt: string;
+  updatedAt: string;
+}
+
 interface DashboardProps {
   onLogout: () => void;
+  user: User | null;
 }
 
 const categoryColors = {
@@ -76,11 +86,16 @@ const categoryColors = {
   Others: "bg-gray-500",
 };
 
-export function Dashboard({ onLogout }: DashboardProps) {
+export function Dashboard({ onLogout, user }: DashboardProps) {
   const [activeTab, setActiveTab] = useState("dashboard");
   const [items, setItems] = useState<InventoryItem[]>(inventoryData);
   const [currentTime, setCurrentTime] = useState(new Date());
   const [isAddDialogOpen, setIsAddDialogOpen] = useState(false);
+  const [newUser, setNewUser] = useState({
+    username: "",
+    password: "",
+  });
+  const [isRegisterDialogOpen, setIsRegisterDialogOpen] = useState(false);
   const [isStockDialogOpen, setIsStockDialogOpen] = useState(false);
   const [selectedItem, setSelectedItem] = useState<InventoryItem | null>(null);
   const [stockOperation, setStockOperation] = useState<"add" | "minus">("add");
@@ -207,6 +222,54 @@ export function Dashboard({ onLogout }: DashboardProps) {
       title: "STOCK ADJUSTMENT COMPLETED",
       description: `Inventory for "${selectedItem.name}" successfully ${action} by ${changeAmount} units`,
     });
+  };
+
+  const handleRegisterUser = async () => {
+    if (!newUser.username.trim() || !newUser.password.trim()) {
+      toast({
+        title: "VALIDATION ERROR",
+        description: "Username and password are required",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    try {
+      const response = await fetch("/api/auth/register", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          username: newUser.username,
+          password: newUser.password,
+          role: "Staff",
+        }),
+      });
+
+      const data = await response.json();
+
+      if (data.success) {
+        toast({
+          title: "USER REGISTERED",
+          description: `New staff account "${newUser.username}" created successfully`,
+        });
+        setNewUser({ username: "", password: "" });
+        setIsRegisterDialogOpen(false);
+      } else {
+        toast({
+          title: "REGISTRATION FAILED",
+          description: data.error || "Failed to create user account",
+          variant: "destructive",
+        });
+      }
+    } catch (error) {
+      toast({
+        title: "REGISTRATION ERROR",
+        description: "Failed to connect to server",
+        variant: "destructive",
+      });
+    }
   };
 
   const handleDeleteItem = (item: InventoryItem) => {
@@ -337,6 +400,15 @@ export function Dashboard({ onLogout }: DashboardProps) {
               <Printer className="h-4 w-4 lg:mr-2" />
               <span className="text-xs lg:text-base">PRINT</span>
             </Button>
+            {user?.role === "Admin" && (
+              <Button
+                onClick={() => setActiveTab("account")}
+                className={getTabButtonClass("account")}
+              >
+                <User className="h-4 w-4 lg:mr-2" />
+                <span className="text-xs lg:text-base">ACCOUNT</span>
+              </Button>
+            )}
           </div>
         </div>
 
@@ -1067,6 +1139,251 @@ export function Dashboard({ onLogout }: DashboardProps) {
           </div>
         )}
 
+        {activeTab === "account" && user?.role === "Admin" && (
+          <div className="space-y-4 md:space-y-6">
+            {/* User Profile Section */}
+            <Card className="bg-white border-4 border-black shadow-[8px_8px_0px_0px_#000000]">
+              <CardHeader className="bg-blue-400 border-b-4 border-black">
+                <CardTitle className="text-xl md:text-2xl font-black text-black">
+                  👤 USER PROFILE
+                </CardTitle>
+                <CardDescription className="text-black font-bold">
+                  Current user information and account details
+                </CardDescription>
+              </CardHeader>
+              <CardContent className="p-6">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  <div className="space-y-4">
+                    <div className="p-4 bg-green-50 border-4 border-black">
+                      <h3 className="font-black text-black mb-2">USERNAME</h3>
+                      <p className="text-lg font-bold text-green-600">
+                        {user.username}
+                      </p>
+                    </div>
+                    <div className="p-4 bg-purple-50 border-4 border-black">
+                      <h3 className="font-black text-black mb-2">ROLE</h3>
+                      <p className="text-lg font-bold text-purple-600">
+                        {user.role}
+                      </p>
+                    </div>
+                  </div>
+                  <div className="space-y-4">
+                    <div className="p-4 bg-blue-50 border-4 border-black">
+                      <h3 className="font-black text-black mb-2">CREATED</h3>
+                      <p className="text-sm font-bold text-blue-600">
+                        {new Date(user.createdAt).toLocaleDateString()}
+                      </p>
+                    </div>
+                    <div className="p-4 bg-orange-50 border-4 border-black">
+                      <h3 className="font-black text-black mb-2">
+                        LAST UPDATED
+                      </h3>
+                      <p className="text-sm font-bold text-orange-600">
+                        {new Date(user.updatedAt).toLocaleDateString()}
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+
+            {/* System Guidelines */}
+            <Card className="bg-white border-4 border-black shadow-[8px_8px_0px_0px_#000000]">
+              <CardHeader className="bg-green-400 border-b-4 border-black">
+                <CardTitle className="text-xl md:text-2xl font-black text-black">
+                  📋 SYSTEM GUIDELINES
+                </CardTitle>
+                <CardDescription className="text-black font-bold">
+                  How to use the inventory management system effectively
+                </CardDescription>
+              </CardHeader>
+              <CardContent className="p-6">
+                <div className="space-y-6">
+                  <div className="p-4 bg-yellow-50 border-4 border-black">
+                    <h3 className="font-black text-black mb-3 flex items-center gap-2">
+                      <Package className="h-5 w-5" />
+                      INVENTORY MANAGEMENT
+                    </h3>
+                    <ul className="space-y-2 text-sm font-bold text-black">
+                      <li>
+                        • Add new products using the "ADD ITEM" button in the
+                        Items tab
+                      </li>
+                      <li>
+                        • Use the search and filter options to find specific
+                        products
+                      </li>
+                      <li>
+                        • Monitor stock levels and restock when items are
+                        running low
+                      </li>
+                      <li>
+                        • Update stock quantities using the + and - buttons
+                      </li>
+                    </ul>
+                  </div>
+
+                  <div className="p-4 bg-blue-50 border-4 border-black">
+                    <h3 className="font-black text-black mb-3 flex items-center gap-2">
+                      <User className="h-5 w-5" />
+                      USER ROLES
+                    </h3>
+                    <ul className="space-y-2 text-sm font-bold text-black">
+                      <li>
+                        • <strong>Admin:</strong> Full access to all features
+                        including user management
+                      </li>
+                      <li>
+                        • <strong>Staff:</strong> Access to inventory management
+                        and reporting
+                      </li>
+                      <li>
+                        • Only Admin users can access the Account tab and
+                        register new users
+                      </li>
+                    </ul>
+                  </div>
+
+                  <div className="p-4 bg-red-50 border-4 border-black">
+                    <h3 className="font-black text-black mb-3 flex items-center gap-2">
+                      <AlertTriangle className="h-5 w-5" />
+                      IMPORTANT NOTES
+                    </h3>
+                    <ul className="space-y-2 text-sm font-bold text-black">
+                      <li>
+                        • Always double-check stock quantities before making
+                        changes
+                      </li>
+                      <li>• Keep product names clear and descriptive</li>
+                      <li>• Regularly monitor out-of-stock items</li>
+                      <li>• Contact IT support for technical issues</li>
+                    </ul>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+
+            {/* User Registration */}
+            <Card className="bg-white border-4 border-black shadow-[8px_8px_0px_0px_#000000]">
+              <CardHeader className="bg-purple-400 border-b-4 border-black">
+                <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+                  <div>
+                    <CardTitle className="text-xl md:text-2xl font-black text-black">
+                      👥 USER REGISTRATION
+                    </CardTitle>
+                    <CardDescription className="text-black font-bold">
+                      Register new staff accounts (Admin only)
+                    </CardDescription>
+                  </div>
+                  <Dialog
+                    open={isRegisterDialogOpen}
+                    onOpenChange={setIsRegisterDialogOpen}
+                  >
+                    <DialogTrigger asChild>
+                      <Button className="bg-green-400 hover:bg-green-500 text-black font-black border-4 border-black shadow-[4px_4px_0px_0px_#000000] hover:shadow-[2px_2px_0px_0px_#000000] hover:translate-x-1 hover:translate-y-1 transition-all">
+                        <Plus className="h-4 w-4 mr-2" />
+                        REGISTER USER
+                      </Button>
+                    </DialogTrigger>
+                    <DialogContent className="bg-white border-4 border-black shadow-[8px_8px_0px_0px_#000000] max-w-md mx-4">
+                      <DialogHeader>
+                        <DialogTitle className="font-black text-black">
+                          REGISTER NEW STAFF
+                        </DialogTitle>
+                        <DialogDescription className="font-bold text-black">
+                          Create a new staff account with default Staff role
+                        </DialogDescription>
+                      </DialogHeader>
+                      <div className="grid gap-4 py-4">
+                        <div className="grid grid-cols-4 items-center gap-4">
+                          <Label
+                            htmlFor="newUsername"
+                            className="text-right font-black text-black text-sm"
+                          >
+                            Username
+                          </Label>
+                          <Input
+                            id="newUsername"
+                            value={newUser.username}
+                            onChange={(e) =>
+                              setNewUser({
+                                ...newUser,
+                                username: e.target.value,
+                              })
+                            }
+                            className="col-span-3 border-4 border-black font-bold"
+                            placeholder="Enter username"
+                          />
+                        </div>
+                        <div className="grid grid-cols-4 items-center gap-4">
+                          <Label
+                            htmlFor="newPassword"
+                            className="text-right font-black text-black text-sm"
+                          >
+                            Password
+                          </Label>
+                          <Input
+                            id="newPassword"
+                            type="password"
+                            value={newUser.password}
+                            onChange={(e) =>
+                              setNewUser({
+                                ...newUser,
+                                password: e.target.value,
+                              })
+                            }
+                            className="col-span-3 border-4 border-black font-bold"
+                            placeholder="Enter password"
+                          />
+                        </div>
+                        <div className="p-3 bg-blue-50 border-2 border-black">
+                          <p className="text-sm font-bold text-black">
+                            <strong>Note:</strong> New accounts will be created
+                            with Staff role by default.
+                          </p>
+                        </div>
+                      </div>
+                      <DialogFooter>
+                        <Button
+                          onClick={() => setIsRegisterDialogOpen(false)}
+                          className="bg-gray-400 hover:bg-gray-500 text-black font-black border-4 border-black shadow-[4px_4px_0px_0px_#000000] hover:shadow-[2px_2px_0px_0px_#000000] hover:translate-x-1 hover:translate-y-1 transition-all"
+                        >
+                          CANCEL
+                        </Button>
+                        <Button
+                          onClick={handleRegisterUser}
+                          className="bg-green-400 hover:bg-green-500 text-black font-black border-4 border-black shadow-[4px_4px_0px_0px_#000000] hover:shadow-[2px_2px_0px_0px_#000000] hover:translate-x-1 hover:translate-y-1 transition-all"
+                        >
+                          REGISTER
+                        </Button>
+                      </DialogFooter>
+                    </DialogContent>
+                  </Dialog>
+                </div>
+              </CardHeader>
+              <CardContent className="p-6">
+                <div className="p-4 bg-gray-50 border-4 border-black">
+                  <h3 className="font-black text-black mb-3">
+                    REGISTRATION PROCESS
+                  </h3>
+                  <ol className="space-y-2 text-sm font-bold text-black">
+                    <li>1. Click the "REGISTER USER" button above</li>
+                    <li>2. Enter a unique username for the new staff member</li>
+                    <li>3. Set a secure password for the account</li>
+                    <li>
+                      4. The account will be created with Staff role
+                      automatically
+                    </li>
+                    <li>
+                      5. New users can immediately log in with their credentials
+                    </li>
+                  </ol>
+                </div>
+              </CardContent>
+            </Card>
+          </div>
+        )}
+
         {activeTab === "print" && (
           <div className="flex items-center justify-center h-full">
             <Card className="bg-white border-4 border-black shadow-[8px_8px_0px_0px_#000000] max-w-md mx-4">
@@ -1136,6 +1453,15 @@ export function Dashboard({ onLogout }: DashboardProps) {
             <Printer className="h-5 w-5 mb-1" />
             <span className="text-xs font-black">PRINT</span>
           </Button>
+          {user?.role === "Admin" && (
+            <Button
+              onClick={() => setActiveTab("account")}
+              className={getTabButtonClass("account")}
+            >
+              <User className="h-5 w-5 mb-1" />
+              <span className="text-xs font-black">ACCOUNT</span>
+            </Button>
+          )}
         </div>
       </div>
 

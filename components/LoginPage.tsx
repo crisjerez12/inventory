@@ -25,7 +25,7 @@ import { useToast } from "@/hooks/use-toast";
 import Image from "next/image";
 
 interface LoginPageProps {
-  onLogin: (username: string, password: string) => boolean;
+  onLogin: (username: string, password: string) => Promise<boolean>;
 }
 
 export function LoginPage({ onLogin }: LoginPageProps) {
@@ -40,18 +40,17 @@ export function LoginPage({ onLogin }: LoginPageProps) {
     setError("");
     setIsLoading(true);
 
-    // Simulate loading delay
-    await new Promise((resolve) => setTimeout(resolve, 1000));
-
     const success = onLogin(username, password);
-    if (!success) {
+    const isAuthenticated = await success;
+    if (!isAuthenticated) {
       setError("Invalid credentials. Please try again.");
-    } else {
-      toast({
-        title: "ACCESS GRANTED",
-        description: "Welcome to the Inventory Management System",
-      });
+      setIsLoading(false);
+      return;
     }
+    toast({
+      title: "ACCESS GRANTED",
+      description: "Welcome to the Inventory Management System",
+    });
     setIsLoading(false);
   };
 

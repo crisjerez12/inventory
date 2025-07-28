@@ -1,36 +1,64 @@
-'use client';
+"use client";
 
-import { useState, useEffect } from 'react';
-import { LoginPage } from '@/components/LoginPage';
-import { Dashboard } from '@/components/Dashboard';
-import { Toaster } from '@/components/ui/toaster';
+import { useState, useEffect } from "react";
+import { LoginPage } from "@/components/LoginPage";
+import { Dashboard } from "@/components/Dashboard";
+import { Toaster } from "@/components/ui/toaster";
+
+interface User {
+  id: number;
+  username: string;
+  role: string;
+  createdAt: string;
+  updatedAt: string;
+}
 
 export default function Home() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [user, setUser] = useState<User | null>(null);
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     // Check if user is already logged in
-    const authStatus = localStorage.getItem('isAuthenticated');
-    if (authStatus === 'true') {
+    const authStatus = localStorage.getItem("isAuthenticated");
+    const userData = localStorage.getItem("userData");
+    if (authStatus === "true" && userData) {
       setIsAuthenticated(true);
+      setUser(JSON.parse(userData));
     }
     setIsLoading(false);
   }, []);
 
-  const handleLogin = (username: string, password: string) => {
-    // Simple authentication (in real app, this would be server-side)
-    if (username === 'admin' && password === 'password') {
-      setIsAuthenticated(true);
-      localStorage.setItem('isAuthenticated', 'true');
-      return true;
+  const handleLogin = async (username: string, password: string) => {
+    try {
+      const response = await fetch("/api/auth/login", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ username, password }),
+      });
+
+      const data = await response.json();
+
+      if (data.success) {
+        setIsAuthenticated(true);
+        setUser(data.user);
+        localStorage.setItem("isAuthenticated", "true");
+        localStorage.setItem("userData", JSON.stringify(data.user));
+        return true;
+      }
+      return false;
+    } catch (error) {
+      return false;
     }
-    return false;
   };
 
   const handleLogout = () => {
     setIsAuthenticated(false);
-    localStorage.removeItem('isAuthenticated');
+    setUser(null);
+    localStorage.removeItem("isAuthenticated");
+    localStorage.removeItem("userData");
   };
 
   if (isLoading) {
@@ -46,7 +74,7 @@ export default function Home() {
       {!isAuthenticated ? (
         <LoginPage onLogin={handleLogin} />
       ) : (
-        <Dashboard onLogout={handleLogout} />
+        <Dashboard onLogout={handleLogout} user={user} />
       )}
       <Toaster />
     </div>
