@@ -58,8 +58,13 @@ import {
   Clock,
   Printer,
   User,
+  Loader2,
+  Download,
+  Calendar,
+  Edit,
+  UserX,
 } from "lucide-react";
-import { inventoryData, type InventoryItem } from "@/lib/inventory-data";
+import { type InventoryItem } from "@/lib/inventory-data";
 import { useToast } from "@/hooks/use-toast";
 
 interface User {
@@ -75,6 +80,14 @@ interface DashboardProps {
   user: User | null;
 }
 
+interface StaffUser {
+  id: number;
+  username: string;
+  role: string;
+  createdAt: string;
+  updatedAt: string;
+}
+
 const categoryColors = {
   "Pig Feeds": "bg-pink-500",
   "Chicken Feeds": "bg-yellow-500",
@@ -88,29 +101,92 @@ const categoryColors = {
 
 export function Dashboard({ onLogout, user }: DashboardProps) {
   const [activeTab, setActiveTab] = useState("dashboard");
-  const [items, setItems] = useState<InventoryItem[]>(inventoryData);
+  const [items, setItems] = useState<InventoryItem[]>([]);
   const [currentTime, setCurrentTime] = useState(new Date());
+
+  // Loading states
+  const [isAddingItem, setIsAddingItem] = useState(false);
+  const [isUpdatingStock, setIsUpdatingStock] = useState(false);
+  const [isDeletingItem, setIsDeletingItem] = useState(false);
+  const [isRegisteringUser, setIsRegisteringUser] = useState(false);
+  const [isUpdatingPassword, setIsUpdatingPassword] = useState(false);
+  const [isUpdatingStaff, setIsUpdatingStaff] = useState(false);
+  const [isDeletingStaff, setIsDeletingStaff] = useState(false);
+  const [isGeneratingPDF, setIsGeneratingPDF] = useState(false);
+
+  // Dialog states
   const [isAddDialogOpen, setIsAddDialogOpen] = useState(false);
-  const [newUser, setNewUser] = useState({
-    username: "",
-    password: "",
-  });
   const [isRegisterDialogOpen, setIsRegisterDialogOpen] = useState(false);
   const [isStockDialogOpen, setIsStockDialogOpen] = useState(false);
+  const [isPasswordDialogOpen, setIsPasswordDialogOpen] = useState(false);
+  const [isEditStaffDialogOpen, setIsEditStaffDialogOpen] = useState(false);
+
+  // Form states
+  const [newUser, setNewUser] = useState({ username: "", password: "" });
   const [selectedItem, setSelectedItem] = useState<InventoryItem | null>(null);
-  const [stockOperation, setStockOperation] = useState<"add" | "minus">("add");
+  const [stockOperation, setStockOperation] = useState<"add" | "reduce">("add");
   const [newItem, setNewItem] = useState({
     name: "",
     category: "Pig Feeds",
     stock: "" as string | number,
   });
   const [stockChange, setStockChange] = useState("" as string | number);
+  const [passwordForm, setPasswordForm] = useState({
+    currentPassword: "",
+    newPassword: "",
+    confirmPassword: "",
+  });
+  const [selectedStaff, setSelectedStaff] = useState<StaffUser | null>(null);
+  const [staffForm, setStaffForm] = useState({ username: "", role: "Staff" });
+  const [staffList, setStaffList] = useState<StaffUser[]>([]);
+
+  // Print form states
+  const [printForm, setPrintForm] = useState({
+    reportType: "history", // history, outOfStock, inStock
+    dateType: "specific", // specific, month, year
+    specificDate: "",
+    month: "",
+    year: "",
+  });
+
+  // Pagination and filters
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 10;
   const [searchTerm, setSearchTerm] = useState("");
   const [categoryFilter, setCategoryFilter] = useState("All");
   const [stockFilter, setStockFilter] = useState("All");
   const { toast } = useToast();
+
+  // Fetch functions
+  const fetchItems = async () => {
+    try {
+      const response = await fetch("/api/items");
+      const data = await response.json();
+      if (data.success) {
+        setItems(data.items);
+      }
+    } catch (error) {
+      console.error("Failed to fetch items:", error);
+    }
+  };
+
+  const fetchStaff = async () => {
+    if (user?.role !== "Admin") return;
+    try {
+      const response = await fetch("/api/users");
+      const data = await response.json();
+      if (data.success) {
+        setStaffList(data.users.filter((u: StaffUser) => u.role === "Staff"));
+      }
+    } catch (error) {
+      console.error("Failed to fetch staff:", error);
+    }
+  };
+
+  useEffect(() => {
+    fetchItems();
+    fetchStaff();
+  }, [user]);
 
   // Update time every second
   useEffect(() => {
@@ -150,7 +226,7 @@ export function Dashboard({ onLogout, user }: DashboardProps) {
     setCurrentPage(1);
   }, [searchTerm, categoryFilter, stockFilter]);
 
-  const handleAddItem = () => {
+  const handleAddItem = async () => {
     if (!newItem.name.trim()) {
       toast({
         title: "VALIDATION ERROR",
@@ -160,31 +236,53 @@ export function Dashboard({ onLogout, user }: DashboardProps) {
       return;
     }
 
-    const newId = Math.max(...items.map((item) => item.id)) + 1;
-    const itemToAdd: InventoryItem = {
-      id: newId,
-      name: newItem.name,
-      category: newItem.category,
-      stock:
-        typeof newItem.stock === "string"
-          ? parseInt(newItem.stock) || 0
-          : newItem.stock,
-    };
+    try {
+      const response = await fetch("/api/items", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          name: newItem.name,
+          category: newItem.category,
+          stock:
+            typeof newItem.stock === "string"
+              ? parseInt(newItem.stock) || 0
+              : newItem.stock,
+          userId: user?.id,
+        }),
+      });
 
-    setItems([...items, itemToAdd]);
-    setNewItem({ name: "", category: "Pig Feeds", stock: "" });
-    setIsAddDialogOpen(false);
+      const data = await response.json();
 
-    // Reset to first page if we're adding items
-    setCurrentPage(1);
+      if (data.success) {
+        // Refresh items list
+        fetchItems();
+        setNewItem({ name: "", category: "Pig Feeds", stock: "" });
+        setIsAddDialogOpen(false);
+        setCurrentPage(1);
 
-    toast({
-      title: "INVENTORY UPDATED",
-      description: `New product "${newItem.name}" successfully added to inventory system`,
-    });
+        toast({
+          title: "INVENTORY UPDATED",
+          description: `New product "${newItem.name}" successfully added to inventory system`,
+        });
+      } else {
+        toast({
+          title: "ERROR",
+          description: data.error || "Failed to add item",
+          variant: "destructive",
+        });
+      }
+    } catch (error) {
+      toast({
+        title: "ERROR",
+        description: "Failed to connect to server",
+        variant: "destructive",
+      });
+    }
   };
 
-  const handleStockChange = () => {
+  const handleStockChange = async () => {
     if (!selectedItem) return;
 
     const changeAmount =
@@ -192,36 +290,55 @@ export function Dashboard({ onLogout, user }: DashboardProps) {
         ? parseInt(stockChange) || 0
         : stockChange;
 
-    if (stockOperation === "minus" && changeAmount > selectedItem.stock) {
+    if (changeAmount <= 0) {
       toast({
-        title: "INSUFFICIENT INVENTORY",
-        description:
-          "Cannot reduce stock below zero. Please adjust quantity accordingly",
+        title: "VALIDATION ERROR",
+        description: "Please enter a valid quantity",
         variant: "destructive",
       });
       return;
     }
 
-    const updatedItems = items.map((item) => {
-      if (item.id === selectedItem.id) {
-        const newStock =
-          stockOperation === "add"
-            ? item.stock + changeAmount
-            : item.stock - changeAmount;
-        return { ...item, stock: Math.max(0, newStock) };
+    try {
+      const response = await fetch(`/api/items/${selectedItem.id}/stock`, {
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          action: stockOperation,
+          quantity: changeAmount,
+          userId: user?.id,
+        }),
+      });
+
+      const data = await response.json();
+
+      if (data.success) {
+        // Refresh items list
+        fetchItems();
+        setIsStockDialogOpen(false);
+        setStockChange("");
+
+        const action = stockOperation === "add" ? "increased" : "decreased";
+        toast({
+          title: "STOCK ADJUSTMENT COMPLETED",
+          description: `Inventory for "${selectedItem.name}" successfully ${action} by ${changeAmount} units`,
+        });
+      } else {
+        toast({
+          title: "ERROR",
+          description: data.error || "Failed to update stock",
+          variant: "destructive",
+        });
       }
-      return item;
-    });
-
-    setItems(updatedItems);
-    setIsStockDialogOpen(false);
-    setStockChange("");
-
-    const action = stockOperation === "add" ? "increased" : "decreased";
-    toast({
-      title: "STOCK ADJUSTMENT COMPLETED",
-      description: `Inventory for "${selectedItem.name}" successfully ${action} by ${changeAmount} units`,
-    });
+    } catch (error) {
+      toast({
+        title: "ERROR",
+        description: "Failed to connect to server",
+        variant: "destructive",
+      });
+    }
   };
 
   const handleRegisterUser = async () => {
@@ -272,20 +389,48 @@ export function Dashboard({ onLogout, user }: DashboardProps) {
     }
   };
 
-  const handleDeleteItem = (item: InventoryItem) => {
-    const updatedItems = items.filter((i) => i.id !== item.id);
-    setItems(updatedItems);
+  const handleDeleteItem = async (item: InventoryItem) => {
+    try {
+      const response = await fetch(`/api/items/${item.id}`, {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          userId: user?.id,
+        }),
+      });
 
-    // Adjust current page if we deleted the last item on the current page
-    const newTotalPages = Math.ceil(updatedItems.length / itemsPerPage);
-    if (currentPage > newTotalPages && newTotalPages > 0) {
-      setCurrentPage(newTotalPages);
+      const data = await response.json();
+
+      if (data.success) {
+        // Refresh items list
+        fetchItems();
+
+        // Adjust current page if needed
+        const newTotalPages = Math.ceil((items.length - 1) / itemsPerPage);
+        if (currentPage > newTotalPages && newTotalPages > 0) {
+          setCurrentPage(newTotalPages);
+        }
+
+        toast({
+          title: "PRODUCT REMOVED",
+          description: `"${item.name}" has been permanently removed from inventory database`,
+        });
+      } else {
+        toast({
+          title: "ERROR",
+          description: data.error || "Failed to delete item",
+          variant: "destructive",
+        });
+      }
+    } catch (error) {
+      toast({
+        title: "ERROR",
+        description: "Failed to connect to server",
+        variant: "destructive",
+      });
     }
-
-    toast({
-      title: "PRODUCT REMOVED",
-      description: `"${item.name}" has been permanently removed from inventory database`,
-    });
   };
 
   // Format time for analog display

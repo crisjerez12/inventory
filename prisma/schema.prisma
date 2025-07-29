@@ -14,6 +14,40 @@ model User {
   role      String   @default("Staff")
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+  
+  // Relationship to history records
+  historyRecords History[]
 
   @@map("users")
+}
+
+model Item {
+  id        Int      @id @default(autoincrement())
+  name      String
+  category  String
+  stock     Int      @default(0)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  
+  // Relationship to history records
+  historyRecords History[]
+
+  @@map("items")
+}
+
+model History {
+  id        Int      @id @default(autoincrement())
+  itemId    Int
+  userId    Int
+  itemName  String   // Store item name for historical reference
+  category  String   // Store category for historical reference
+  quantity  Int      // Amount changed (positive for add, negative for reduce)
+  action    String   // "add", "reduce", "delete", "create"
+  createdAt DateTime @default(now())
+  
+  // Relationships
+  item      Item     @relation(fields: [itemId], references: [id], onDelete: Cascade)
+  user      User     @relation(fields: [userId], references: [id])
+
+  @@map("history")
 }
