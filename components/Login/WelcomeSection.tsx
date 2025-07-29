@@ -1,4 +1,3 @@
-
 "use client";
 
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -31,7 +30,7 @@ export function WelcomeSection() {
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         <Card className="bg-green-400 border-6 border-black shadow-[8px_8px_0px_0px_#000000] rounded-none hover:translate-x-2 hover:translate-y-2 hover:shadow-[4px_4px_0px_0px_#000000] transition-all duration-300 transform rotate-1">
           <CardHeader className="pb-4">
-            <CardTitle className="flex items-center font-black text-blue-900 text-xl uppercase tracking-wide">
+            <CardTitle className="flex items-center font-black text-blue-600 text-xl uppercase tracking-wide">
               <div className="bg-white p-2 border-4 border-black mr-4">
                 <Shield className="h-8 w-8 text-green-500" />
               </div>
@@ -39,7 +38,7 @@ export function WelcomeSection() {
             </CardTitle>
           </CardHeader>
           <CardContent>
-            <p className="text-blue-900 font-bold text-base uppercase">
+            <p className="text-blue-600 font-bold text-base uppercase">
               Enterprise-grade security ensures your feed inventory data is protected with advanced encryption.
             </p>
           </CardContent>
@@ -48,7 +47,7 @@ export function WelcomeSection() {
         <Card className="bg-blue-900 border-6 border-black shadow-[8px_8px_0px_0px_#000000] rounded-none hover:translate-x-2 hover:translate-y-2 hover:shadow-[4px_4px_0px_0px_#000000] transition-all duration-300 transform -rotate-1">
           <CardHeader className="pb-4">
             <CardTitle className="flex items-center font-black text-white text-xl uppercase tracking-wide">
-              <div className="bg-green-400 p-2 border-4 border-black mr-4">
+              <div className="bg-green-200 p-2 border-4 border-black mr-4">
                 <BarChart3 className="h-8 w-8 text-blue-900" />
               </div>
               EFFICIENT
@@ -63,15 +62,15 @@ export function WelcomeSection() {
 
         <Card className="bg-white border-6 border-black shadow-[8px_8px_0px_0px_#000000] rounded-none hover:translate-x-2 hover:translate-y-2 hover:shadow-[4px_4px_0px_0px_#000000] transition-all duration-300 transform rotate-2">
           <CardHeader className="pb-4">
-            <CardTitle className="flex items-center font-black text-blue-900 text-xl uppercase tracking-wide">
-              <div className="bg-green-400 p-2 border-4 border-black mr-4">
+            <CardTitle className="flex items-center font-black text-blue-600 text-xl uppercase tracking-wide">
+              <div className="bg-green-200 p-2 border-4 border-black mr-4">
                 <Clock className="h-8 w-8 text-blue-900" />
               </div>
               REAL-TIME
             </CardTitle>
           </CardHeader>
           <CardContent>
-            <p className="text-blue-900 font-bold text-base uppercase">
+            <p className="text-blue-600 font-bold text-base uppercase">
               Live feed stock synchronization and instant updates across all your farm locations.
             </p>
           </CardContent>
