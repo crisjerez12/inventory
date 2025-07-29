@@ -47,25 +47,31 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import {
+  Plus,
+  Minus,
+  Trash2,
+  Printer,
+  User,
+} from "lucide-react";
+import { type InventoryItem } from "@/lib/inventory-data";
+import { useToast } from "@/hooks/use-toast";
+import { Sidebar } from "./Dashboard/Sidebar";
+import { MobileHeader } from "./Dashboard/MobileHeader";
+import { MobileNavigation } from "./Dashboard/MobileNavigation";
+import { DashboardStats } from "./Dashboard/DashboardStats";
+import {
   LogOut,
   Package,
   AlertTriangle,
   BarChart3,
   Box,
-  Plus,
-  Minus,
-  Trash2,
   Clock,
-  Printer,
-  User,
   Loader2,
   Download,
   Calendar,
   Edit,
   UserX,
 } from "lucide-react";
-import { type InventoryItem } from "@/lib/inventory-data";
-import { useToast } from "@/hooks/use-toast";
 
 interface User {
   id: number;
@@ -500,326 +506,63 @@ export function Dashboard({ onLogout, user }: DashboardProps) {
     }`;
   };
 
+  const renderPrintTab = () => (
+    <div className="flex items-center justify-center h-full">
+      <Card className="bg-white border-4 border-black shadow-[8px_8px_0px_0px_#000000] max-w-md mx-4">
+        <CardHeader className="bg-orange-400 border-b-4 border-black text-center">
+          <div className="flex justify-center mb-4">
+            <div className="w-12 h-12 md:w-16 md:h-16 bg-black border-4 border-white flex items-center justify-center transform rotate-12">
+              <Printer className="h-6 w-6 md:h-8 md:w-8 text-white" />
+            </div>
+          </div>
+          <CardTitle className="text-xl md:text-2xl font-black text-black transform -rotate-1">
+            PRINT FEATURE
+          </CardTitle>
+          <CardDescription className="text-black font-bold">
+            COMING SOON
+          </CardDescription>
+        </CardHeader>
+        <CardContent className="p-6 md:p-8 text-center">
+          <div className="space-y-4">
+            <div className="text-4xl md:text-6xl font-black text-gray-400 transform rotate-3">
+              🚧
+            </div>
+            <h3 className="text-lg md:text-xl font-black text-black">
+              TO BE ADDED LATER
+            </h3>
+            <p className="text-black font-bold text-sm md:text-base">
+              This feature is currently under development and will be available in a future update.
+            </p>
+            <div className="mt-6 p-4 bg-yellow-100 border-4 border-black">
+              <p className="text-sm font-bold text-black">
+                📋 PLANNED FEATURES:
+              </p>
+              <ul className="text-xs font-bold text-black mt-2 space-y-1">
+                <li>•Print Inventory Reports</li>
+                <li>•Inventory History</li>
+                <li>•Category Summaries</li>
+              </ul>
+            </div>
+          </div>
+        </CardContent>
+      </Card>
+    </div>
+  );
+
   return (
     <div className="h-screen bg-cyan-300 flex flex-col lg:flex-row overflow-hidden">
-      {/* Desktop Sidebar - Hidden on mobile/tablet */}
-      <div className="hidden lg:flex w-80 bg-yellow-400 border-r-8 border-black flex-col h-full">
-        {/* Header */}
-        <div className="p-6 border-b-4 border-black">
-          <div className="flex items-center space-x-3 mb-4">
-            <div className="w-12 h-12 bg-black border-4 border-white flex items-center justify-center transform rotate-12">
-              <Package className="h-6 w-6 text-white" />
-            </div>
-            <div>
-              <h1 className="text-2xl font-black text-black transform -rotate-2">
-                INVENTORY SYSTEM
-              </h1>
-              <p className="text-sm text-black font-bold">
-                MANAGE YOUR ANIMAL FEEDS
-              </p>
-            </div>
-          </div>
-        </div>
-
-        {/* Navigation */}
-        <div className="flex-1 p-6 overflow-y-auto">
-          <div className="space-y-4">
-            <Button
-              onClick={() => setActiveTab("dashboard")}
-              className={getTabButtonClass("dashboard")}
-            >
-              <BarChart3 className="h-4 w-4 lg:mr-2" />
-              <span className="text-xs lg:text-base">DASHBOARD</span>
-            </Button>
-            <Button
-              onClick={() => setActiveTab("items")}
-              className={getTabButtonClass("items")}
-            >
-              <Box className="h-4 w-4 lg:mr-2" />
-              <span className="text-xs lg:text-base">ITEMS</span>
-            </Button>
-            <Button
-              onClick={() => setActiveTab("print")}
-              className={getTabButtonClass("print")}
-            >
-              <Printer className="h-4 w-4 lg:mr-2" />
-              <span className="text-xs lg:text-base">PRINT</span>
-            </Button>
-            {user?.role === "Admin" && (
-              <Button
-                onClick={() => setActiveTab("account")}
-                className={getTabButtonClass("account")}
-              >
-                <User className="h-4 w-4 lg:mr-2" />
-                <span className="text-xs lg:text-base">ACCOUNT</span>
-              </Button>
-            )}
-          </div>
-        </div>
-
-        {/* Time and Logout */}
-        <div className="p-6 border-t-4 border-black space-y-4">
-          {/* Current Time */}
-          <div className="bg-gradient-to-br from-gray-800 to-black text-white p-4 border-4 border-white shadow-[6px_6px_0px_0px_#ffffff] transform -rotate-1">
-            {/* Analog Clock Design */}
-            <div className="text-center space-y-2">
-              {/* Clock Face */}
-              <div className="relative w-16 h-16 mx-auto mb-3">
-                <div className="absolute inset-0 bg-white border-4 border-gray-300 rounded-full"></div>
-                <div className="absolute inset-2 bg-gray-100 border-2 border-gray-400 rounded-full"></div>
-
-                {/* Clock Numbers */}
-                <div className="absolute top-1 left-1/2 transform -translate-x-1/2 text-xs font-black text-black">
-                  12
-                </div>
-                <div className="absolute right-1 top-1/2 transform -translate-y-1/2 text-xs font-black text-black">
-                  3
-                </div>
-                <div className="absolute bottom-1 left-1/2 transform -translate-x-1/2 text-xs font-black text-black">
-                  6
-                </div>
-                <div className="absolute left-1 top-1/2 transform -translate-y-1/2 text-xs font-black text-black">
-                  9
-                </div>
-
-                {/* Clock Hands */}
-                <div
-                  className="absolute top-1/2 left-1/2 w-0.5 bg-black origin-bottom transform -translate-x-1/2 -translate-y-full"
-                  style={{
-                    height: "20px",
-                    transform: `translate(-50%, -100%) rotate(${
-                      (currentTime.getHours() % 12) * 30 +
-                      currentTime.getMinutes() * 0.5
-                    }deg)`,
-                  }}
-                ></div>
-                <div
-                  className="absolute top-1/2 left-1/2 w-0.5 bg-black origin-bottom transform -translate-x-1/2 -translate-y-full"
-                  style={{
-                    height: "24px",
-                    transform: `translate(-50%, -100%) rotate(${
-                      currentTime.getMinutes() * 6
-                    }deg)`,
-                  }}
-                ></div>
-
-                {/* Center Dot */}
-                <div className="absolute top-1/2 left-1/2 w-2 h-2 bg-red-500 border border-black rounded-full transform -translate-x-1/2 -translate-y-1/2"></div>
-              </div>
-
-              {/* Digital Time */}
-              <div className="space-y-1">
-                <div className="font-black text-lg tracking-wider">
-                  {formatTime(currentTime).time}
-                </div>
-                <div className="font-bold text-sm text-yellow-300">
-                  {formatTime(currentTime).day}
-                </div>
-                <div className="font-bold text-xs text-gray-300">
-                  {formatTime(currentTime).date}
-                </div>
-              </div>
-            </div>
-          </div>
-
-          {/* Logout Button */}
-          <Button
-            onClick={onLogout}
-            className="w-full bg-red-400 hover:bg-red-500 text-black font-black border-4 border-black shadow-[4px_4px_0px_0px_#000000] hover:shadow-[2px_2px_0px_0px_#000000] hover:translate-x-1 hover:translate-y-1 transition-all"
-          >
-            <LogOut className="h-4 w-4 mr-2" />
-            LOGOUT
-          </Button>
-        </div>
-      </div>
-
-      {/* Mobile/Tablet Header */}
-      <div className="lg:hidden bg-yellow-400 border-b-4 border-black p-4">
-        <div className="flex items-center justify-between">
-          <div className="flex items-center space-x-3">
-            <div className="w-10 h-10 bg-black border-4 border-white flex items-center justify-center transform rotate-12">
-              <Package className="h-5 w-5 text-white" />
-            </div>
-            <div>
-              <h1 className="text-lg md:text-xl font-black text-black transform -rotate-2">
-                FEED INVENTORY
-              </h1>
-              <p className="text-xs md:text-sm text-black font-bold">
-                MANAGE YOUR ANIMAL FEEDS
-              </p>
-            </div>
-          </div>
-          <Button
-            onClick={onLogout}
-            className="bg-red-400 hover:bg-red-500 text-black font-black border-4 border-black shadow-[4px_4px_0px_0px_#000000] hover:shadow-[2px_2px_0px_0px_#000000] hover:translate-x-1 hover:translate-y-1 transition-all px-3 py-2"
-          >
-            <LogOut className="h-4 w-4" />
-          </Button>
-        </div>
-      </div>
+      <Sidebar 
+        activeTab={activeTab} 
+        setActiveTab={setActiveTab} 
+        onLogout={onLogout} 
+        user={user} 
+      />
+      <MobileHeader onLogout={onLogout} />
 
       {/* Main Content */}
       <div className="flex-1 p-4 md:p-6 lg:p-8 overflow-y-auto pb-20 lg:pb-8">
         {activeTab === "dashboard" && (
-          <div className="space-y-4 md:space-y-6">
-            {/* Statistics Cards */}
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-8">
-              <Card className="bg-green-400 border-4 border-black shadow-[8px_8px_0px_0px_#000000] transform hover:translate-x-2 hover:translate-y-2 hover:shadow-[4px_4px_0px_0px_#000000] transition-all">
-                <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                  <CardTitle className="text-base md:text-lg font-black text-black">
-                    TOTAL ITEMS
-                  </CardTitle>
-                  <Package className="h-6 w-6 md:h-8 md:w-8 text-black" />
-                </CardHeader>
-                <CardContent>
-                  <div className="text-3xl md:text-5xl font-black text-black transform -rotate-3">
-                    {totalItems}
-                  </div>
-                  <p className="text-xs md:text-sm text-black font-bold mt-2">
-                    ITEMS IN INVENTORY
-                  </p>
-                </CardContent>
-              </Card>
-
-              <Card className="bg-red-400 border-4 border-black shadow-[8px_8px_0px_0px_#000000] transform hover:translate-x-2 hover:translate-y-2 hover:shadow-[4px_4px_0px_0px_#000000] transition-all">
-                <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                  <CardTitle className="text-base md:text-lg font-black text-black">
-                    OUT OF STOCK
-                  </CardTitle>
-                  <AlertTriangle className="h-6 w-6 md:h-8 md:w-8 text-black" />
-                </CardHeader>
-                <CardContent>
-                  <div className="text-3xl md:text-5xl font-black text-black transform rotate-3">
-                    {outOfStockItems}
-                  </div>
-                  <p className="text-xs md:text-sm text-black font-bold mt-2">
-                    ITEMS NEED RESTOCKING
-                  </p>
-                </CardContent>
-              </Card>
-            </div>
-
-            {/* Category Overview */}
-            <Card className="bg-white border-4 border-black shadow-[8px_8px_0px_0px_#000000]">
-              <CardHeader className="bg-gradient-to-r from-blue-500 to-purple-600 border-b-4 border-black">
-                <CardTitle className="text-xl md:text-2xl font-black text-black">
-                  📊 CATEGORY ANALYTICS
-                </CardTitle>
-                <CardDescription className="text-white font-bold opacity-90 text-sm md:text-base">
-                  Comprehensive inventory distribution across all product
-                  categories
-                </CardDescription>
-              </CardHeader>
-              <CardContent className="p-4 md:p-6">
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6">
-                  {Object.entries(categoryColors).map(
-                    ([category, colorClass]) => {
-                      const categoryItems = items.filter(
-                        (item) => item.category === category
-                      );
-                      const outOfStockInCategory = categoryItems.filter(
-                        (item) => item.stock === 0
-                      ).length;
-                      const totalStock = categoryItems.reduce(
-                        (sum, item) => sum + item.stock,
-                        0
-                      );
-
-                      return (
-                        <div
-                          key={category}
-                          className="relative overflow-hidden bg-gradient-to-br from-white to-gray-50 border-4 border-black shadow-[6px_6px_0px_0px_#000000] hover:shadow-[8px_8px_0px_0px_#000000] hover:translate-x-[-2px] hover:translate-y-[-2px] transition-all duration-200"
-                        >
-                          {/* Category Header */}
-                          <div
-                            className={`${colorClass} p-3 border-b-4 border-black`}
-                          >
-                            <div className="flex items-center justify-between">
-                              <h3 className="font-black text-white text-xs md:text-sm tracking-wide">
-                                {category.toUpperCase()}
-                              </h3>
-                              <div className="w-6 h-6 md:w-8 md:h-8 bg-white border-2 border-black rounded-full flex items-center justify-center">
-                                <Package className="w-3 h-3 md:w-4 md:h-4 text-black" />
-                              </div>
-                            </div>
-                          </div>
-
-                          {/* Stats Grid */}
-                          <div className="p-3 md:p-4">
-                            <div className="grid grid-cols-2 gap-2 md:gap-3 mb-3">
-                              <div className="text-center p-2 bg-blue-50 border-2 border-black">
-                                <div className="font-black text-blue-600 text-lg md:text-xl">
-                                  {categoryItems.length}
-                                </div>
-                                <div className="font-bold text-black text-xs">
-                                  PRODUCTS
-                                </div>
-                              </div>
-                              <div className="text-center p-2 bg-green-50 border-2 border-black">
-                                <div className="font-black text-green-600 text-lg md:text-xl">
-                                  {totalStock}
-                                </div>
-                                <div className="font-bold text-black text-xs">
-                                  TOTAL STOCK
-                                </div>
-                              </div>
-                            </div>
-
-                            {/* Status Bar */}
-                            <div
-                              className={`w-full h-3 border-2 border-black relative overflow-hidden ${
-                                outOfStockInCategory === categoryItems.length
-                                  ? "bg-red-200"
-                                  : "bg-green-200"
-                              }`}
-                            >
-                              <div
-                                className="h-full bg-green-500 transition-all duration-500"
-                                style={{
-                                  width: `${
-                                    categoryItems.length > 0
-                                      ? ((categoryItems.length -
-                                          outOfStockInCategory) /
-                                          categoryItems.length) *
-                                        100
-                                      : 0
-                                  }%`,
-                                }}
-                              ></div>
-                            </div>
-
-                            <div className="flex justify-between mt-2 text-xs">
-                              <span className="font-bold text-green-600">
-                                {categoryItems.length - outOfStockInCategory}{" "}
-                                Available
-                              </span>
-                              <span className="font-bold text-red-600">
-                                {outOfStockInCategory} Out
-                              </span>
-                            </div>
-                          </div>
-
-                          {/* Status Indicator */}
-                          <div className="absolute top-2 right-2">
-                            <div
-                              className={`w-3 h-3 rounded-full border-2 border-white ${
-                                outOfStockInCategory === 0
-                                  ? "bg-green-500"
-                                  : outOfStockInCategory ===
-                                    categoryItems.length
-                                  ? "bg-red-500"
-                                  : "bg-yellow-500"
-                              }`}
-                            ></div>
-                          </div>
-                        </div>
-                      );
-                    }
-                  )}
-                </div>
-              </CardContent>
-            </Card>
-          </div>
+          <DashboardStats items={items} totalItems={totalItems} outOfStockItems={outOfStockItems} categoryColors={categoryColors}/>
         )}
 
         {activeTab === "items" && (
@@ -833,7 +576,6 @@ export function Dashboard({ onLogout, user }: DashboardProps) {
               </CardHeader>
               <CardContent className="p-4 md:p-6">
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                  {/* Search */}
                   <div>
                     <Label className="font-black text-black mb-2 block text-sm">
                       SEARCH PRODUCTS
@@ -846,28 +588,18 @@ export function Dashboard({ onLogout, user }: DashboardProps) {
                     />
                   </div>
 
-                  {/* Category Filter */}
                   <div>
                     <Label className="font-black text-black mb-2 block text-sm">
                       FILTER BY CATEGORY
                     </Label>
-                    <Select
-                      value={categoryFilter}
-                      onValueChange={setCategoryFilter}
-                    >
+                    <Select value={categoryFilter} onValueChange={setCategoryFilter}>
                       <SelectTrigger className="border-4 border-black font-bold shadow-[4px_4px_0px_0px_#000000]">
                         <SelectValue />
                       </SelectTrigger>
                       <SelectContent className="border-4 border-black">
-                        <SelectItem value="All" className="font-bold">
-                          All Categories
-                        </SelectItem>
+                        <SelectItem value="All" className="font-bold">All Categories</SelectItem>
                         {Object.keys(categoryColors).map((category) => (
-                          <SelectItem
-                            key={category}
-                            value={category}
-                            className="font-bold"
-                          >
+                          <SelectItem key={category} value={category} className="font-bold">
                             {category}
                           </SelectItem>
                         ))}
@@ -875,7 +607,6 @@ export function Dashboard({ onLogout, user }: DashboardProps) {
                     </Select>
                   </div>
 
-                  {/* Stock Filter */}
                   <div>
                     <Label className="font-black text-black mb-2 block text-sm">
                       FILTER BY STOCK
@@ -885,15 +616,9 @@ export function Dashboard({ onLogout, user }: DashboardProps) {
                         <SelectValue />
                       </SelectTrigger>
                       <SelectContent className="border-4 border-black">
-                        <SelectItem value="All" className="font-bold">
-                          All Items
-                        </SelectItem>
-                        <SelectItem value="In Stock" className="font-bold">
-                          In Stock Only
-                        </SelectItem>
-                        <SelectItem value="Out of Stock" className="font-bold">
-                          Out of Stock Only
-                        </SelectItem>
+                        <SelectItem value="All" className="font-bold">All Items</SelectItem>
+                        <SelectItem value="In Stock" className="font-bold">In Stock Only</SelectItem>
+                        <SelectItem value="Out of Stock" className="font-bold">Out of Stock Only</SelectItem>
                       </SelectContent>
                     </Select>
                   </div>
@@ -901,6 +626,7 @@ export function Dashboard({ onLogout, user }: DashboardProps) {
               </CardContent>
             </Card>
 
+            {/* Items Table */}
             <Card className="bg-white border-4 border-black shadow-[8px_8px_0px_0px_#000000]">
               <CardHeader className="bg-green-400 border-b-4 border-black">
                 <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
@@ -909,14 +635,10 @@ export function Dashboard({ onLogout, user }: DashboardProps) {
                       INVENTORY ITEMS
                     </CardTitle>
                     <CardDescription className="text-black font-bold text-sm md:text-base">
-                      MANAGE YOUR PRODUCT INVENTORY ({filteredItems.length}{" "}
-                      items found)
+                      MANAGE YOUR PRODUCT INVENTORY ({filteredItems.length} items found)
                     </CardDescription>
                   </div>
-                  <Dialog
-                    open={isAddDialogOpen}
-                    onOpenChange={setIsAddDialogOpen}
-                  >
+                  <Dialog open={isAddDialogOpen} onOpenChange={setIsAddDialogOpen}>
                     <DialogTrigger asChild>
                       <Button className="bg-blue-400 hover:bg-blue-500 text-black font-black border-4 border-black shadow-[4px_4px_0px_0px_#000000] hover:shadow-[2px_2px_0px_0px_#000000] hover:translate-x-1 hover:translate-y-1 transition-all">
                         <Plus className="h-4 w-4 mr-2" />
@@ -925,54 +647,38 @@ export function Dashboard({ onLogout, user }: DashboardProps) {
                     </DialogTrigger>
                     <DialogContent className="bg-white border-4 border-black shadow-[8px_8px_0px_0px_#000000] max-w-md mx-4">
                       <DialogHeader>
-                        <DialogTitle className="font-black text-black">
-                          ADD NEW ITEM
-                        </DialogTitle>
+                        <DialogTitle className="font-black text-black">ADD NEW ITEM</DialogTitle>
                         <DialogDescription className="font-bold text-black">
                           Enter product details for inventory registration
                         </DialogDescription>
                       </DialogHeader>
                       <div className="grid gap-4 py-4">
                         <div className="grid grid-cols-4 items-center gap-4">
-                          <Label
-                            htmlFor="name"
-                            className="text-right font-black text-black text-sm"
-                          >
+                          <Label htmlFor="name" className="text-right font-black text-black text-sm">
                             Name
                           </Label>
                           <Input
                             id="name"
                             value={newItem.name}
-                            onChange={(e) =>
-                              setNewItem({ ...newItem, name: e.target.value })
-                            }
+                            onChange={(e) => setNewItem({ ...newItem, name: e.target.value })}
                             className="col-span-3 border-4 border-black font-bold"
                             placeholder="Enter product name"
                           />
                         </div>
                         <div className="grid grid-cols-4 items-center gap-4">
-                          <Label
-                            htmlFor="category"
-                            className="text-right font-black text-black text-sm"
-                          >
+                          <Label htmlFor="category" className="text-right font-black text-black text-sm">
                             Category
                           </Label>
                           <Select
                             value={newItem.category}
-                            onValueChange={(value) =>
-                              setNewItem({ ...newItem, category: value })
-                            }
+                            onValueChange={(value) => setNewItem({ ...newItem, category: value })}
                           >
                             <SelectTrigger className="col-span-3 border-4 border-black font-bold">
                               <SelectValue />
                             </SelectTrigger>
                             <SelectContent className="border-4 border-black">
                               {Object.keys(categoryColors).map((category) => (
-                                <SelectItem
-                                  key={category}
-                                  value={category}
-                                  className="font-bold"
-                                >
+                                <SelectItem key={category} value={category} className="font-bold">
                                   {category}
                                 </SelectItem>
                               ))}
@@ -980,22 +686,14 @@ export function Dashboard({ onLogout, user }: DashboardProps) {
                           </Select>
                         </div>
                         <div className="grid grid-cols-4 items-center gap-4">
-                          <Label
-                            htmlFor="stock"
-                            className="text-right font-black text-black text-sm"
-                          >
+                          <Label htmlFor="stock" className="text-right font-black text-black text-sm">
                             Stock
                           </Label>
                           <Input
                             id="stock"
                             type="number"
                             value={newItem.stock}
-                            onChange={(e) =>
-                              setNewItem({
-                                ...newItem,
-                                stock: e.target.value,
-                              })
-                            }
+                            onChange={(e) => setNewItem({ ...newItem, stock: e.target.value })}
                             onFocus={() => handleInputFocus("stock")}
                             className="col-span-3 border-4 border-black font-bold"
                             placeholder="Enter initial stock"
@@ -1026,35 +724,20 @@ export function Dashboard({ onLogout, user }: DashboardProps) {
                   <Table>
                     <TableHeader>
                       <TableRow className="border-b-4 border-black">
-                        <TableHead className="font-black text-black text-lg">
-                          PRODUCT NAME
-                        </TableHead>
-                        <TableHead className="font-black text-black text-lg">
-                          CATEGORY
-                        </TableHead>
-                        <TableHead className="font-black text-black text-lg">
-                          STOCK
-                        </TableHead>
-                        <TableHead className="font-black text-black text-lg">
-                          ACTIONS
-                        </TableHead>
+                        <TableHead className="font-black text-black text-lg">PRODUCT NAME</TableHead>
+                        <TableHead className="font-black text-black text-lg">CATEGORY</TableHead>
+                        <TableHead className="font-black text-black text-lg">STOCK</TableHead>
+                        <TableHead className="font-black text-black text-lg">ACTIONS</TableHead>
                       </TableRow>
                     </TableHeader>
                     <TableBody>
                       {currentItems.map((item) => (
-                        <TableRow
-                          key={item.id}
-                          className="border-b-2 border-black"
-                        >
-                          <TableCell className="font-bold text-black">
-                            {item.name}
-                          </TableCell>
+                        <TableRow key={item.id} className="border-b-2 border-black">
+                          <TableCell className="font-bold text-black">{item.name}</TableCell>
                           <TableCell>
                             <span
                               className={`px-2 py-1 border-2 border-black font-black text-black text-xs ${
-                                categoryColors[
-                                  item.category as keyof typeof categoryColors
-                                ]
+                                categoryColors[item.category as keyof typeof categoryColors]
                               }`}
                             >
                               {item.category}
@@ -1099,8 +782,7 @@ export function Dashboard({ onLogout, user }: DashboardProps) {
                                       CONFIRM DELETION
                                     </AlertDialogTitle>
                                     <AlertDialogDescription className="font-bold text-black">
-                                      Are you sure you want to permanently
-                                      remove "{item.name}" from the inventory
+                                      Are you sure you want to permanently remove "{item.name}" from the inventory
                                       system? This action cannot be undone.
                                     </AlertDialogDescription>
                                   </AlertDialogHeader>
@@ -1133,35 +815,25 @@ export function Dashboard({ onLogout, user }: DashboardProps) {
                       className="bg-gradient-to-br from-white to-gray-50 border-4 border-black shadow-[6px_6px_0px_0px_#000000] hover:shadow-[8px_8px_0px_0px_#000000] hover:translate-x-[-2px] hover:translate-y-[-2px] transition-all duration-200"
                     >
                       <CardContent className="p-4">
-                        {/* First Row - Product Name */}
                         <div className="mb-3">
-                          <h3 className="font-black text-black text-lg leading-tight">
-                            {item.name}
-                          </h3>
+                          <h3 className="font-black text-black text-lg leading-tight">{item.name}</h3>
                         </div>
 
-                        {/* Second Row - Category and Stock */}
                         <div className="flex justify-between items-center mb-4">
                           <div>
                             <span
                               className={`px-3 py-1 border-2 border-black font-black text-black text-xs ${
-                                categoryColors[
-                                  item.category as keyof typeof categoryColors
-                                ]
+                                categoryColors[item.category as keyof typeof categoryColors]
                               }`}
                             >
                               {item.category}
                             </span>
                           </div>
                           <div className="text-right">
-                            <div className="text-xs font-bold text-gray-600 mb-1">
-                              STOCK
-                            </div>
+                            <div className="text-xs font-bold text-gray-600 mb-1">STOCK</div>
                             <div className="font-black text-black text-lg">
                               {item.stock === 0 ? (
-                                <span className="text-red-600 text-sm">
-                                  OUT OF STOCK
-                                </span>
+                                <span className="text-red-600 text-sm">OUT OF STOCK</span>
                               ) : (
                                 item.stock
                               )}
@@ -1169,7 +841,6 @@ export function Dashboard({ onLogout, user }: DashboardProps) {
                           </div>
                         </div>
 
-                        {/* Third Row - Action Buttons */}
                         <div className="flex justify-center space-x-3">
                           <Button
                             onClick={() => openStockDialog(item, "add")}
@@ -1204,9 +875,7 @@ export function Dashboard({ onLogout, user }: DashboardProps) {
                                   CONFIRM DELETION
                                 </AlertDialogTitle>
                                 <AlertDialogDescription className="font-bold text-black">
-                                  Are you sure you want to permanently remove "
-                                  {item.name}" from the inventory system? This
-                                  action cannot be undone.
+                                  Are you sure you want to permanently remove "{item.name}" from the inventory system? This action cannot be undone.
                                 </AlertDialogDescription>
                               </AlertDialogHeader>
                               <AlertDialogFooter>
@@ -1232,9 +901,7 @@ export function Dashboard({ onLogout, user }: DashboardProps) {
                 {totalPages > 1 && (
                   <div className="flex flex-col sm:flex-row justify-center items-center space-y-4 sm:space-y-0 sm:space-x-4 mt-6 p-4 bg-gray-100 border-4 border-black">
                     <Button
-                      onClick={() =>
-                        setCurrentPage(Math.max(1, currentPage - 1))
-                      }
+                      onClick={() => setCurrentPage(Math.max(1, currentPage - 1))}
                       disabled={currentPage === 1}
                       className="bg-blue-400 hover:bg-blue-500 disabled:bg-gray-300 disabled:cursor-not-allowed text-black font-black border-4 border-black shadow-[4px_4px_0px_0px_#000000] hover:shadow-[2px_2px_0px_0px_#000000] hover:translate-x-1 hover:translate-y-1 transition-all disabled:shadow-none disabled:translate-x-0 disabled:translate-y-0"
                     >
@@ -1242,27 +909,23 @@ export function Dashboard({ onLogout, user }: DashboardProps) {
                     </Button>
 
                     <div className="flex items-center space-x-2 overflow-x-auto">
-                      {Array.from({ length: totalPages }, (_, i) => i + 1).map(
-                        (page) => (
-                          <Button
-                            key={page}
-                            onClick={() => setCurrentPage(page)}
-                            className={`w-10 h-10 md:w-12 md:h-12 font-black border-4 border-black shadow-[4px_4px_0px_0px_#000000] hover:shadow-[2px_2px_0px_0px_#000000] hover:translate-x-1 hover:translate-y-1 transition-all ${
-                              currentPage === page
-                                ? "bg-green-400 text-black"
-                                : "bg-white hover:bg-green-400 text-black"
-                            }`}
-                          >
-                            {page}
-                          </Button>
-                        )
-                      )}
+                      {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (
+                        <Button
+                          key={page}
+                          onClick={() => setCurrentPage(page)}
+                          className={`w-10 h-10 md:w-12 md:h-12 font-black border-4 border-black shadow-[4px_4px_0px_0px_#000000] hover:shadow-[2px_2px_0px_0px_#000000] hover:translate-x-1 hover:translate-y-1 transition-all ${
+                            currentPage === page
+                              ? "bg-green-400 text-black"
+                              : "bg-white hover:bg-green-400 text-black"
+                          }`}
+                        >
+                          {page}
+                        </Button>
+                      ))}
                     </div>
 
                     <Button
-                      onClick={() =>
-                        setCurrentPage(Math.min(totalPages, currentPage + 1))
-                      }
+                      onClick={() => setCurrentPage(Math.min(totalPages, currentPage + 1))}
                       disabled={currentPage === totalPages}
                       className="bg-blue-400 hover:bg-blue-500 disabled:bg-gray-300 disabled:cursor-not-allowed text-black font-black border-4 border-black shadow-[4px_4px_0px_0px_#000000] hover:shadow-[2px_2px_0px_0px_#000000] hover:translate-x-1 hover:translate-y-1 transition-all disabled:shadow-none disabled:translate-x-0 disabled:translate-y-0"
                     >
@@ -1271,11 +934,9 @@ export function Dashboard({ onLogout, user }: DashboardProps) {
                   </div>
                 )}
 
-                {/* Items count info */}
                 <div className="mt-4 text-center">
                   <p className="font-bold text-black text-sm">
-                    Showing {startIndex + 1}-
-                    {Math.min(endIndex, filteredItems.length)} of{" "}
+                    Showing {startIndex + 1}-{Math.min(endIndex, filteredItems.length)} of{" "}
                     {filteredItems.length} items
                   </p>
                 </div>
@@ -1301,15 +962,11 @@ export function Dashboard({ onLogout, user }: DashboardProps) {
                   <div className="space-y-4">
                     <div className="p-4 bg-green-50 border-4 border-black">
                       <h3 className="font-black text-black mb-2">USERNAME</h3>
-                      <p className="text-lg font-bold text-green-600">
-                        {user.username}
-                      </p>
+                      <p className="text-lg font-bold text-green-600">{user.username}</p>
                     </div>
                     <div className="p-4 bg-purple-50 border-4 border-black">
                       <h3 className="font-black text-black mb-2">ROLE</h3>
-                      <p className="text-lg font-bold text-purple-600">
-                        {user.role}
-                      </p>
+                      <p className="text-lg font-bold text-purple-600">{user.role}</p>
                     </div>
                   </div>
                   <div className="space-y-4">
@@ -1320,89 +977,11 @@ export function Dashboard({ onLogout, user }: DashboardProps) {
                       </p>
                     </div>
                     <div className="p-4 bg-orange-50 border-4 border-black">
-                      <h3 className="font-black text-black mb-2">
-                        LAST UPDATED
-                      </h3>
+                      <h3 className="font-black text-black mb-2">LAST UPDATED</h3>
                       <p className="text-sm font-bold text-orange-600">
                         {new Date(user.updatedAt).toLocaleDateString()}
                       </p>
                     </div>
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
-
-            {/* System Guidelines */}
-            <Card className="bg-white border-4 border-black shadow-[8px_8px_0px_0px_#000000]">
-              <CardHeader className="bg-green-400 border-b-4 border-black">
-                <CardTitle className="text-xl md:text-2xl font-black text-black">
-                  📋 SYSTEM GUIDELINES
-                </CardTitle>
-                <CardDescription className="text-black font-bold">
-                  How to use the inventory management system effectively
-                </CardDescription>
-              </CardHeader>
-              <CardContent className="p-6">
-                <div className="space-y-6">
-                  <div className="p-4 bg-yellow-50 border-4 border-black">
-                    <h3 className="font-black text-black mb-3 flex items-center gap-2">
-                      <Package className="h-5 w-5" />
-                      INVENTORY MANAGEMENT
-                    </h3>
-                    <ul className="space-y-2 text-sm font-bold text-black">
-                      <li>
-                        • Add new products using the "ADD ITEM" button in the
-                        Items tab
-                      </li>
-                      <li>
-                        • Use the search and filter options to find specific
-                        products
-                      </li>
-                      <li>
-                        • Monitor stock levels and restock when items are
-                        running low
-                      </li>
-                      <li>
-                        • Update stock quantities using the + and - buttons
-                      </li>
-                    </ul>
-                  </div>
-
-                  <div className="p-4 bg-blue-50 border-4 border-black">
-                    <h3 className="font-black text-black mb-3 flex items-center gap-2">
-                      <User className="h-5 w-5" />
-                      USER ROLES
-                    </h3>
-                    <ul className="space-y-2 text-sm font-bold text-black">
-                      <li>
-                        • <strong>Admin:</strong> Full access to all features
-                        including user management
-                      </li>
-                      <li>
-                        • <strong>Staff:</strong> Access to inventory management
-                        and reporting
-                      </li>
-                      <li>
-                        • Only Admin users can access the Account tab and
-                        register new users
-                      </li>
-                    </ul>
-                  </div>
-
-                  <div className="p-4 bg-red-50 border-4 border-black">
-                    <h3 className="font-black text-black mb-3 flex items-center gap-2">
-                      <AlertTriangle className="h-5 w-5" />
-                      IMPORTANT NOTES
-                    </h3>
-                    <ul className="space-y-2 text-sm font-bold text-black">
-                      <li>
-                        • Always double-check stock quantities before making
-                        changes
-                      </li>
-                      <li>• Keep product names clear and descriptive</li>
-                      <li>• Regularly monitor out-of-stock items</li>
-                      <li>• Contact IT support for technical issues</li>
-                    </ul>
                   </div>
                 </div>
               </CardContent>
@@ -1420,10 +999,7 @@ export function Dashboard({ onLogout, user }: DashboardProps) {
                       Register new staff accounts (Admin only)
                     </CardDescription>
                   </div>
-                  <Dialog
-                    open={isRegisterDialogOpen}
-                    onOpenChange={setIsRegisterDialogOpen}
-                  >
+                  <Dialog open={isRegisterDialogOpen} onOpenChange={setIsRegisterDialogOpen}>
                     <DialogTrigger asChild>
                       <Button className="bg-green-400 hover:bg-green-500 text-black font-black border-4 border-black shadow-[4px_4px_0px_0px_#000000] hover:shadow-[2px_2px_0px_0px_#000000] hover:translate-x-1 hover:translate-y-1 transition-all">
                         <Plus className="h-4 w-4 mr-2" />
@@ -1432,60 +1008,36 @@ export function Dashboard({ onLogout, user }: DashboardProps) {
                     </DialogTrigger>
                     <DialogContent className="bg-white border-4 border-black shadow-[8px_8px_0px_0px_#000000] max-w-md mx-4">
                       <DialogHeader>
-                        <DialogTitle className="font-black text-black">
-                          REGISTER NEW STAFF
-                        </DialogTitle>
+                        <DialogTitle className="font-black text-black">REGISTER NEW STAFF</DialogTitle>
                         <DialogDescription className="font-bold text-black">
                           Create a new staff account with default Staff role
                         </DialogDescription>
                       </DialogHeader>
                       <div className="grid gap-4 py-4">
                         <div className="grid grid-cols-4 items-center gap-4">
-                          <Label
-                            htmlFor="newUsername"
-                            className="text-right font-black text-black text-sm"
-                          >
+                          <Label htmlFor="newUsername" className="text-right font-black text-black text-sm">
                             Username
                           </Label>
                           <Input
                             id="newUsername"
                             value={newUser.username}
-                            onChange={(e) =>
-                              setNewUser({
-                                ...newUser,
-                                username: e.target.value,
-                              })
-                            }
+                            onChange={(e) => setNewUser({ ...newUser, username: e.target.value })}
                             className="col-span-3 border-4 border-black font-bold"
                             placeholder="Enter username"
                           />
                         </div>
                         <div className="grid grid-cols-4 items-center gap-4">
-                          <Label
-                            htmlFor="newPassword"
-                            className="text-right font-black text-black text-sm"
-                          >
+                          <Label htmlFor="newPassword" className="text-right font-black text-black text-sm">
                             Password
                           </Label>
                           <Input
                             id="newPassword"
                             type="password"
                             value={newUser.password}
-                            onChange={(e) =>
-                              setNewUser({
-                                ...newUser,
-                                password: e.target.value,
-                              })
-                            }
+                            onChange={(e) => setNewUser({ ...newUser, password: e.target.value })}
                             className="col-span-3 border-4 border-black font-bold"
                             placeholder="Enter password"
                           />
-                        </div>
-                        <div className="p-3 bg-blue-50 border-2 border-black">
-                          <p className="text-sm font-bold text-black">
-                            <strong>Note:</strong> New accounts will be created
-                            with Staff role by default.
-                          </p>
                         </div>
                       </div>
                       <DialogFooter>
@@ -1506,109 +1058,18 @@ export function Dashboard({ onLogout, user }: DashboardProps) {
                   </Dialog>
                 </div>
               </CardHeader>
-              <CardContent className="p-6">
-                <div className="p-4 bg-gray-50 border-4 border-black">
-                  <h3 className="font-black text-black mb-3">
-                    REGISTRATION PROCESS
-                  </h3>
-                  <ol className="space-y-2 text-sm font-bold text-black">
-                    <li>1. Click the "REGISTER USER" button above</li>
-                    <li>2. Enter a unique username for the new staff member</li>
-                    <li>3. Set a secure password for the account</li>
-                    <li>
-                      4. The account will be created with Staff role
-                      automatically
-                    </li>
-                    <li>
-                      5. New users can immediately log in with their credentials
-                    </li>
-                  </ol>
-                </div>
-              </CardContent>
             </Card>
           </div>
         )}
 
-        {activeTab === "print" && (
-          <div className="flex items-center justify-center h-full">
-            <Card className="bg-white border-4 border-black shadow-[8px_8px_0px_0px_#000000] max-w-md mx-4">
-              <CardHeader className="bg-orange-400 border-b-4 border-black text-center">
-                <div className="flex justify-center mb-4">
-                  <div className="w-12 h-12 md:w-16 md:h-16 bg-black border-4 border-white flex items-center justify-center transform rotate-12">
-                    <Printer className="h-6 w-6 md:h-8 md:w-8 text-white" />
-                  </div>
-                </div>
-                <CardTitle className="text-xl md:text-2xl font-black text-black transform -rotate-1">
-                  PRINT FEATURE
-                </CardTitle>
-                <CardDescription className="text-black font-bold">
-                  COMING SOON
-                </CardDescription>
-              </CardHeader>
-              <CardContent className="p-6 md:p-8 text-center">
-                <div className="space-y-4">
-                  <div className="text-4xl md:text-6xl font-black text-gray-400 transform rotate-3">
-                    🚧
-                  </div>
-                  <h3 className="text-lg md:text-xl font-black text-black">
-                    TO BE ADDED LATER
-                  </h3>
-                  <p className="text-black font-bold text-sm md:text-base">
-                    This feature is currently under development and will be
-                    available in a future update.
-                  </p>
-                  <div className="mt-6 p-4 bg-yellow-100 border-4 border-black">
-                    <p className="text-sm font-bold text-black">
-                      📋 PLANNED FEATURES:
-                    </p>
-                    <ul className="text-xs font-bold text-black mt-2 space-y-1">
-                      <li>•Print Inventory Reports</li>
-                      <li>•Inventory History</li>
-                      <li>•Category Summaries</li>
-                    </ul>
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
-          </div>
-        )}
+        {activeTab === "print" && renderPrintTab()}
       </div>
 
-      {/* Mobile Bottom Navigation - Instagram Style */}
-      <div className="lg:hidden fixed bottom-0 left-0 right-0 bg-yellow-400 border-t-4 border-black p-2">
-        <div className="flex justify-around items-center">
-          <Button
-            onClick={() => setActiveTab("dashboard")}
-            className={getTabButtonClass("dashboard")}
-          >
-            <BarChart3 className="h-5 w-5 mb-1" />
-            <span className="text-xs font-black">DASHBOARD</span>
-          </Button>
-          <Button
-            onClick={() => setActiveTab("items")}
-            className={getTabButtonClass("items")}
-          >
-            <Box className="h-5 w-5 mb-1" />
-            <span className="text-xs font-black">ITEMS</span>
-          </Button>
-          <Button
-            onClick={() => setActiveTab("print")}
-            className={getTabButtonClass("print")}
-          >
-            <Printer className="h-5 w-5 mb-1" />
-            <span className="text-xs font-black">PRINT</span>
-          </Button>
-          {user?.role === "Admin" && (
-            <Button
-              onClick={() => setActiveTab("account")}
-              className={getTabButtonClass("account")}
-            >
-              <User className="h-5 w-5 mb-1" />
-              <span className="text-xs font-black">ACCOUNT</span>
-            </Button>
-          )}
-        </div>
-      </div>
+      <MobileNavigation 
+        activeTab={activeTab} 
+        setActiveTab={setActiveTab} 
+        user={user} 
+      />
 
       {/* Stock Change Dialog */}
       <Dialog open={isStockDialogOpen} onOpenChange={setIsStockDialogOpen}>
@@ -1630,12 +1091,8 @@ export function Dashboard({ onLogout, user }: DashboardProps) {
                     </div>
                   </div>
                   <div className="p-3 bg-green-50 border-2 border-black">
-                    <div className="font-black text-black">
-                      📊 CURRENT STOCK
-                    </div>
-                    <div className="text-2xl font-black text-green-600">
-                      {selectedItem.stock} units
-                    </div>
+                    <div className="font-black text-black">📊 CURRENT STOCK</div>
+                    <div className="text-2xl font-black text-green-600">{selectedItem.stock} units</div>
                   </div>
                   {stockOperation === "add" && (
                     <div className="p-3 bg-blue-50 border-2 border-black">
@@ -1676,10 +1133,7 @@ export function Dashboard({ onLogout, user }: DashboardProps) {
           </DialogHeader>
           <div className="grid gap-4 py-4">
             <div className="grid grid-cols-4 items-center gap-4">
-              <Label
-                htmlFor="stockChange"
-                className="text-right font-black text-black text-sm"
-              >
+              <Label htmlFor="stockChange" className="text-right font-black text-black text-sm">
                 Quantity
               </Label>
               <Input
@@ -1691,9 +1145,7 @@ export function Dashboard({ onLogout, user }: DashboardProps) {
                 className="col-span-3 border-4 border-black font-bold"
                 placeholder={`Enter quantity to ${stockOperation}`}
                 min="0"
-                max={
-                  stockOperation === "minus" ? selectedItem?.stock : undefined
-                }
+                max={stockOperation === "minus" ? selectedItem?.stock : undefined}
               />
             </div>
           </div>
