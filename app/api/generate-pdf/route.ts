@@ -8,7 +8,7 @@ export async function POST(request: NextRequest) {
 
     // Import dynamic modules
     const { jsPDF } = await import('jspdf');
-    require('jspdf-autotable');
+    const autoTable = (await import('jspdf-autotable')).default;
 
     const doc = new jsPDF('p', 'mm', 'legal'); // Legal size (8.5" x 14")
     
@@ -96,7 +96,7 @@ export async function POST(request: NextRequest) {
     }
     
     // Add table
-    (doc as any).autoTable({
+    autoTable(doc, {
       head: [headers],
       body: tableData,
       startY: reportType === 'history' ? 85 : 75,
