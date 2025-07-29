@@ -5,6 +5,29 @@ export async function hashPassword(password: string): Promise<string> {
   return bcrypt.hash(password, 12);
 }
 
+export async function createDefaultAdmin() {
+  try {
+    // Check if admin user already exists
+    const existingAdmin = await prisma.user.findUnique({
+      where: { username: 'admin' }
+    });
+
+    if (!existingAdmin) {
+      const hashedPassword = await hashPassword('admin123');
+      await prisma.user.create({
+        data: {
+          username: 'admin',
+          password: hashedPassword,
+          role: 'Admin',
+        },
+      });
+      console.log('Default admin user created: username=admin, password=admin123');
+    }
+  } catch (error) {
+    console.error('Error creating default admin:', error);
+  }
+}
+
 export async function verifyPassword(
   password: string,
   hashedPassword: string

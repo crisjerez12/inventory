@@ -1,7 +1,9 @@
 import { NextRequest, NextResponse } from "next/server";
-import { authenticateUser } from "@/lib/auth";
+import { authenticateUser, createDefaultAdmin } from "@/lib/auth";
 
 export async function POST(request: NextRequest) {
+  // Ensure default admin exists
+  await createDefaultAdmin();
   try {
     const { username, password } = await request.json();
 
