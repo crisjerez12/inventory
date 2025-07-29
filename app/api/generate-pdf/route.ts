@@ -12,48 +12,49 @@ export async function POST(request: NextRequest) {
 
     const doc = new jsPDF('p', 'mm', 'a4'); // A4 size for professional look
     
-    // Company header with Microtek branding
-    doc.setFillColor(30, 58, 138); // Navy blue matching Microtek logo
-    doc.rect(0, 0, 210, 35, 'F');
+    // Professional header with company branding
+    doc.setFillColor(30, 58, 138); // Navy blue
+    doc.rect(0, 0, 210, 40, 'F');
     
-    // Add decorative green stripe
-    doc.setFillColor(134, 204, 22); // Green accent from logo
-    doc.rect(0, 35, 210, 3, 'F');
+    // Company logo area
+    doc.setFillColor(255, 255, 255);
+    doc.rect(15, 8, 50, 24, 'F');
+    doc.setTextColor(30, 58, 138);
+    doc.setFontSize(8);
+    doc.text('MICROTEK', 18, 18);
+    doc.text('LOGO', 18, 24);
     
-    // Company name with neobrutalist styling
+    // Company information
     doc.setTextColor(255, 255, 255);
-    doc.setFontSize(20);
+    doc.setFontSize(22);
     doc.setFont('helvetica', 'bold');
-    doc.text('MICROTEK', 15, 18);
+    doc.text('MICROTEK', 75, 20);
     
     doc.setFontSize(12);
     doc.setFont('helvetica', 'normal');
-    doc.text('Animal Feed Solutions', 15, 28);
+    doc.text('Animal Feed Solutions', 75, 28);
+    doc.text('Professional Inventory Management', 75, 34);
     
-    // Logo space (placeholder for now - would need actual logo implementation)
-    doc.setFillColor(255, 255, 255);
-    doc.rect(160, 8, 40, 20, 'F');
-    doc.setTextColor(30, 58, 138);
+    // Contact information (right aligned)
     doc.setFontSize(8);
-    doc.text('MICROTEK LOGO', 165, 18);
+    doc.text('Email: info@microtek.com', 150, 20);
+    doc.text('Phone: +1 (555) 123-4567', 150, 25);
+    doc.text('www.microtek.com', 150, 30);
     
-    // Reset text color for body
+    // Professional line separator
+    doc.setFillColor(134, 204, 22); // Green accent
+    doc.rect(0, 40, 210, 2, 'F');
+    
+    // Reset text color for document body
     doc.setTextColor(0, 0, 0);
     
-    // Report title with neobrutalist styling
-    doc.setFillColor(134, 204, 22); // Green background
-    doc.rect(15, 48, 180, 12, 'F');
-    doc.setLineWidth(2);
-    doc.setDrawColor(0, 0, 0);
-    doc.rect(15, 48, 180, 12);
-    
-    doc.setFontSize(14);
+    // Document title
+    doc.setFontSize(18);
     doc.setFont('helvetica', 'bold');
-    doc.setTextColor(30, 58, 138); // Navy blue text
     let reportTitle = '';
     switch (reportType) {
       case 'history':
-        reportTitle = 'TRANSACTION HISTORY REPORT';
+        reportTitle = 'INVENTORY TRANSACTION HISTORY REPORT';
         break;
       case 'outOfStock':
         reportTitle = 'OUT OF STOCK PRODUCTS REPORT';
@@ -62,51 +63,66 @@ export async function POST(request: NextRequest) {
         reportTitle = 'IN STOCK PRODUCTS REPORT';
         break;
     }
-    doc.text(reportTitle, 20, 57);
     
-    // Date and time with neobrutalist box
+    // Center the title
+    const titleWidth = doc.getTextWidth(reportTitle);
+    const pageWidth = doc.internal.pageSize.width;
+    const titleX = (pageWidth - titleWidth) / 2;
+    
+    doc.text(reportTitle, titleX, 55);
+    
+    // Document metadata box
+    doc.setFillColor(248, 250, 252); // Light gray background
+    doc.rect(15, 65, 180, 20, 'F');
+    doc.setLineWidth(0.5);
+    doc.setDrawColor(200, 200, 200);
+    doc.rect(15, 65, 180, 20);
+    
+    // Report metadata
     const now = new Date();
-    doc.setFillColor(240, 248, 255); // Light blue background
-    doc.rect(15, 65, 100, 8, 'F');
-    doc.setLineWidth(1);
-    doc.rect(15, 65, 100, 8);
+    doc.setFontSize(10);
+    doc.setFont('helvetica', 'normal');
+    doc.text('Report Generated:', 20, 72);
+    doc.text(`${now.toLocaleDateString('en-US', { 
+      year: 'numeric', 
+      month: 'long', 
+      day: 'numeric' 
+    })} at ${now.toLocaleTimeString('en-US')}`, 55, 72);
     
-    doc.setFontSize(9);
-    doc.setFont('helvetica', 'bold');
-    doc.setTextColor(30, 58, 138);
-    doc.text(`Generated: ${now.toLocaleDateString()} ${now.toLocaleTimeString()}`, 18, 71);
+    doc.text('Report Type:', 20, 78);
+    doc.text(reportTitle.toLowerCase().replace(/report/g, '').trim(), 55, 78);
     
-    let startY = 80;
+    let startY = 92;
     
     if (reportType === 'history' && dateFilter) {
-      let dateText = 'Period: ';
+      let dateText = '';
       if (dateFilter.dateType === 'specific') {
-        dateText += `${new Date(dateFilter.specificDate).toLocaleDateString()}`;
+        dateText = `Specific Date: ${new Date(dateFilter.specificDate).toLocaleDateString('en-US', { 
+          year: 'numeric', 
+          month: 'long', 
+          day: 'numeric' 
+        })}`;
       } else if (dateFilter.dateType === 'month') {
         const monthName = new Date(2024, parseInt(dateFilter.month) - 1, 1).toLocaleString('default', { month: 'long' });
-        dateText += `${monthName} ${dateFilter.year}`;
+        dateText = `Period: ${monthName} ${dateFilter.year}`;
       } else if (dateFilter.dateType === 'year') {
-        dateText += `Year ${dateFilter.year}`;
+        dateText = `Period: Year ${dateFilter.year}`;
       }
       
-      // Period info box
-      doc.setFillColor(255, 255, 255);
-      doc.rect(120, 65, 75, 8, 'F');
-      doc.setLineWidth(1);
-      doc.setDrawColor(0, 0, 0);
-      doc.rect(120, 65, 75, 8);
+      doc.text('Report Period:', 120, 72);
+      doc.text(dateText.replace(/Period: |Specific Date: /, ''), 155, 72);
       
-      doc.setFontSize(9);
-      doc.setFont('helvetica', 'bold');
-      doc.setTextColor(30, 58, 138);
-      doc.text(dateText, 123, 71);
-      startY = 82;
+      doc.text('Status:', 120, 78);
+      doc.text('CONFIDENTIAL', 155, 78);
+    } else {
+      doc.text('Status:', 120, 72);
+      doc.text('CONFIDENTIAL', 155, 72);
+      
+      doc.text('Classification:', 120, 78);
+      doc.text('Internal Use Only', 155, 78);
     }
     
-    // Reset text color for table
-    doc.setTextColor(0, 0, 0);
-    
-    // Table data
+    // Table data preparation
     let tableData: any[][] = [];
     let headers: string[] = [];
     
@@ -116,26 +132,26 @@ export async function POST(request: NextRequest) {
         take: 100,
       });
       
-      headers = ['Date', 'Product', 'Category', 'Action', 'Qty', 'User'];
+      headers = ['Date', 'Product Name', 'Category', 'Action', 'Quantity', 'User ID'];
       tableData = history.map(record => [
-        new Date(record.createdAt).toLocaleDateString(),
-        record.itemName.length > 20 ? record.itemName.substring(0, 17) + '...' : record.itemName,
-        record.category.length > 15 ? record.category.substring(0, 12) + '...' : record.category,
-        record.action.toUpperCase(),
+        new Date(record.createdAt).toLocaleDateString('en-US'),
+        record.itemName.length > 30 ? record.itemName.substring(0, 27) + '...' : record.itemName,
+        record.category,
+        record.action.charAt(0).toUpperCase() + record.action.slice(1),
         record.quantity.toString(),
-        `User ${record.userId}`
+        record.userId.toString()
       ]);
     } else {
-      headers = ['Product Name', 'Category', 'Stock', 'Status'];
+      headers = ['Product Name', 'Category', 'Stock Level', 'Status'];
       tableData = items.map((item: any) => [
-        item.name.length > 25 ? item.name.substring(0, 22) + '...' : item.name,
-        item.category.length > 15 ? item.category.substring(0, 12) + '...' : item.category,
+        item.name.length > 35 ? item.name.substring(0, 32) + '...' : item.name,
+        item.category,
         item.stock.toString(),
         item.stock === 0 ? 'OUT OF STOCK' : 'IN STOCK'
       ]);
     }
     
-    // Neobrutalist table styling with Microtek colors
+    // Professional table styling
     autoTable(doc, {
       head: [headers],
       body: tableData,
@@ -143,10 +159,11 @@ export async function POST(request: NextRequest) {
       margin: { left: 15, right: 15 },
       styles: {
         fontSize: 9,
-        cellPadding: 3,
-        lineColor: [0, 0, 0], // Black borders for neobrutalist look
-        lineWidth: 1,
-        fontStyle: 'bold',
+        cellPadding: 4,
+        lineColor: [200, 200, 200],
+        lineWidth: 0.5,
+        fontStyle: 'normal',
+        textColor: [0, 0, 0],
       },
       headStyles: {
         fillColor: [30, 58, 138], // Navy blue header
@@ -156,49 +173,67 @@ export async function POST(request: NextRequest) {
         halign: 'center',
       },
       alternateRowStyles: {
-        fillColor: [134, 204, 22, 0.1], // Light green alternate rows
+        fillColor: [248, 250, 252], // Very light gray
       },
       bodyStyles: {
-        textColor: [30, 58, 138], // Navy blue text
+        textColor: [0, 0, 0],
       },
       columnStyles: reportType === 'history' ? {
-        0: { cellWidth: 25 },
-        1: { cellWidth: 40 },
-        2: { cellWidth: 30 },
-        3: { cellWidth: 20 },
-        4: { cellWidth: 15 },
-        5: { cellWidth: 20 },
+        0: { cellWidth: 30, halign: 'center' },
+        1: { cellWidth: 45 },
+        2: { cellWidth: 35 },
+        3: { cellWidth: 25, halign: 'center' },
+        4: { cellWidth: 25, halign: 'center' },
+        5: { cellWidth: 25, halign: 'center' },
       } : {
-        0: { cellWidth: 60 },
-        1: { cellWidth: 40 },
-        2: { cellWidth: 25 },
-        3: { cellWidth: 35 },
+        0: { cellWidth: 70 },
+        1: { cellWidth: 45 },
+        2: { cellWidth: 30, halign: 'center' },
+        3: { cellWidth: 35, halign: 'center' },
       },
       didDrawPage: (data) => {
-        // Add page numbers
+        // Professional page footer
         const pageCount = doc.internal.pages.length - 1;
+        
+        // Footer line
+        doc.setLineWidth(0.5);
+        doc.setDrawColor(200, 200, 200);
+        doc.line(15, 280, 195, 280);
+        
+        // Footer text
         doc.setFontSize(8);
-        doc.setTextColor(150, 150, 150);
-        doc.text(`Page ${data.pageNumber} of ${pageCount}`, 180, 285);
+        doc.setTextColor(100, 100, 100);
+        doc.setFont('helvetica', 'normal');
+        doc.text('MICROTEK - Animal Feed Solutions | Confidential Document', 15, 287);
+        doc.text(`Page ${data.pageNumber} of ${pageCount}`, 170, 287);
       }
     });
     
-    // Neobrutalist footer
+    // Document summary
     const finalY = (doc as any).lastAutoTable.finalY || startY + 50;
     
-    // Footer background box
-    doc.setFillColor(134, 204, 22); // Green background
-    doc.rect(15, finalY + 10, 180, 15, 'F');
-    doc.setLineWidth(2);
-    doc.setDrawColor(0, 0, 0);
-    doc.rect(15, finalY + 10, 180, 15);
-    
-    doc.setFontSize(8);
-    doc.setTextColor(30, 58, 138);
-    doc.setFont('helvetica', 'bold');
-    doc.text('Generated by Microtek Feed Inventory Management System', 20, finalY + 18);
-    doc.text(`Total Records: ${tableData.length}`, 20, finalY + 22);
-    doc.text('© Microtek - Animal Feed Solutions', 120, finalY + 22);
+    // Summary box
+    if (finalY < 240) {
+      doc.setFillColor(248, 250, 252);
+      doc.rect(15, finalY + 15, 180, 25, 'F');
+      doc.setLineWidth(0.5);
+      doc.setDrawColor(200, 200, 200);
+      doc.rect(15, finalY + 15, 180, 25);
+      
+      doc.setFontSize(12);
+      doc.setFont('helvetica', 'bold');
+      doc.setTextColor(30, 58, 138);
+      doc.text('REPORT SUMMARY', 20, finalY + 25);
+      
+      doc.setFontSize(9);
+      doc.setFont('helvetica', 'normal');
+      doc.setTextColor(0, 0, 0);
+      doc.text(`Total Records: ${tableData.length}`, 20, finalY + 32);
+      doc.text(`Generated by: MICROTEK Inventory Management System v2.0`, 20, finalY + 37);
+      
+      doc.text('Document Classification: Internal Use Only', 110, finalY + 32);
+      doc.text(`Report ID: MIK-${Date.now().toString().slice(-6)}`, 110, finalY + 37);
+    }
     
     // Convert to buffer
     const pdfBuffer = Buffer.from(doc.output('arraybuffer'));
@@ -206,7 +241,7 @@ export async function POST(request: NextRequest) {
     return new NextResponse(pdfBuffer, {
       headers: {
         'Content-Type': 'application/pdf',
-        'Content-Disposition': `attachment; filename="${reportType}-report-${Date.now()}.pdf"`,
+        'Content-Disposition': `attachment; filename="microtek-${reportType}-report-${Date.now()}.pdf"`,
       },
     });
   } catch (error) {
