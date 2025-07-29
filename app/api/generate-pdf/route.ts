@@ -12,31 +12,44 @@ export async function POST(request: NextRequest) {
 
     const doc = new jsPDF('p', 'mm', 'a4'); // A4 size for professional look
     
-    // Company header with professional styling
-    doc.setFillColor(30, 58, 138); // Navy blue header matching logo
-    doc.rect(0, 0, 210, 40, 'F');
+    // Company header with Microtek branding
+    doc.setFillColor(30, 58, 138); // Navy blue matching Microtek logo
+    doc.rect(0, 0, 210, 35, 'F');
     
-    // Company name
+    // Add decorative green stripe
+    doc.setFillColor(134, 204, 22); // Green accent from logo
+    doc.rect(0, 35, 210, 3, 'F');
+    
+    // Company name with neobrutalist styling
     doc.setTextColor(255, 255, 255);
-    doc.setFontSize(22);
+    doc.setFontSize(20);
     doc.setFont('helvetica', 'bold');
-    doc.text('MICROTEK', 20, 18);
+    doc.text('MICROTEK', 15, 18);
     
-    doc.setFontSize(14);
+    doc.setFontSize(12);
     doc.setFont('helvetica', 'normal');
-    doc.text('Animal Feed Solutions', 20, 28);
+    doc.text('Animal Feed Solutions', 15, 28);
     
-    doc.setFontSize(10);
-    doc.setTextColor(134, 204, 22); // Green accent color
-    doc.text('FEED INVENTORY MANAGEMENT SYSTEM', 20, 35);
+    // Logo space (placeholder for now - would need actual logo implementation)
+    doc.setFillColor(255, 255, 255);
+    doc.rect(160, 8, 40, 20, 'F');
+    doc.setTextColor(30, 58, 138);
+    doc.setFontSize(8);
+    doc.text('MICROTEK LOGO', 165, 18);
     
     // Reset text color for body
     doc.setTextColor(0, 0, 0);
     
-    // Report title with clean styling
-    doc.setFontSize(16);
+    // Report title with neobrutalist styling
+    doc.setFillColor(134, 204, 22); // Green background
+    doc.rect(15, 48, 180, 12, 'F');
+    doc.setLineWidth(2);
+    doc.setDrawColor(0, 0, 0);
+    doc.rect(15, 48, 180, 12);
+    
+    doc.setFontSize(14);
     doc.setFont('helvetica', 'bold');
-    doc.setTextColor(30, 58, 138); // Navy blue for titles
+    doc.setTextColor(30, 58, 138); // Navy blue text
     let reportTitle = '';
     switch (reportType) {
       case 'history':
@@ -49,16 +62,21 @@ export async function POST(request: NextRequest) {
         reportTitle = 'IN STOCK PRODUCTS REPORT';
         break;
     }
-    doc.text(reportTitle, 20, 55);
+    doc.text(reportTitle, 20, 57);
     
-    // Date and time in smaller, clean format
+    // Date and time with neobrutalist box
     const now = new Date();
-    doc.setFontSize(10);
-    doc.setFont('helvetica', 'normal');
-    doc.setTextColor(100, 100, 100);
-    doc.text(`Generated: ${now.toLocaleDateString()} ${now.toLocaleTimeString()}`, 20, 63);
+    doc.setFillColor(240, 248, 255); // Light blue background
+    doc.rect(15, 65, 100, 8, 'F');
+    doc.setLineWidth(1);
+    doc.rect(15, 65, 100, 8);
     
-    let startY = 70;
+    doc.setFontSize(9);
+    doc.setFont('helvetica', 'bold');
+    doc.setTextColor(30, 58, 138);
+    doc.text(`Generated: ${now.toLocaleDateString()} ${now.toLocaleTimeString()}`, 18, 71);
+    
+    let startY = 80;
     
     if (reportType === 'history' && dateFilter) {
       let dateText = 'Period: ';
@@ -70,8 +88,19 @@ export async function POST(request: NextRequest) {
       } else if (dateFilter.dateType === 'year') {
         dateText += `Year ${dateFilter.year}`;
       }
-      doc.text(dateText, 20, 65);
-      startY = 72;
+      
+      // Period info box
+      doc.setFillColor(255, 255, 255);
+      doc.rect(120, 65, 75, 8, 'F');
+      doc.setLineWidth(1);
+      doc.setDrawColor(0, 0, 0);
+      doc.rect(120, 65, 75, 8);
+      
+      doc.setFontSize(9);
+      doc.setFont('helvetica', 'bold');
+      doc.setTextColor(30, 58, 138);
+      doc.text(dateText, 123, 71);
+      startY = 82;
     }
     
     // Reset text color for table
@@ -106,26 +135,31 @@ export async function POST(request: NextRequest) {
       ]);
     }
     
-    // Professional table styling
+    // Neobrutalist table styling with Microtek colors
     autoTable(doc, {
       head: [headers],
       body: tableData,
       startY: startY,
-      margin: { left: 20, right: 20 },
+      margin: { left: 15, right: 15 },
       styles: {
         fontSize: 9,
-        cellPadding: 4,
-        lineColor: [200, 200, 200],
-        lineWidth: 0.1,
+        cellPadding: 3,
+        lineColor: [0, 0, 0], // Black borders for neobrutalist look
+        lineWidth: 1,
+        fontStyle: 'bold',
       },
       headStyles: {
         fillColor: [30, 58, 138], // Navy blue header
         textColor: [255, 255, 255],
         fontStyle: 'bold',
         fontSize: 10,
+        halign: 'center',
       },
       alternateRowStyles: {
-        fillColor: [240, 253, 244], // Light green alternate rows
+        fillColor: [134, 204, 22, 0.1], // Light green alternate rows
+      },
+      bodyStyles: {
+        textColor: [30, 58, 138], // Navy blue text
       },
       columnStyles: reportType === 'history' ? {
         0: { cellWidth: 25 },
@@ -149,17 +183,22 @@ export async function POST(request: NextRequest) {
       }
     });
     
-    // Professional footer
+    // Neobrutalist footer
     const finalY = (doc as any).lastAutoTable.finalY || startY + 50;
-    doc.setDrawColor(200, 200, 200);
-    doc.line(20, finalY + 15, 190, finalY + 15);
+    
+    // Footer background box
+    doc.setFillColor(134, 204, 22); // Green background
+    doc.rect(15, finalY + 10, 180, 15, 'F');
+    doc.setLineWidth(2);
+    doc.setDrawColor(0, 0, 0);
+    doc.rect(15, finalY + 10, 180, 15);
     
     doc.setFontSize(8);
-    doc.setTextColor(100, 100, 100);
-    doc.setFont('helvetica', 'italic');
-    doc.text('Generated by Microtek Feed Inventory Management System', 20, finalY + 22);
-    doc.text(`Total Records: ${tableData.length}`, 20, finalY + 28);
-    doc.text('© Microtek - Animal Feed Solutions', 120, finalY + 28);
+    doc.setTextColor(30, 58, 138);
+    doc.setFont('helvetica', 'bold');
+    doc.text('Generated by Microtek Feed Inventory Management System', 20, finalY + 18);
+    doc.text(`Total Records: ${tableData.length}`, 20, finalY + 22);
+    doc.text('© Microtek - Animal Feed Solutions', 120, finalY + 22);
     
     // Convert to buffer
     const pdfBuffer = Buffer.from(doc.output('arraybuffer'));
