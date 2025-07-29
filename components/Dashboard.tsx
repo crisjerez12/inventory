@@ -326,18 +326,12 @@ export default function Dashboard({ onLogout, user }: DashboardProps) {
       {/* Desktop Sidebar - Hidden on mobile/tablet */}
       <div className="hidden lg:flex w-80 bg-yellow-400 border-r-8 border-black flex-col h-full">
         {/* Header */}
-        <div className="p-6 border-b-4 border-black">
-          <div className="flex items-center space-x-3 mb-4">
-            <div className="w-12 h-12 bg-black border-4 border-white flex items-center justify-center transform rotate-12">
-              <Package className="h-6 w-6 text-white" />
-            </div>
+        <div className="bg-gradient-to-r from-blue-900 to-blue-800 border-b-2 border-blue-700 p-6">
+          <div className="flex items-center space-x-4 mb-4">
+            <img src="/images/microtek-logo.jpg" alt="Microtek Logo" className="h-12" />
             <div>
-              <h1 className="text-2xl font-black text-black transform -rotate-2">
-                INVENTORY SYSTEM
-              </h1>
-              <p className="text-sm text-black font-bold">
-                MANAGE YOUR ANIMAL FEEDS
-              </p>
+              <h1 className="text-2xl md:text-3xl font-bold text-white">MICROTEK INVENTORY</h1>
+              <p className="text-sm md:text-base text-blue-200 font-medium">Microbial Technology Solutions</p>
             </div>
           </div>
         </div>
@@ -688,7 +682,7 @@ export default function Dashboard({ onLogout, user }: DashboardProps) {
                     </div>
                   </div>
                   <div className="p-3 bg-green-50 border-2 border-black">
-                    <div className="font-black text-black">📊 CURRENT STOCK</div>
+                    <div className="font-black textblack">📊 CURRENT STOCK</div>
                     <div className="text-2xl font-black text-green-600">{selectedItem.stock} units</div>
                   </div>
                   {stockOperation === "add" && (

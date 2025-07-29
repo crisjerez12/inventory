@@ -1,4 +1,3 @@
-
 "use client";
 
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -6,91 +5,73 @@ import { Package, BarChart3, Shield, Clock } from "lucide-react";
 
 export function WelcomeSection() {
   return (
-    <div className="flex flex-col justify-center space-y-6">
-      <div className="text-center lg:text-left">
-        <div className="flex items-center justify-center lg:justify-start space-x-4 mb-6">
-          <div className="w-16 h-16 bg-black border-4 border-white flex items-center justify-center transform rotate-12 shadow-[6px_6px_0px_0px_#ffffff]">
-            <Package className="h-8 w-8 text-white" />
-          </div>
-          <div>
-            <h1 className="text-4xl md:text-5xl lg:text-6xl font-black text-white transform -rotate-2 drop-shadow-lg">
-              FEED INVENTORY
-            </h1>
-            <p className="text-lg md:text-xl text-white font-bold">
-              PROFESSIONAL ANIMAL FEED MANAGEMENT SYSTEM
-            </p>
-          </div>
+    <div className="space-y-8">
+      {/* Main Hero Section */}
+      <div className="text-center space-y-4">
+        <div className="inline-flex items-center justify-center mb-6">
+          <img src="/images/microtek-logo.jpg" alt="Microtek Logo" className="h-24" />
         </div>
-        
-        <p className="text-white text-lg md:text-xl font-bold mb-8 leading-relaxed">
-          Streamline your animal feed business with our comprehensive inventory management solution. 
-          Track stock levels, manage categories, and generate detailed reports with ease.
+        <h1 className="text-4xl md:text-5xl font-bold text-blue-900">
+          MICROTEK INVENTORY
+        </h1>
+        <h2 className="text-xl md:text-2xl font-semibold text-green-600">
+          Microbial Technology Solutions
+        </h2>
+        <p className="text-blue-800 font-medium text-lg max-w-md mx-auto">
+          Professional inventory management system for microbial technology products and solutions.
         </p>
       </div>
 
+{/* Features Grid */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-        <Card className="bg-gradient-to-br from-yellow-400 to-orange-400 border-4 border-black shadow-[8px_8px_0px_0px_#000000] transform hover:translate-x-[-2px] hover:translate-y-[-2px] hover:shadow-[10px_10px_0px_0px_#000000] transition-all duration-300">
+        <Card className="bg-white border-2 border-green-200 shadow-lg hover:shadow-xl transition-all duration-300 hover:border-green-400">
           <CardHeader className="pb-3">
-            <CardTitle className="flex items-center font-black text-black text-lg">
-              <BarChart3 className="h-6 w-6 mr-2" />
-              ANALYTICS
+            <CardTitle className="flex items-center font-semibold text-blue-900 text-lg">
+              <Shield className="h-6 w-6 mr-2 text-green-600" />
+              SECURE
             </CardTitle>
           </CardHeader>
           <CardContent>
-            <p className="text-black font-bold text-sm">
-              Real-time dashboard with comprehensive insights into your inventory performance and trends.
+            <p className="text-gray-700 font-medium text-sm">
+              Enterprise-grade security ensures your inventory data is protected with advanced encryption.
             </p>
           </CardContent>
         </Card>
 
-        <Card className="bg-gradient-to-br from-green-400 to-blue-400 border-4 border-black shadow-[8px_8px_0px_0px_#000000] transform hover:translate-x-[-2px] hover:translate-y-[-2px] hover:shadow-[10px_10px_0px_0px_#000000] transition-all duration-300">
+        <Card className="bg-white border-2 border-green-200 shadow-lg hover:shadow-xl transition-all duration-300 hover:border-green-400">
           <CardHeader className="pb-3">
-            <CardTitle className="flex items-center font-black text-black text-lg">
-              <Shield className="h-6 w-6 mr-2" />
-              SECURITY
+            <CardTitle className="flex items-center font-semibold text-blue-900 text-lg">
+              <BarChart3 className="h-6 w-6 mr-2 text-green-600" />
+              EFFICIENT
             </CardTitle>
           </CardHeader>
           <CardContent>
-            <p className="text-black font-bold text-sm">
-              Secure user authentication and role-based access control to protect your business data.
+            <p className="text-gray-700 font-medium text-sm">
+              Optimized operations with instant updates and high-performance data processing.
             </p>
           </CardContent>
         </Card>
 
-        <Card className="bg-gradient-to-br from-purple-400 to-pink-400 border-4 border-black shadow-[8px_8px_0px_0px_#000000] transform hover:translate-x-[-2px] hover:translate-y-[-2px] hover:shadow-[10px_10px_0px_0px_#000000] transition-all duration-300">
+        <Card className="bg-white border-2 border-green-200 shadow-lg hover:shadow-xl transition-all duration-300 hover:border-green-400">
           <CardHeader className="pb-3">
-            <CardTitle className="flex items-center font-black text-black text-lg">
-              <Package className="h-6 w-6 mr-2" />
-              INVENTORY
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            <p className="text-black font-bold text-sm">
-              Complete stock management for all animal feed categories with automated alerts.
-            </p>
-          </CardContent>
-        </Card>
-
-        <Card className="bg-gradient-to-br from-red-400 to-yellow-400 border-4 border-black shadow-[8px_8px_0px_0px_#000000] transform hover:translate-x-[-2px] hover:translate-y-[-2px] hover:shadow-[10px_10px_0px_0px_#000000] transition-all duration-300">
-          <CardHeader className="pb-3">
-            <CardTitle className="flex items-center font-black text-black text-lg">
-              <Clock className="h-6 w-6 mr-2" />
+            <CardTitle className="flex items-center font-semibold text-blue-900 text-lg">
+              <Clock className="h-6 w-6 mr-2 text-green-600" />
               REAL-TIME
             </CardTitle>
           </CardHeader>
           <CardContent>
-            <p className="text-black font-bold text-sm">
-              Live updates and instant synchronization across all your devices and locations.
+            <p className="text-gray-700 font-medium text-sm">
+              Live synchronization and instant updates across all your devices and locations.
             </p>
           </CardContent>
         </Card>
       </div>
 
-      <div className="bg-gradient-to-r from-black to-gray-800 text-white p-6 border-4 border-white shadow-[8px_8px_0px_0px_#ffffff] transform -rotate-1">
+      <div className="bg-gradient-to-r from-blue-900 to-blue-800 text-white p-6 rounded-lg shadow-xl">
         <div className="text-center">
-          <h3 className="font-black text-xl mb-2">🎯 TRUSTED BY PROFESSIONALS</h3>
-          <p className="font-bold text-sm">
-            Join thousands of feed retailers and distributors who trust our system to manage their inventory efficiently.
+          <h3 className="font-bold text-xl mb-2">🧬 TRUSTED BY PROFESSIONALS</h3>
+          <p className="font-medium text-sm text-blue-100">
+            Join industry leaders who trust Microtek for their microbial technology inventory management needs.
           </p>
         </div>
       </div>
