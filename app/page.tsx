@@ -24,14 +24,14 @@ export default function Home() {
     setUser(null);
   };
 
-  if (user) {
-    return <Dashboard user={user} onLogout={handleLogout} />;
-  }
-
   return (
-      <>
-          <LoginPage onLogin={handleLogin} />
-          <Toaster />
-      </>
+    <>
+      {user ? (
+        <Dashboard user={user} onLogout={handleLogout} />
+      ) : (
+        <LoginPage onLogin={handleLogin} />
+      )}
+      <Toaster />
+    </>
   );
 }

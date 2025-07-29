@@ -1,13 +1,19 @@
-
 "use client";
 
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import { Eye, EyeOff, LogIn, Loader2 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
+import Image from "next/image";
 
 interface User {
   id: number;
@@ -28,7 +34,7 @@ export function LoginForm({ onLogin }: LoginFormProps) {
     username: "",
     password: "",
   });
-  
+
   const { toast } = useToast();
 
   const handleLogin = async (e: React.FormEvent) => {
@@ -84,20 +90,26 @@ export function LoginForm({ onLogin }: LoginFormProps) {
         <CardHeader className="bg-gradient-to-r from-blue-400 to-green-300 text-white border-b-8 border-black">
           <div className="flex items-center justify-center mb-4">
             <div className="bg-white p-4 border-4 border-black shadow-[8px_8px_0px_0px_#000000]">
-              <img src="/images/microtek-logo.png" alt="Microtek Logo" className="h-16" />
+              <Image
+                src="/images/logo.jpg"
+                alt="Microtek Logo"
+                width={200}
+                height={64}
+                className="h-16"
+              />
             </div>
           </div>
           <CardTitle className="text-2xl font-black text-center uppercase tracking-wider">
-            MICROTEK INVENTORY
+            Sign In to Your Account
           </CardTitle>
-          <CardDescription className="text-blue-100 text-center font-bold text-lg">
-            Animal Feed Solutions
-          </CardDescription>
         </CardHeader>
         <CardContent className="p-8 bg-green-200">
           <form onSubmit={handleLogin} className="space-y-6">
             <div className="space-y-3">
-              <Label htmlFor="login-username" className="font-black text-blue-600 text-lg uppercase tracking-wide">
+              <Label
+                htmlFor="login-username"
+                className="font-black text-blue-600 text-lg uppercase tracking-wide"
+              >
                 Username
               </Label>
               <Input
@@ -105,13 +117,18 @@ export function LoginForm({ onLogin }: LoginFormProps) {
                 type="text"
                 placeholder="Enter your username"
                 value={loginData.username}
-                onChange={(e) => setLoginData({ ...loginData, username: e.target.value })}
+                onChange={(e) =>
+                  setLoginData({ ...loginData, username: e.target.value })
+                }
                 className="border-4 border-black bg-white focus:border-blue-500 transition-colors font-bold text-lg p-4 shadow-[4px_4px_0px_0px_#000000] rounded-none"
                 disabled={isLoading}
               />
             </div>
             <div className="space-y-3">
-              <Label htmlFor="login-password" className="font-black text-blue-600 text-lg uppercase tracking-wide">
+              <Label
+                htmlFor="login-password"
+                className="font-black text-blue-600 text-lg uppercase tracking-wide"
+              >
                 Password
               </Label>
               <div className="relative">
@@ -120,7 +137,9 @@ export function LoginForm({ onLogin }: LoginFormProps) {
                   type={showPassword ? "text" : "password"}
                   placeholder="Enter your password"
                   value={loginData.password}
-                  onChange={(e) => setLoginData({ ...loginData, password: e.target.value })}
+                  onChange={(e) =>
+                    setLoginData({ ...loginData, password: e.target.value })
+                  }
                   className="border-4 border-black bg-white focus:border-blue-500 transition-colors font-bold text-lg p-4 pr-16 shadow-[4px_4px_0px_0px_#000000] rounded-none"
                   disabled={isLoading}
                 />
@@ -130,7 +149,11 @@ export function LoginForm({ onLogin }: LoginFormProps) {
                   className="absolute right-2 top-1/2 transform -translate-y-1/2 p-2 h-auto bg-blue-500 hover:bg-green-400 text-white border-2 border-black shadow-[2px_2px_0px_0px_#000000] rounded-none"
                   disabled={isLoading}
                 >
-                  {showPassword ? <EyeOff className="h-5 w-5" /> : <Eye className="h-5 w-5" />}
+                  {showPassword ? (
+                    <EyeOff className="h-5 w-5" />
+                  ) : (
+                    <Eye className="h-5 w-5" />
+                  )}
                 </Button>
               </div>
             </div>

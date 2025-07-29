@@ -1,26 +1,22 @@
-
 "use client";
 
 import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
-import { Package, BarChart3, Box, Printer, User, LogOut } from "lucide-react";
-
-interface User {
-  id: number;
-  username: string;
-  role: string;
-  createdAt: string;
-  updatedAt: string;
-}
+import { BarChart3, Box, Printer, LogOut } from "lucide-react";
 
 interface SidebarProps {
   activeTab: string;
   setActiveTab: (tab: string) => void;
   onLogout: () => void;
-  user: User | null;
+  user: any | null;
 }
 
-export function Sidebar({ activeTab, setActiveTab, onLogout, user }: SidebarProps) {
+export function Sidebar({
+  activeTab,
+  setActiveTab,
+  onLogout,
+  user,
+}: SidebarProps) {
   const [currentTime, setCurrentTime] = useState(new Date());
 
   useEffect(() => {
@@ -48,11 +44,27 @@ export function Sidebar({ activeTab, setActiveTab, onLogout, user }: SidebarProp
     const displayHours = hours % 12 || 12;
 
     const dayNames = [
-      "Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday",
+      "Sunday",
+      "Monday",
+      "Tuesday",
+      "Wednesday",
+      "Thursday",
+      "Friday",
+      "Saturday",
     ];
     const monthNames = [
-      "Jan", "Feb", "Mar", "Apr", "May", "Jun",
-      "Jul", "Aug", "Sep", "Oct", "Nov", "Dec",
+      "Jan",
+      "Feb",
+      "Mar",
+      "Apr",
+      "May",
+      "Jun",
+      "Jul",
+      "Aug",
+      "Sep",
+      "Oct",
+      "Nov",
+      "Dec",
     ];
 
     return {
@@ -60,29 +72,40 @@ export function Sidebar({ activeTab, setActiveTab, onLogout, user }: SidebarProp
         .toString()
         .padStart(2, "0")}:${seconds.toString().padStart(2, "0")} ${ampm}`,
       day: dayNames[date.getDay()],
-      date: `${monthNames[date.getMonth()]} ${date.getDate()}, ${date.getFullYear()}`,
+      date: `${
+        monthNames[date.getMonth()]
+      } ${date.getDate()}, ${date.getFullYear()}`,
     };
   };
 
   return (
     <div className="hidden lg:flex w-80 bg-yellow-400 border-r-8 border-black flex-col h-full">
-      {/* Header */}
+      MICROTEK INVENTORY
       <div className="p-6 border-b-4 border-black">
-        <div className="flex items-center space-x-3 mb-4">
-          <div className="w-12 h-12 bg-black border-4 border-white flex items-center justify-center transform rotate-12">
-            <Package className="h-6 w-6 text-white" />
-          </div>
-          <div>
-            <h1 className="text-2xl font-black text-black transform -rotate-2">
-              INVENTORY SYSTEM
-            </h1>
-            <p className="text-sm text-black font-bold">
-              MANAGE YOUR ANIMAL FEEDS
-            </p>
+        <div className="mb-4">
+          <div className="w-full">
+            <div className="bg-white border-4 border-black p-3 shadow-[3px_3px_0px_0px_#000000] mb-2">
+              <h1 className="text-xl font-black text-black tracking-wider leading-none">
+                MICROTEK INVENTORY
+              </h1>
+              <div className="w-full h-1 bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 mt-1"></div>
+            </div>
+            <div className="bg-black text-white px-3 py-1 border-4 border-white shadow-[2px_2px_0px_0px_#ffffff]">
+              <p className="text-xs font-bold tracking-wide">
+                PROFESSIONAL INVENTORY MANAGEMENT SYSTEM
+              </p>
+            </div>
+            <div className="flex space-x-1 mt-2">
+              <div className="bg-green-400 border-2 border-black px-2 py-1">
+                <span className="text-xs font-black">LICENSED</span>
+              </div>
+              <div className="bg-blue-400 border-2 border-black px-2 py-1">
+                <span className="text-xs font-black">v2.1</span>
+              </div>
+            </div>
           </div>
         </div>
       </div>
-
       {/* Navigation */}
       <div className="flex-1 p-6 overflow-y-auto">
         <div className="space-y-4">
@@ -112,13 +135,13 @@ export function Sidebar({ activeTab, setActiveTab, onLogout, user }: SidebarProp
               onClick={() => setActiveTab("account")}
               className={getTabButtonClass("account")}
             >
-              <User className="h-4 w-4 lg:mr-2" />
+              {/* Placeholder for User icon */}
+              <div className="h-4 w-4 lg:mr-2"></div>
               <span className="text-xs lg:text-base">ACCOUNT</span>
             </Button>
           )}
         </div>
       </div>
-
       {/* Time and Logout */}
       <div className="p-6 border-t-4 border-black space-y-4">
         {/* Current Time */}
@@ -130,10 +153,18 @@ export function Sidebar({ activeTab, setActiveTab, onLogout, user }: SidebarProp
               <div className="absolute inset-2 bg-gray-100 border-2 border-gray-400 rounded-full"></div>
 
               {/* Clock Numbers */}
-              <div className="absolute top-1 left-1/2 transform -translate-x-1/2 text-xs font-black text-black">12</div>
-              <div className="absolute right-1 top-1/2 transform -translate-y-1/2 text-xs font-black text-black">3</div>
-              <div className="absolute bottom-1 left-1/2 transform -translate-x-1/2 text-xs font-black text-black">6</div>
-              <div className="absolute left-1 top-1/2 transform -translate-y-1/2 text-xs font-black text-black">9</div>
+              <div className="absolute top-1 left-1/2 transform -translate-x-1/2 text-xs font-black text-black">
+                12
+              </div>
+              <div className="absolute right-1 top-1/2 transform -translate-y-1/2 text-xs font-black text-black">
+                3
+              </div>
+              <div className="absolute bottom-1 left-1/2 transform -translate-x-1/2 text-xs font-black text-black">
+                6
+              </div>
+              <div className="absolute left-1 top-1/2 transform -translate-y-1/2 text-xs font-black text-black">
+                9
+              </div>
 
               {/* Clock Hands */}
               <div
@@ -141,7 +172,8 @@ export function Sidebar({ activeTab, setActiveTab, onLogout, user }: SidebarProp
                 style={{
                   height: "20px",
                   transform: `translate(-50%, -100%) rotate(${
-                    (currentTime.getHours() % 12) * 30 + currentTime.getMinutes() * 0.5
+                    (currentTime.getHours() % 12) * 30 +
+                    currentTime.getMinutes() * 0.5
                   }deg)`,
                 }}
               ></div>
@@ -149,7 +181,9 @@ export function Sidebar({ activeTab, setActiveTab, onLogout, user }: SidebarProp
                 className="absolute top-1/2 left-1/2 w-0.5 bg-black origin-bottom transform -translate-x-1/2 -translate-y-full"
                 style={{
                   height: "24px",
-                  transform: `translate(-50%, -100%) rotate(${currentTime.getMinutes() * 6}deg)`,
+                  transform: `translate(-50%, -100%) rotate(${
+                    currentTime.getMinutes() * 6
+                  }deg)`,
                 }}
               ></div>
 

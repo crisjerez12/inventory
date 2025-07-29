@@ -1,4 +1,3 @@
-
 "use client";
 
 import { Button } from "@/components/ui/button";
@@ -18,10 +17,10 @@ export function MobileHeader({ onLogout }: MobileHeaderProps) {
           </div>
           <div>
             <h1 className="text-lg md:text-xl font-black text-black transform -rotate-2">
-              FEED INVENTORY
+              MICROTEK INVENTORY
             </h1>
             <p className="text-xs md:text-sm text-black font-bold">
-              MANAGE YOUR ANIMAL FEEDS
+              MANAGE YOUR STOCKS
             </p>
           </div>
         </div>

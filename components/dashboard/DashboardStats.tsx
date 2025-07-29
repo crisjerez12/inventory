@@ -78,7 +78,11 @@ export function DashboardStats({ items }: DashboardStatsProps) {
               const totalStock = categoryItems.reduce((sum, item) => sum + item.stock, 0);
 
               return (
-                <div key={category} className="relative overflow-hidden bg-gradient-to-br from-white to-gray-50 border-4 border-black shadow-[6px_6px_0px_0px_#000000] hover:shadow-[8px_8px_0px_0px_#000000] hover:translate-x-[-2px] hover:translate-y-[-2px] transition-all duration-200">
+                <div
+                  key={category}
+                  className="relative overflow-hidden bg-gradient-to-br from-white to-gray-50 border-4 border-black shadow-[6px_6px_0px_0px_#000000] hover:shadow-[8px_8px_0px_0px_#000000] hover:translate-x-[-2px] hover:translate-y-[-2px] transition-all duration-200"
+                >
+                  {/* Category Header */}
                   <div className={`${colorClass} p-3 border-b-4 border-black`}>
                     <div className="flex items-center justify-between">
                       <h3 className="font-black text-white text-xs md:text-sm tracking-wide">
@@ -90,6 +94,7 @@ export function DashboardStats({ items }: DashboardStatsProps) {
                     </div>
                   </div>
 
+                  {/* Stats Grid */}
                   <div className="p-3 md:p-4">
                     <div className="grid grid-cols-2 gap-2 md:gap-3 mb-3">
                       <div className="text-center p-2 bg-blue-50 border-2 border-black">
@@ -106,11 +111,20 @@ export function DashboardStats({ items }: DashboardStatsProps) {
                       </div>
                     </div>
 
-                    <div className={`w-full h-3 border-2 border-black relative overflow-hidden ${outOfStockInCategory === categoryItems.length ? "bg-red-200" : "bg-green-200"}`}>
+                    {/* Status Bar */}
+                    <div
+                      className={`w-full h-3 border-2 border-black relative overflow-hidden ${
+                        outOfStockInCategory === categoryItems.length ? "bg-red-200" : "bg-green-200"
+                      }`}
+                    >
                       <div
                         className="h-full bg-green-500 transition-all duration-500"
                         style={{
-                          width: `${categoryItems.length > 0 ? ((categoryItems.length - outOfStockInCategory) / categoryItems.length) * 100 : 0}%`,
+                          width: `${
+                            categoryItems.length > 0
+                              ? ((categoryItems.length - outOfStockInCategory) / categoryItems.length) * 100
+                              : 0
+                          }%`,
                         }}
                       ></div>
                     </div>
@@ -123,6 +137,19 @@ export function DashboardStats({ items }: DashboardStatsProps) {
                         {outOfStockInCategory} Out
                       </span>
                     </div>
+                  </div>
+
+                  {/* Status Indicator */}
+                  <div className="absolute top-2 right-2">
+                    <div
+                      className={`w-3 h-3 rounded-full border-2 border-white ${
+                        outOfStockInCategory === 0
+                          ? "bg-green-500"
+                          : outOfStockInCategory === categoryItems.length
+                          ? "bg-red-500"
+                          : "bg-yellow-500"
+                      }`}
+                    ></div>
                   </div>
                 </div>
               );
