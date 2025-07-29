@@ -7,46 +7,47 @@ export async function PATCH(
   { params }: { params: { id: string } }
 ) {
   try {
-    const itemId = parseInt(params.id);
     const { action, quantity, userId } = await request.json();
+    const itemId = parseInt(params.id);
 
-    if (!action || !quantity || quantity <= 0) {
+    if (!["add", "reduce"].includes(action)) {
       return NextResponse.json(
-        { success: false, error: "Valid action and quantity are required" },
+        { success: false, error: "Invalid action. Must be 'add' or 'reduce'" },
         { status: 400 }
       );
     }
 
-    const item = await prisma.item.findUnique({
+    if (!quantity || quantity <= 0) {
+      return NextResponse.json(
+        { success: false, error: "Quantity must be a positive number" },
+        { status: 400 }
+      );
+    }
+
+    // Get current item
+    const currentItem = await prisma.item.findUnique({
       where: { id: itemId },
     });
 
-    if (!item) {
+    if (!currentItem) {
       return NextResponse.json(
         { success: false, error: "Item not found" },
         { status: 404 }
       );
     }
 
-    let newStock = item.stock;
-    let historyQuantity = quantity;
-
+    // Calculate new stock
+    let newStock;
     if (action === "add") {
-      newStock = item.stock + quantity;
+      newStock = currentItem.stock + quantity;
     } else if (action === "reduce") {
-      if (quantity > item.stock) {
+      if (currentItem.stock < quantity) {
         return NextResponse.json(
-          { success: false, error: "Insufficient stock" },
+          { success: false, error: "Cannot reduce stock below zero" },
           { status: 400 }
         );
       }
-      newStock = item.stock - quantity;
-      historyQuantity = -quantity; // Negative for reduction
-    } else {
-      return NextResponse.json(
-        { success: false, error: "Invalid action. Use 'add' or 'reduce'" },
-        { status: 400 }
-      );
+      newStock = currentItem.stock - quantity;
     }
 
     // Update item stock
@@ -58,11 +59,11 @@ export async function PATCH(
     // Create history record
     await prisma.history.create({
       data: {
-        itemId: item.id,
+        itemId: updatedItem.id,
         userId: userId || 1,
-        itemName: item.name,
-        category: item.category,
-        quantity: historyQuantity,
+        itemName: updatedItem.name,
+        category: updatedItem.category,
+        quantity: quantity,
         action: action,
       },
     });

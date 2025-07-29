@@ -58,3 +58,98 @@ export async function DELETE(
     );
   }
 }
+import { NextRequest, NextResponse } from "next/server";
+import { prisma } from "@/lib/prisma";
+
+// UPDATE user
+export async function PATCH(
+  request: NextRequest,
+  { params }: { params: { id: string } }
+) {
+  try {
+    const { username, role } = await request.json();
+    const userId = parseInt(params.id);
+
+    if (!username) {
+      return NextResponse.json(
+        { success: false, error: "Username is required" },
+        { status: 400 }
+      );
+    }
+
+    // Check if username already exists for another user
+    const existingUser = await prisma.user.findFirst({
+      where: {
+        username,
+        NOT: { id: userId },
+      },
+    });
+
+    if (existingUser) {
+      return NextResponse.json(
+        { success: false, error: "Username already exists" },
+        { status: 400 }
+      );
+    }
+
+    const updatedUser = await prisma.user.update({
+      where: { id: userId },
+      data: { username, role },
+      select: {
+        id: true,
+        username: true,
+        role: true,
+        createdAt: true,
+        updatedAt: true,
+      },
+    });
+
+    return NextResponse.json({ success: true, user: updatedUser });
+  } catch (error) {
+    return NextResponse.json(
+      { success: false, error: "Failed to update user" },
+      { status: 500 }
+    );
+  }
+}
+
+// DELETE user
+export async function DELETE(
+  request: NextRequest,
+  { params }: { params: { id: string } }
+) {
+  try {
+    const userId = parseInt(params.id);
+
+    // Check if user exists
+    const user = await prisma.user.findUnique({
+      where: { id: userId },
+    });
+
+    if (!user) {
+      return NextResponse.json(
+        { success: false, error: "User not found" },
+        { status: 404 }
+      );
+    }
+
+    // Don't allow deletion of admin users
+    if (user.role === "Admin") {
+      return NextResponse.json(
+        { success: false, error: "Cannot delete admin users" },
+        { status: 403 }
+      );
+    }
+
+    await prisma.user.delete({
+      where: { id: userId },
+    });
+
+    return NextResponse.json({ success: true });
+  } catch (error) {
+    return NextResponse.json(
+      { success: false, error: "Failed to delete user" },
+      { status: 500 }
+    );
+  }
+}
