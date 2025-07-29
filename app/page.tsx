@@ -1,8 +1,8 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { LoginPage } from "@/components/LoginPage";
-import { Dashboard } from "@/components/Dashboard";
+import LoginPage from "@/components/LoginPage";
+import Dashboard from "@/components/Dashboard";
 import { Toaster } from "@/components/ui/toaster";
 
 interface User {
@@ -72,7 +72,12 @@ export default function Home() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100">
       {!isAuthenticated ? (
-        <LoginPage onLogin={handleLogin} />
+        <LoginPage onLogin={(user) => {
+          setIsAuthenticated(true);
+          setUser(user);
+          localStorage.setItem("isAuthenticated", "true");
+          localStorage.setItem("userData", JSON.stringify(user));
+        }} />
       ) : (
         <Dashboard onLogout={handleLogout} user={user} />
       )}

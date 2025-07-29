@@ -42,7 +42,7 @@ const categoryColors = {
   Others: "bg-gray-500",
 };
 
-export function Dashboard({ onLogout, user }: DashboardProps) {
+export default function Dashboard({ onLogout, user }: DashboardProps) {
   const [activeTab, setActiveTab] = useState("dashboard");
   const [items, setItems] = useState<InventoryItem[]>([]);
   const [currentTime, setCurrentTime] = useState(new Date());
