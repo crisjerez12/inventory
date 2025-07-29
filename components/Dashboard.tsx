@@ -331,7 +331,7 @@ export default function Dashboard({ onLogout, user }: DashboardProps) {
             <img src="/images/microtek-logo.jpg" alt="Microtek Logo" className="h-12" />
             <div>
               <h1 className="text-2xl md:text-3xl font-bold text-white">MICROTEK INVENTORY</h1>
-              <p className="text-sm md:text-base text-blue-200 font-medium">Microbial Technology Solutions</p>
+              <p className="text-sm md:text-base text-blue-200 font-medium">Animal Feed Solutions</p>
             </div>
           </div>
         </div>

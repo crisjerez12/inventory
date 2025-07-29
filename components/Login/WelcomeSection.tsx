@@ -15,10 +15,10 @@ export function WelcomeSection() {
           MICROTEK INVENTORY
         </h1>
         <h2 className="text-xl md:text-2xl font-semibold text-green-600">
-          Microbial Technology Solutions
+          Animal Feed Solutions
         </h2>
         <p className="text-blue-800 font-medium text-lg max-w-md mx-auto">
-          Professional inventory management system for microbial technology products and solutions.
+          Professional inventory management system for animal feeds and livestock nutrition products.
         </p>
       </div>
 
@@ -33,7 +33,7 @@ export function WelcomeSection() {
           </CardHeader>
           <CardContent>
             <p className="text-gray-700 font-medium text-sm">
-              Enterprise-grade security ensures your inventory data is protected with advanced encryption.
+              Enterprise-grade security ensures your feed inventory data is protected with advanced encryption.
             </p>
           </CardContent>
         </Card>
@@ -47,7 +47,7 @@ export function WelcomeSection() {
           </CardHeader>
           <CardContent>
             <p className="text-gray-700 font-medium text-sm">
-              Optimized operations with instant updates and high-performance data processing.
+              Optimized feed management with instant stock updates and high-performance tracking.
             </p>
           </CardContent>
         </Card>
@@ -61,7 +61,7 @@ export function WelcomeSection() {
           </CardHeader>
           <CardContent>
             <p className="text-gray-700 font-medium text-sm">
-              Live synchronization and instant updates across all your devices and locations.
+              Live feed stock synchronization and instant updates across all your farm locations.
             </p>
           </CardContent>
         </Card>
@@ -69,9 +69,9 @@ export function WelcomeSection() {
 
       <div className="bg-gradient-to-r from-blue-900 to-blue-800 text-white p-6 rounded-lg shadow-xl">
         <div className="text-center">
-          <h3 className="font-bold text-xl mb-2">🧬 TRUSTED BY PROFESSIONALS</h3>
+          <h3 className="font-bold text-xl mb-2">🌾 TRUSTED BY FEED PROFESSIONALS</h3>
           <p className="font-medium text-sm text-blue-100">
-            Join industry leaders who trust Microtek for their microbial technology inventory management needs.
+            Join livestock farmers and feed dealers who trust Microtek for their animal feed inventory management needs.
           </p>
         </div>
       </div>

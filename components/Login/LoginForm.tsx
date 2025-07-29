@@ -91,7 +91,7 @@ export function LoginForm({ onLogin }: LoginFormProps) {
             MICROTEK INVENTORY
           </CardTitle>
           <CardDescription className="text-blue-100 text-center">
-            Microbial Technology Solutions
+            Animal Feed Solutions
           </CardDescription>
         </CardHeader>
         <CardContent className="p-6">
