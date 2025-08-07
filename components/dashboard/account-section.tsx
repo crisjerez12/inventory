@@ -311,15 +311,15 @@ const openEditStaffDialog = (staff: StaffUser) => {
 return (
   <div className="space-y-6">
     {/* User Profile Section */}
-    <Card className="bg-white border-2 border-border shadow-md">
-      <CardHeader className="bg-primary text-white">
+    <Card className="brutal-card">
+      <CardHeader className="brutal-header">
         <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
           <div>
-            <CardTitle className="text-xl font-semibold text-white flex items-center">
+            <CardTitle className="text-lg font-bold text-white flex items-center">
               <UserIcon className="h-5 w-5 mr-2" />
               User Profile
             </CardTitle>
-            <CardDescription className="text-white/90">
+            <CardDescription className="text-white/90 font-medium">
               Current user information and account management
             </CardDescription>
           </div>
@@ -328,17 +328,17 @@ return (
             onOpenChange={setIsPasswordDialogOpen}
           >
             <DialogTrigger asChild>
-              <Button className="bg-secondary hover:bg-secondary/90 text-white font-medium">
+              <Button className="brutal-button-secondary">
                 <Key className="h-4 w-4 mr-2" />
                 Update Password
               </Button>
             </DialogTrigger>
-            <DialogContent className="bg-white border-2 border-border shadow-lg max-w-md mx-4">
+            <DialogContent className="brutal-card max-w-md mx-4">
               <DialogHeader>
-                <DialogTitle className="font-semibold text-primary">
+                <DialogTitle className="font-bold text-primary uppercase tracking-wide">
                   Update Password
                 </DialogTitle>
-                <DialogDescription className="text-muted-foreground">
+                <DialogDescription className="text-muted-foreground font-medium">
                   Change your account password for security
                 </DialogDescription>
               </DialogHeader>
@@ -346,7 +346,7 @@ return (
                 <div className="grid grid-cols-4 items-center gap-4">
                   <Label
                     htmlFor="currentPassword"
-                    className="text-right font-medium text-foreground"
+                    className="text-right font-semibold text-foreground uppercase tracking-wide text-sm"
                   >
                     Current
                   </Label>
@@ -360,14 +360,14 @@ return (
                         currentPassword: e.target.value,
                       })
                     }
-                    className="col-span-3 border-2 border-border focus:border-primary"
+                    className="col-span-3 brutal-input"
                     placeholder="Enter current password"
                   />
                 </div>
                 <div className="grid grid-cols-4 items-center gap-4">
                   <Label
                     htmlFor="newPassword"
-                    className="text-right font-medium text-foreground"
+                    className="text-right font-semibold text-foreground uppercase tracking-wide text-sm"
                   >
                     New
                   </Label>
@@ -381,14 +381,14 @@ return (
                         newPassword: e.target.value,
                       })
                     }
-                    className="col-span-3 border-2 border-border focus:border-primary"
+                    className="col-span-3 brutal-input"
                     placeholder="Enter new password"
                   />
                 </div>
                 <div className="grid grid-cols-4 items-center gap-4">
                   <Label
                     htmlFor="confirmPassword"
-                    className="text-right font-medium text-foreground"
+                    className="text-right font-semibold text-foreground uppercase tracking-wide text-sm"
                   >
                     Confirm
                   </Label>
@@ -402,7 +402,7 @@ return (
                         confirmPassword: e.target.value,
                       })
                     }
-                    className="col-span-3 border-2 border-border focus:border-primary"
+                    className="col-span-3 brutal-input"
                     placeholder="Confirm new password"
                   />
                 </div>
@@ -411,14 +411,14 @@ return (
                 <Button
                   onClick={() => setIsPasswordDialogOpen(false)}
                   variant="outline"
-                  className="border-2 border-border"
+                  className="brutal-button bg-white text-black border-3 border-black"
                 >
                   Cancel
                 </Button>
                 <Button
                   onClick={handleUpdatePassword}
                   disabled={isUpdatingPassword}
-                  className="bg-secondary hover:bg-secondary/90 text-white"
+                  className="brutal-button-secondary"
                 >
                   {isUpdatingPassword ? (
                     <Loader2 className="h-4 w-4 mr-2 animate-spin" />
@@ -433,29 +433,29 @@ return (
       <CardContent className="p-6">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <div className="space-y-4">
-            <div className="p-4 bg-secondary/10 border border-secondary/20 rounded-lg">
-              <h3 className="font-semibold text-primary mb-2">Username</h3>
-              <p className="text-lg font-medium text-foreground">
+            <div className="p-4 bg-secondary/10 border-2 border-secondary/20 rounded-lg shadow-[2px_2px_0px_0px_rgba(0,0,0,0.1)]">
+              <h3 className="font-bold text-primary mb-2 uppercase tracking-wide text-sm">Username</h3>
+              <p className="text-base font-semibold text-foreground">
                 {user?.username}
               </p>
             </div>
-            <div className="p-4 bg-primary/10 border border-primary/20 rounded-lg">
-              <h3 className="font-semibold text-primary mb-2">Role</h3>
-              <p className="text-lg font-medium text-foreground">
+            <div className="p-4 bg-primary/10 border-2 border-primary/20 rounded-lg shadow-[2px_2px_0px_0px_rgba(0,0,0,0.1)]">
+              <h3 className="font-bold text-primary mb-2 uppercase tracking-wide text-sm">Role</h3>
+              <p className="text-base font-semibold text-foreground">
                 {user?.role}
               </p>
             </div>
           </div>
           <div className="space-y-4">
-            <div className="p-4 bg-secondary/10 border border-secondary/20 rounded-lg">
-              <h3 className="font-semibold text-primary mb-2">Created</h3>
-              <p className="text-sm font-medium text-foreground">
+            <div className="p-4 bg-secondary/10 border-2 border-secondary/20 rounded-lg shadow-[2px_2px_0px_0px_rgba(0,0,0,0.1)]">
+              <h3 className="font-bold text-primary mb-2 uppercase tracking-wide text-sm">Created</h3>
+              <p className="text-sm font-semibold text-foreground">
                 {user ? new Date(user.createdAt).toLocaleDateString() : ""}
               </p>
             </div>
-            <div className="p-4 bg-primary/10 border border-primary/20 rounded-lg">
-              <h3 className="font-semibold text-primary mb-2">Last Updated</h3>
-              <p className="text-sm font-medium text-foreground">
+            <div className="p-4 bg-primary/10 border-2 border-primary/20 rounded-lg shadow-[2px_2px_0px_0px_rgba(0,0,0,0.1)]">
+              <h3 className="font-bold text-primary mb-2 uppercase tracking-wide text-sm">Last Updated</h3>
+              <p className="text-sm font-semibold text-foreground">
                 {user ? new Date(user.updatedAt).toLocaleDateString() : ""}
               </p>
             </div>
@@ -468,15 +468,15 @@ return (
     {user?.role === "Admin" && (
       <>
         {/* User Registration */}
-        <Card className="bg-white border-2 border-border shadow-md">
-          <CardHeader className="bg-secondary text-white">
+        <Card className="brutal-card">
+          <CardHeader className="brutal-header-secondary">
             <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
               <div>
-                <CardTitle className="text-xl font-semibold text-white flex items-center">
+                <CardTitle className="text-lg font-bold text-white flex items-center">
                   <Users className="h-5 w-5 mr-2" />
                   User Registration
                 </CardTitle>
-                <CardDescription className="text-white/90">
+                <CardDescription className="text-white/90 font-medium">
                   Register new staff accounts (Admin only)
                 </CardDescription>
               </div>
@@ -485,17 +485,17 @@ return (
                 onOpenChange={setIsRegisterDialogOpen}
               >
                 <DialogTrigger asChild>
-                  <Button className="bg-primary hover:bg-primary/90 text-white font-medium">
+                  <Button className="brutal-button">
                     <Plus className="h-4 w-4 mr-2" />
                     Register User
                   </Button>
                 </DialogTrigger>
-                <DialogContent className="bg-white border-2 border-border shadow-lg max-w-md mx-4">
+                <DialogContent className="brutal-card max-w-md mx-4">
                   <DialogHeader>
-                    <DialogTitle className="font-semibold text-primary">
+                    <DialogTitle className="font-bold text-primary uppercase tracking-wide">
                       Register New Staff
                     </DialogTitle>
-                    <DialogDescription className="text-muted-foreground">
+                    <DialogDescription className="text-muted-foreground font-medium">
                       Create a new staff account with default Staff role
                     </DialogDescription>
                   </DialogHeader>
@@ -503,7 +503,7 @@ return (
                     <div className="grid grid-cols-4 items-center gap-4">
                       <Label
                         htmlFor="newUsername"
-                        className="text-right font-medium text-foreground"
+                        className="text-right font-semibold text-foreground uppercase tracking-wide text-sm"
                       >
                         Username
                       </Label>
@@ -513,14 +513,14 @@ return (
                         onChange={(e) =>
                           setNewUser({ ...newUser, username: e.target.value })
                         }
-                        className="col-span-3 border-2 border-border focus:border-primary"
+                        className="col-span-3 brutal-input"
                         placeholder="Enter username"
                       />
                     </div>
                     <div className="grid grid-cols-4 items-center gap-4">
                       <Label
                         htmlFor="newPassword"
-                        className="text-right font-medium text-foreground"
+                        className="text-right font-semibold text-foreground uppercase tracking-wide text-sm"
                       >
                         Password
                       </Label>
@@ -531,13 +531,13 @@ return (
                         onChange={(e) =>
                           setNewUser({ ...newUser, password: e.target.value })
                         }
-                        className="col-span-3 border-2 border-border focus:border-primary"
+                        className="col-span-3 brutal-input"
                         placeholder="Enter password"
                       />
                     </div>
-                    <div className="p-3 bg-muted/50 border border-border rounded-lg">
-                      <p className="text-sm font-medium text-muted-foreground">
-                        <strong>Note:</strong> New accounts will be created
+                    <div className="p-3 bg-muted/50 border-2 border-gray-200 rounded-lg shadow-[2px_2px_0px_0px_rgba(0,0,0,0.1)]">
+                      <p className="text-sm font-semibold text-muted-foreground">
+                        <span className="font-bold">Note:</span> New accounts will be created
                         with Staff role by default.
                       </p>
                     </div>
@@ -546,14 +546,14 @@ return (
                     <Button
                       onClick={() => setIsRegisterDialogOpen(false)}
                       variant="outline"
-                      className="border-2 border-border"
+                      className="brutal-button bg-white text-black border-3 border-black"
                     >
                       Cancel
                     </Button>
                     <Button
                       onClick={handleRegisterUser}
                       disabled={isRegisteringUser}
-                      className="bg-secondary hover:bg-secondary/90 text-white"
+                      className="brutal-button-secondary"
                     >
                       {isRegisteringUser ? (
                         <Loader2 className="h-4 w-4 mr-2 animate-spin" />
@@ -568,13 +568,13 @@ return (
         </Card>
 
         {/* Staff Management Table */}
-        <Card className="bg-white border-2 border-border shadow-md">
-          <CardHeader className="bg-primary text-white">
-            <CardTitle className="text-xl font-semibold text-white flex items-center">
+        <Card className="brutal-card">
+          <CardHeader className="brutal-header">
+            <CardTitle className="text-lg font-bold text-white flex items-center">
               <Users className="h-5 w-5 mr-2" />
               Staff Management
             </CardTitle>
-            <CardDescription className="text-white/90">
+            <CardDescription className="text-white/90 font-medium">
               Manage staff accounts and permissions ({staffList.length} staff
               members)
             </CardDescription>
@@ -583,17 +583,17 @@ return (
             {staffList.length > 0 ? (
               <Table>
                 <TableHeader>
-                  <TableRow className="border-b-2 border-border">
-                    <TableHead className="font-semibold text-foreground">
+                  <TableRow className="border-b-2 border-gray-200">
+                    <TableHead className="font-bold text-foreground uppercase tracking-wide text-sm">
                       Username
                     </TableHead>
-                    <TableHead className="font-semibold text-foreground">
+                    <TableHead className="font-bold text-foreground uppercase tracking-wide text-sm">
                       Role
                     </TableHead>
-                    <TableHead className="font-semibold text-foreground">
+                    <TableHead className="font-bold text-foreground uppercase tracking-wide text-sm">
                       Created
                     </TableHead>
-                    <TableHead className="font-semibold text-foreground">
+                    <TableHead className="font-bold text-foreground uppercase tracking-wide text-sm">
                       Actions
                     </TableHead>
                   </TableRow>
@@ -602,17 +602,17 @@ return (
                   {staffList.map((staff) => (
                     <TableRow
                       key={staff.id}
-                      className="border-b border-border hover:bg-muted/50"
+                      className="border-b border-gray-200 hover:bg-muted/30"
                     >
-                      <TableCell className="font-medium text-foreground">
+                      <TableCell className="font-semibold text-foreground">
                         {staff.username}
                       </TableCell>
                       <TableCell>
-                        <span className="px-3 py-1 rounded-full text-xs font-medium bg-secondary text-white">
+                        <span className="px-3 py-1 rounded-md text-xs font-bold bg-secondary text-white border-2 border-black shadow-[2px_2px_0px_0px_rgba(0,0,0,0.1)] uppercase tracking-wide">
                           {staff.role}
                         </span>
                       </TableCell>
-                      <TableCell className="font-medium text-foreground">
+                      <TableCell className="font-semibold text-foreground">
                         {new Date(staff.createdAt).toLocaleDateString()}
                       </TableCell>
                       <TableCell>
@@ -620,7 +620,7 @@ return (
                           <Button
                             onClick={() => openEditStaffDialog(staff)}
                             size="sm"
-                            className="bg-primary hover:bg-primary/90 text-white"
+                            className="brutal-button"
                           >
                             <Edit className="h-3 w-3" />
                           </Button>
@@ -630,7 +630,7 @@ return (
                                 disabled={isDeletingStaff}
                                 size="sm"
                                 variant="destructive"
-                                className="disabled:opacity-50"
+                                className="brutal-button-destructive disabled:opacity-50"
                               >
                                 {isDeletingStaff ? (
                                   <Loader2 className="h-3 w-3 animate-spin" />
@@ -639,12 +639,12 @@ return (
                                 )}
                               </Button>
                             </AlertDialogTrigger>
-                            <AlertDialogContent className="bg-white border-2 border-border shadow-lg max-w-md mx-4">
+                            <AlertDialogContent className="brutal-card max-w-md mx-4">
                               <AlertDialogHeader>
-                                <AlertDialogTitle className="font-semibold text-foreground">
+                                <AlertDialogTitle className="font-bold text-foreground uppercase tracking-wide">
                                   Confirm Deletion
                                 </AlertDialogTitle>
-                                <AlertDialogDescription className="text-muted-foreground">
+                                <AlertDialogDescription className="text-muted-foreground font-medium">
                                   Are you sure you want to permanently delete
                                   the staff account "{staff.username}"? This
                                   action cannot be undone and the user will
@@ -652,12 +652,12 @@ return (
                                 </AlertDialogDescription>
                               </AlertDialogHeader>
                               <AlertDialogFooter>
-                                <AlertDialogCancel className="border-2 border-border">
+                                <AlertDialogCancel className="brutal-button bg-white text-black border-3 border-black">
                                   Cancel
                                 </AlertDialogCancel>
                                 <AlertDialogAction
                                   onClick={() => handleDeleteStaff(staff)}
-                                  className="bg-destructive hover:bg-destructive/90 text-white"
+                                  className="brutal-button-destructive"
                                 >
                                   Delete
                                 </AlertDialogAction>
@@ -672,7 +672,7 @@ return (
               </Table>
             ) : (
               <div className="text-center p-8">
-                <p className="font-medium text-muted-foreground">
+                <p className="font-semibold text-muted-foreground">
                   No staff members found. Register new staff accounts to get
                   started.
                 </p>
@@ -688,12 +688,12 @@ return (
       open={isEditStaffDialogOpen}
       onOpenChange={setIsEditStaffDialogOpen}
     >
-      <DialogContent className="bg-white border-2 border-border shadow-lg max-w-md mx-4">
+      <DialogContent className="brutal-card max-w-md mx-4">
         <DialogHeader>
-          <DialogTitle className="font-semibold text-primary">
+          <DialogTitle className="font-bold text-primary uppercase tracking-wide">
             Edit Staff Member
           </DialogTitle>
-          <DialogDescription className="text-muted-foreground">
+          <DialogDescription className="text-muted-foreground font-medium">
             Update staff member information and role
           </DialogDescription>
         </DialogHeader>
@@ -701,7 +701,7 @@ return (
           <div className="grid grid-cols-4 items-center gap-4">
             <Label
               htmlFor="editUsername"
-              className="text-right font-medium text-foreground"
+              className="text-right font-semibold text-foreground uppercase tracking-wide text-sm"
             >
               Username
             </Label>
@@ -711,14 +711,14 @@ return (
               onChange={(e) =>
                 setStaffForm({ ...staffForm, username: e.target.value })
               }
-              className="col-span-3 border-2 border-border focus:border-primary"
+              className="col-span-3 brutal-input"
               placeholder="Enter username"
             />
           </div>
           <div className="grid grid-cols-4 items-center gap-4">
             <Label
               htmlFor="editPassword"
-              className="text-right font-medium text-foreground"
+              className="text-right font-semibold text-foreground uppercase tracking-wide text-sm"
             >
               Password
             </Label>
@@ -729,7 +729,7 @@ return (
               onChange={(e) =>
                 setStaffForm({ ...staffForm, password: e.target.value })
               }
-              className="col-span-3 border-2 border-border focus:border-primary"
+              className="col-span-3 brutal-input"
               placeholder="Leave empty to keep current password"
             />
           </div>
@@ -738,14 +738,14 @@ return (
           <Button
             onClick={() => setIsEditStaffDialogOpen(false)}
             variant="outline"
-            className="border-2 border-border"
+            className="brutal-button bg-white text-black border-3 border-black"
           >
             Cancel
           </Button>
           <Button
             onClick={handleUpdateStaff}
             disabled={isUpdatingStaff}
-            className="bg-secondary hover:bg-secondary/90 text-white"
+            className="brutal-button-secondary"
           >
             {isUpdatingStaff ? (
               <Loader2 className="h-4 w-4 mr-2 animate-spin" />
