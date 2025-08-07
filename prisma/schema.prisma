@@ -1,0 +1,62 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = "file:./dev.db"
+}
+model User {
+  id        String   @id @default(cuid())
+  username  String   @unique
+  password  String
+  role      String   @default("Staff")
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Relations
+  items        InventoryItem[] // <-- This needs an opposite relation
+  transactions Transaction[]
+
+  @@map("users")
+}
+
+model InventoryItem {
+  id        String   @id @default(cuid())
+  name      String
+  price     Float
+  stock     Int
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Relations
+  user      User?    @relation(fields: [userId], references: [id])
+  userId    String?
+  transactions Transaction[]
+
+  @@map("inventory_items")
+}
+model Transaction {
+  id           String   @id @default(cuid())
+  itemId       String
+  itemName     String
+  type         String   // "add" or "reduce"
+  quantity     Int
+  price        Float
+  totalAmount  Float
+  customerName String?
+  date         String
+  invoiceNumber String?
+  userId       String
+  username     String
+  createdAt    DateTime @default(now())
+
+  // Relations
+  item InventoryItem @relation(fields: [itemId], references: [id], onDelete: Cascade)
+  user User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("transactions")
+}
