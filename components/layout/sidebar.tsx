@@ -66,9 +66,9 @@ export function Sidebar({ activeTab, setActiveTab, user, onLogout }: SidebarProp
       `}>
         <div className="flex flex-col h-full">
           {/* Header with Logo */}
-          <div className="p-6 professional-header">
+          <div className="p-6 brutal-header">
             <div className="flex items-center justify-center mb-4">
-              <div className="bg-white p-4 border-2 border-border shadow-md rounded-lg">
+              <div className="bg-white p-4 border-3 border-black shadow-[var(--shadow-brutal)] rounded-lg">
                 <Image
                   src="/logo.jpg"
                   alt="Microtek Logo"
@@ -78,10 +78,10 @@ export function Sidebar({ activeTab, setActiveTab, user, onLogout }: SidebarProp
                 />
               </div>
             </div>
-            <h1 className="text-xl font-semibold text-center text-white">
+            <h1 className="text-lg font-bold text-center text-white uppercase tracking-wide">
               Inventory System
             </h1>
-            <p className="text-sm text-white/80 mt-1 text-center">
+            <p className="text-sm text-white/90 mt-1 text-center font-medium">
               Welcome, {user?.username}
             </p>
           </div>
@@ -100,28 +100,28 @@ export function Sidebar({ activeTab, setActiveTab, user, onLogout }: SidebarProp
           </div>
 
           {/* Digital Clock */}
-          <div className="p-4 border-t-2 border-border bg-muted/30">
+          <div className="p-4 border-t-3 border-black bg-muted/30">
             <div className="text-center">
               <div className="flex items-center justify-center mb-2">
                 <Clock className="h-5 w-5 mr-2 text-primary" />
-                <span className="text-sm font-medium text-primary">
+                <span className="text-sm font-semibold text-primary uppercase tracking-wide">
                   Live Time
                 </span>
               </div>
-              <div className="text-2xl font-bold text-primary">
+              <div className="text-xl font-bold text-primary">
                 {currentTime.toLocaleTimeString()}
               </div>
-              <div className="text-sm text-muted-foreground">
+              <div className="text-sm text-muted-foreground font-medium">
                 {currentTime.toLocaleDateString()}
               </div>
             </div>
           </div>
 
           {/* Logout Button */}
-          <div className="p-4 border-t-2 border-border">
+          <div className="p-4 border-t-3 border-black">
             <Button
               onClick={handleLogout}
-              className="w-full professional-button-destructive"
+              className="w-full brutal-button-destructive"
             >
               <LogOut className="h-4 w-4 mr-2" />
               Logout

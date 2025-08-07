@@ -153,9 +153,9 @@ export function ItemsSection({ items, user, onItemsUpdate }: ItemsSectionProps) 
   return (
     <div className="space-y-6">
       {/* Search and Filters */}
-      <Card className="professional-card">
-        <CardHeader className="professional-header-secondary">
-          <CardTitle className="text-xl font-semibold text-white flex items-center">
+      <Card className="brutal-card">
+        <CardHeader className="brutal-header-secondary">
+          <CardTitle className="text-lg font-bold text-white flex items-center">
             <Search className="h-5 w-5 mr-2" />
             Search & Filters
           </CardTitle>
@@ -163,25 +163,25 @@ export function ItemsSection({ items, user, onItemsUpdate }: ItemsSectionProps) 
         <CardContent className="p-6">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
-              <Label className="font-medium text-foreground mb-2 block">
+              <Label className="font-semibold text-foreground mb-2 block uppercase tracking-wide text-sm">
                 Search Products
               </Label>
               <Input
                 placeholder="Enter product name..."
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
-                className="professional-input"
+                className="brutal-input"
               />
             </div>
             <div>
-              <Label className="font-medium text-foreground mb-2 block">
+              <Label className="font-semibold text-foreground mb-2 block uppercase tracking-wide text-sm">
                 Filter by Stock
               </Label>
               <Select value={stockFilter} onValueChange={setStockFilter}>
-                <SelectTrigger className="professional-select">
+                <SelectTrigger className="brutal-select">
                   <SelectValue />
                 </SelectTrigger>
-                <SelectContent className="professional-select">
+                <SelectContent className="brutal-select">
                   <SelectItem value="All">All Items</SelectItem>
                   <SelectItem value="In Stock">In Stock</SelectItem>
                   <SelectItem value="Low Stock">Low Stock (≤10)</SelectItem>
@@ -194,11 +194,11 @@ export function ItemsSection({ items, user, onItemsUpdate }: ItemsSectionProps) 
       </Card>
 
       {/* Items Table */}
-      <Card className="professional-card">
-        <CardHeader className="professional-header">
+      <Card className="brutal-card">
+        <CardHeader className="brutal-header">
           <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
             <div>
-              <CardTitle className="text-xl font-semibold text-white flex items-center">
+              <CardTitle className="text-lg font-bold text-white flex items-center">
                 <Box className="h-5 w-5 mr-2" />
                 Inventory Items
               </CardTitle>
@@ -208,35 +208,35 @@ export function ItemsSection({ items, user, onItemsUpdate }: ItemsSectionProps) 
             </div>
             <Dialog open={isAddDialogOpen} onOpenChange={setIsAddDialogOpen}>
               <DialogTrigger asChild>
-                <Button className="professional-button-secondary">
+                <Button className="brutal-button-secondary">
                   <Plus className="h-4 w-4 mr-2" />
                   Add Item
                 </Button>
               </DialogTrigger>
-              <DialogContent className="professional-card max-w-md mx-4">
+              <DialogContent className="brutal-card max-w-md mx-4">
                 <DialogHeader>
-                  <DialogTitle className="font-semibold text-primary">
+                  <DialogTitle className="font-bold text-primary uppercase tracking-wide">
                     Add New Item
                   </DialogTitle>
-                  <DialogDescription className="text-muted-foreground">
+                  <DialogDescription className="text-muted-foreground font-medium">
                     Enter product details for inventory
                   </DialogDescription>
                 </DialogHeader>
                 <div className="grid gap-4 py-4">
                   <div className="grid grid-cols-4 items-center gap-4">
-                    <Label htmlFor="name" className="text-right font-medium text-foreground">
+                    <Label htmlFor="name" className="text-right font-semibold text-foreground uppercase tracking-wide text-sm">
                       Name
                     </Label>
                     <Input
                       id="name"
                       value={newItem.name}
                       onChange={(e) => setNewItem({ ...newItem, name: e.target.value })}
-                      className="col-span-3 professional-input"
+                      className="col-span-3 brutal-input"
                       placeholder="Product name"
                     />
                   </div>
                   <div className="grid grid-cols-4 items-center gap-4">
-                    <Label htmlFor="price" className="text-right font-medium text-foreground">
+                    <Label htmlFor="price" className="text-right font-semibold text-foreground uppercase tracking-wide text-sm">
                       Price
                     </Label>
                     <Input
@@ -245,12 +245,12 @@ export function ItemsSection({ items, user, onItemsUpdate }: ItemsSectionProps) 
                       step="0.01"
                       value={newItem.price}
                       onChange={(e) => setNewItem({ ...newItem, price: e.target.value })}
-                      className="col-span-3 professional-input"
+                      className="col-span-3 brutal-input"
                       placeholder="₱ Price"
                     />
                   </div>
                   <div className="grid grid-cols-4 items-center gap-4">
-                    <Label htmlFor="stock" className="text-right font-medium text-foreground">
+                    <Label htmlFor="stock" className="text-right font-semibold text-foreground uppercase tracking-wide text-sm">
                       Stock
                     </Label>
                     <Input
@@ -258,7 +258,7 @@ export function ItemsSection({ items, user, onItemsUpdate }: ItemsSectionProps) 
                       type="number"
                       value={newItem.stock}
                       onChange={(e) => setNewItem({ ...newItem, stock: e.target.value })}
-                      className="col-span-3 professional-input"
+                      className="col-span-3 brutal-input"
                       placeholder="Initial stock"
                     />
                   </div>
@@ -267,14 +267,14 @@ export function ItemsSection({ items, user, onItemsUpdate }: ItemsSectionProps) 
                   <Button
                     onClick={() => setIsAddDialogOpen(false)}
                     variant="outline"
-                    className="border-2 border-border"
+                    className="brutal-button bg-white text-black border-3 border-black"
                   >
                     Cancel
                   </Button>
                   <Button
                     onClick={handleAddItem}
                     disabled={isAddingItem}
-                    className="professional-button-secondary"
+                    className="brutal-button-secondary"
                   >
                     {isAddingItem ? (
                       <Loader2 className="h-4 w-4 mr-2 animate-spin" />
@@ -297,11 +297,11 @@ export function ItemsSection({ items, user, onItemsUpdate }: ItemsSectionProps) 
 
           {/* Pagination Controls */}
           {totalPages > 1 && (
-            <div className="flex flex-col sm:flex-row justify-center items-center space-y-4 sm:space-y-0 sm:space-x-4 mt-6 p-4 professional-card bg-muted/30">
+            <div className="flex flex-col sm:flex-row justify-center items-center space-y-4 sm:space-y-0 sm:space-x-4 mt-6 p-4 brutal-card bg-muted/30">
               <Button
                 onClick={() => setCurrentPage(Math.max(1, currentPage - 1))}
                 disabled={currentPage === 1}
-                className="professional-button disabled:opacity-50 disabled:cursor-not-allowed"
+                className="brutal-button disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 Previous
               </Button>
@@ -313,8 +313,8 @@ export function ItemsSection({ items, user, onItemsUpdate }: ItemsSectionProps) 
                     onClick={() => setCurrentPage(page)}
                     className={`w-10 h-10 ${
                       currentPage === page
-                        ? "professional-button"
-                        : "professional-button bg-white text-black hover:bg-primary hover:text-white"
+                        ? "brutal-button"
+                        : "brutal-button bg-white text-black hover:bg-primary hover:text-white"
                     }`}
                   >
                     {page}
@@ -325,7 +325,7 @@ export function ItemsSection({ items, user, onItemsUpdate }: ItemsSectionProps) 
               <Button
                 onClick={() => setCurrentPage(Math.min(totalPages, currentPage + 1))}
                 disabled={currentPage === totalPages}
-                className="professional-button disabled:opacity-50 disabled:cursor-not-allowed"
+                className="brutal-button disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 Next
               </Button>

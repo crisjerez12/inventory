@@ -10,65 +10,70 @@
 
 @layer base {
   :root {
-    --background: 0 0% 100%; /* White */
-    --foreground: 142 84% 15%; /* Dark Green */
+    --background: 0 0% 98%; /* Off-white for softer look */
+    --foreground: 142 50% 20%; /* Softer dark green */
 
-    --card: 0 0% 100%; /* White */
-    --card-foreground: 142 84% 15%; /* Dark Green */
+    --card: 0 0% 100%; /* Pure white for cards */
+    --card-foreground: 142 50% 20%; /* Softer dark green */
 
-    --popover: 0 0% 100%; /* White */
-    --popover-foreground: 142 84% 15%; /* Dark Green */
+    --popover: 0 0% 100%; /* Pure white */
+    --popover-foreground: 142 50% 20%; /* Softer dark green */
 
-    --primary: 142 84% 25%; /* Forest Green */
+    --primary: 142 70% 35%; /* Softer forest green */
     --primary-foreground: 0 0% 100%; /* White */
 
-    --secondary: 142 71% 45%; /* Medium Green */
+    --secondary: 142 60% 50%; /* Softer medium green */
     --secondary-foreground: 0 0% 100%; /* White */
 
-    --muted: 142 20% 95%; /* Very Light Green */
-    --muted-foreground: 142 40% 40%; /* Muted Green */
+    --muted: 142 15% 96%; /* Very light green */
+    --muted-foreground: 142 30% 45%; /* Softer muted green */
 
-    --accent: 142 71% 35%; /* Accent Green */
+    --accent: 142 60% 40%; /* Softer accent green */
     --accent-foreground: 0 0% 100%; /* White */
 
-    --destructive: 0 84% 60%; /* Red */
+    --destructive: 0 70% 55%; /* Softer red */
     --destructive-foreground: 0 0% 100%; /* White */
 
-    --border: 142 20% 80%; /* Light Green Border */
+    --border: 0 0% 20%; /* Dark border for neobrutalism */
     --input: 0 0% 100%; /* White */
-    --ring: 142 71% 45%; /* Medium Green */
+    --ring: 142 60% 50%; /* Softer ring color */
 
     --radius: 0.5rem; /* Rounded corners */
+    
+    /* Neobrutalism shadow variables */
+    --shadow-brutal: 4px 4px 0px 0px #000000;
+    --shadow-brutal-hover: 2px 2px 0px 0px #000000;
+    --shadow-brutal-lg: 6px 6px 0px 0px #000000;
   }
 
   .dark {
-    --background: 142 84% 8%; /* Very Dark Green */
-    --foreground: 142 20% 95%; /* Light Green */
+    --background: 142 50% 12%; /* Softer very dark green */
+    --foreground: 142 15% 92%; /* Softer light green */
 
-    --card: 142 84% 10%; /* Dark Green Card */
-    --card-foreground: 142 20% 95%; /* Light Green */
+    --card: 142 50% 15%; /* Softer dark green card */
+    --card-foreground: 142 15% 92%; /* Softer light green */
 
-    --popover: 142 84% 10%; /* Dark Green */
-    --popover-foreground: 142 20% 95%; /* Light Green */
+    --popover: 142 50% 15%; /* Softer dark green */
+    --popover-foreground: 142 15% 92%; /* Softer light green */
 
-    --primary: 142 71% 45%; /* Medium Green */
+    --primary: 142 60% 50%; /* Softer medium green */
     --primary-foreground: 0 0% 100%; /* White */
 
-    --secondary: 142 84% 25%; /* Forest Green */
+    --secondary: 142 70% 35%; /* Softer forest green */
     --secondary-foreground: 0 0% 100%; /* White */
 
-    --muted: 142 40% 15%; /* Dark Muted Green */
-    --muted-foreground: 142 40% 70%; /* Light Muted Green */
+    --muted: 142 30% 18%; /* Softer dark muted green */
+    --muted-foreground: 142 30% 65%; /* Softer light muted green */
 
-    --accent: 142 71% 45%; /* Medium Green */
+    --accent: 142 60% 50%; /* Softer medium green */
     --accent-foreground: 0 0% 100%; /* White */
 
-    --destructive: 0 62% 50%; /* Dark Red */
+    --destructive: 0 60% 50%; /* Softer dark red */
     --destructive-foreground: 0 0% 100%; /* White */
 
-    --border: 142 20% 80%; /* Light Green Border */
-    --input: 142 84% 12%; /* Dark Green Input */
-    --ring: 142 71% 45%; /* Medium Green */
+    --border: 0 0% 80%; /* Light border for dark mode */
+    --input: 142 50% 18%; /* Softer dark green input */
+    --ring: 142 60% 50%; /* Softer ring color */
   }
 }
 
@@ -83,39 +88,39 @@
 
 /* Neobrutalism Components */
 .brutal-card {
-  @apply bg-white border-4 border-black shadow-[var(--shadow-brutal)] hover:shadow-[var(--shadow-brutal-hover)] transition-all duration-200;
+  @apply bg-white border-3 border-black shadow-[var(--shadow-brutal)] hover:shadow-[var(--shadow-brutal-hover)] transition-all duration-200 rounded-lg;
 }
 
 .brutal-button {
-  @apply bg-primary text-white border-4 border-black shadow-[var(--shadow-brutal)] hover:shadow-[var(--shadow-brutal-hover)] hover:translate-x-1 hover:translate-y-1 transition-all duration-200 font-bold uppercase tracking-wide;
+  @apply bg-primary text-white border-3 border-black shadow-[var(--shadow-brutal)] hover:shadow-[var(--shadow-brutal-hover)] hover:translate-x-1 hover:translate-y-1 transition-all duration-200 font-semibold uppercase tracking-wide rounded-md;
 }
 
 .brutal-button-secondary {
-  @apply bg-secondary text-white border-4 border-black shadow-[var(--shadow-brutal)] hover:shadow-[var(--shadow-brutal-hover)] hover:translate-x-1 hover:translate-y-1 transition-all duration-200 font-bold uppercase tracking-wide;
+  @apply bg-secondary text-white border-3 border-black shadow-[var(--shadow-brutal)] hover:shadow-[var(--shadow-brutal-hover)] hover:translate-x-1 hover:translate-y-1 transition-all duration-200 font-semibold uppercase tracking-wide rounded-md;
 }
 
 .brutal-button-destructive {
-  @apply bg-destructive text-white border-4 border-black shadow-[var(--shadow-brutal)] hover:shadow-[var(--shadow-brutal-hover)] hover:translate-x-1 hover:translate-y-1 transition-all duration-200 font-bold uppercase tracking-wide;
+  @apply bg-destructive text-white border-3 border-black shadow-[var(--shadow-brutal)] hover:shadow-[var(--shadow-brutal-hover)] hover:translate-x-1 hover:translate-y-1 transition-all duration-200 font-semibold uppercase tracking-wide rounded-md;
 }
 
 .brutal-input {
-  @apply bg-white border-4 border-black shadow-[var(--shadow-brutal)] focus:shadow-[var(--shadow-brutal-hover)] focus:translate-x-1 focus:translate-y-1 transition-all duration-200 font-bold;
+  @apply bg-white border-3 border-black shadow-[var(--shadow-brutal)] focus:shadow-[var(--shadow-brutal-hover)] focus:translate-x-1 focus:translate-y-1 transition-all duration-200 font-medium rounded-md;
 }
 
 .brutal-select {
-  @apply bg-white border-4 border-black shadow-[var(--shadow-brutal)] font-bold;
+  @apply bg-white border-3 border-black shadow-[var(--shadow-brutal)] font-medium rounded-md;
 }
 
 .brutal-table {
-  @apply border-4 border-black shadow-[var(--shadow-brutal-lg)];
+  @apply border-3 border-black shadow-[var(--shadow-brutal-lg)] rounded-lg overflow-hidden;
 }
 
 .brutal-header {
-  @apply bg-primary text-white border-b-4 border-black font-black uppercase tracking-wider;
+  @apply bg-primary text-white border-b-3 border-black font-bold uppercase tracking-wider;
 }
 
 .brutal-header-secondary {
-  @apply bg-secondary text-white border-b-4 border-black font-black uppercase tracking-wider;
+  @apply bg-secondary text-white border-b-3 border-black font-bold uppercase tracking-wider;
 }
 
 .brutal-loading {
@@ -124,18 +129,18 @@
 
 /* Stock status colors with Neobrutalism */
 .stock-out {
-  @apply bg-destructive text-white border-4 border-black px-3 py-1 font-black uppercase tracking-wide shadow-[var(--shadow-brutal)];
+  @apply bg-destructive text-white border-2 border-black px-3 py-1 font-bold uppercase tracking-wide shadow-[var(--shadow-brutal)] rounded-md;
 }
 
 .stock-low {
-  @apply bg-yellow-500 text-black border-4 border-black px-3 py-1 font-black uppercase tracking-wide shadow-[var(--shadow-brutal)];
+  @apply bg-yellow-400 text-black border-2 border-black px-3 py-1 font-bold uppercase tracking-wide shadow-[var(--shadow-brutal)] rounded-md;
 }
 
 .stock-good {
-  @apply bg-secondary text-white border-4 border-black px-3 py-1 font-black uppercase tracking-wide shadow-[var(--shadow-brutal)];
+  @apply bg-secondary text-white border-2 border-black px-3 py-1 font-bold uppercase tracking-wide shadow-[var(--shadow-brutal)] rounded-md;
 }
 
-/* Professional Components */
+/* Professional Components (Fallback) */
 .professional-card {
   @apply bg-white border-2 border-border shadow-md hover:shadow-lg transition-shadow rounded-lg;
 }

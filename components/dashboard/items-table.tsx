@@ -57,28 +57,28 @@ return (
   <>
     {/* Desktop Table View */}
     <div className="hidden md:block">
-      <div className="brutal-table bg-white">
+      <div className="brutal-table bg-white rounded-lg overflow-hidden">
         <Table>
           <TableHeader>
-            <TableRow className="brutal-header">
-              <TableHead className="font-black text-white text-lg uppercase tracking-wider">PRODUCT NAME</TableHead>
-              <TableHead className="font-black text-white text-lg uppercase tracking-wider">PRICE</TableHead>
-              <TableHead className="font-black text-white text-lg uppercase tracking-wider">STOCK</TableHead>
-              <TableHead className="font-black text-white text-lg uppercase tracking-wider">TOTAL VALUE</TableHead>
-              <TableHead className="font-black text-white text-lg uppercase tracking-wider">ACTIONS</TableHead>
+            <TableRow className="brutal-header rounded-t-lg">
+              <TableHead className="font-bold text-white text-base uppercase tracking-wide py-4">PRODUCT NAME</TableHead>
+              <TableHead className="font-bold text-white text-base uppercase tracking-wide py-4">PRICE</TableHead>
+              <TableHead className="font-bold text-white text-base uppercase tracking-wide py-4">STOCK</TableHead>
+              <TableHead className="font-bold text-white text-base uppercase tracking-wide py-4">TOTAL VALUE</TableHead>
+              <TableHead className="font-bold text-white text-base uppercase tracking-wide py-4">ACTIONS</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
             {currentItems.map((item) => (
-              <TableRow key={item.id} className="border-b-4 border-black hover:bg-muted/50 transition-colors">
-                <TableCell className="font-bold text-foreground text-lg py-4">{item.name}</TableCell>
-                <TableCell className="font-bold text-foreground text-lg py-4">
+              <TableRow key={item.id} className="border-b-2 border-gray-200 hover:bg-muted/30 transition-colors">
+                <TableCell className="font-semibold text-foreground text-base py-4">{item.name}</TableCell>
+                <TableCell className="font-semibold text-foreground text-base py-4">
                   ₱{item.price.toLocaleString()}
                 </TableCell>
-                <TableCell className="font-bold py-4">
+                <TableCell className="font-semibold py-4">
                   {getStockDisplay(item.stock)}
                 </TableCell>
-                <TableCell className="font-bold text-foreground text-lg py-4">
+                <TableCell className="font-semibold text-foreground text-base py-4">
                   ₱{(item.stock * item.price).toLocaleString()}
                 </TableCell>
                 <TableCell className="py-4">
@@ -121,17 +121,17 @@ return (
                           )}
                         </Button>
                       </AlertDialogTrigger>
-                      <AlertDialogContent className="brutal-card bg-white max-w-md mx-4">
+                      <AlertDialogContent className="brutal-card bg-white max-w-md mx-4 rounded-lg">
                         <AlertDialogHeader>
-                          <AlertDialogTitle className="font-black text-foreground text-xl uppercase tracking-wide">
+                          <AlertDialogTitle className="font-bold text-foreground text-lg uppercase tracking-wide">
                             ⚠️ CONFIRM DELETION
                           </AlertDialogTitle>
-                          <AlertDialogDescription className="text-muted-foreground font-bold text-lg">
+                          <AlertDialogDescription className="text-muted-foreground font-medium text-base">
                             ARE YOU SURE YOU WANT TO PERMANENTLY REMOVE "{item.name}" FROM THE INVENTORY? THIS ACTION CANNOT BE UNDONE!
                           </AlertDialogDescription>
                         </AlertDialogHeader>
                         <AlertDialogFooter className="gap-4">
-                          <AlertDialogCancel className="brutal-button bg-white text-black border-4 border-black font-bold uppercase">
+                          <AlertDialogCancel className="brutal-button bg-white text-black border-3 border-black font-semibold uppercase rounded-md">
                             CANCEL
                           </AlertDialogCancel>
                           <AlertDialogAction
@@ -155,32 +155,32 @@ return (
     {/* Mobile Card View */}
     <div className="md:hidden space-y-6">
       {currentItems.map((item) => (
-        <Card key={item.id} className="brutal-card bg-white">
+        <Card key={item.id} className="brutal-card bg-white rounded-lg">
           <CardContent className="p-6">
             <div className="mb-4">
-              <h3 className="font-black text-foreground text-xl leading-tight uppercase tracking-wide">
+              <h3 className="font-bold text-foreground text-lg leading-tight uppercase tracking-wide">
                 {item.name}
               </h3>
             </div>
 
             <div className="grid grid-cols-2 gap-4 mb-6">
-              <div className="text-center p-4 brutal-card bg-primary/10">
-                <div className="text-sm font-black text-muted-foreground mb-2 uppercase tracking-wide">PRICE</div>
-                <div className="font-black text-primary text-2xl">
+              <div className="text-center p-4 brutal-card bg-primary/10 rounded-lg">
+                <div className="text-sm font-bold text-muted-foreground mb-2 uppercase tracking-wide">PRICE</div>
+                <div className="font-bold text-primary text-xl">
                   ₱{item.price.toLocaleString()}
                 </div>
               </div>
-              <div className="text-center p-4 brutal-card bg-secondary/10">
-                <div className="text-sm font-black text-muted-foreground mb-2 uppercase tracking-wide">STOCK</div>
-                <div className="font-black text-2xl">
+              <div className="text-center p-4 brutal-card bg-secondary/10 rounded-lg">
+                <div className="text-sm font-bold text-muted-foreground mb-2 uppercase tracking-wide">STOCK</div>
+                <div className="font-bold text-xl">
                   {getStockDisplay(item.stock)}
                 </div>
               </div>
             </div>
 
-            <div className="text-center p-4 brutal-card bg-muted/50 mb-6">
-              <div className="text-sm font-black text-muted-foreground mb-2 uppercase tracking-wide">TOTAL VALUE</div>
-              <div className="font-black text-foreground text-3xl">
+            <div className="text-center p-4 brutal-card bg-muted/50 mb-6 rounded-lg">
+              <div className="text-sm font-bold text-muted-foreground mb-2 uppercase tracking-wide">TOTAL VALUE</div>
+              <div className="font-bold text-foreground text-2xl">
                 ₱{(item.stock * item.price).toLocaleString()}
               </div>
             </div>
@@ -227,17 +227,17 @@ return (
                     DELETE
                   </Button>
                 </AlertDialogTrigger>
-                <AlertDialogContent className="brutal-card bg-white max-w-sm mx-4">
+                <AlertDialogContent className="brutal-card bg-white max-w-sm mx-4 rounded-lg">
                   <AlertDialogHeader>
-                    <AlertDialogTitle className="font-black text-foreground text-lg uppercase tracking-wide">
+                    <AlertDialogTitle className="font-bold text-foreground text-base uppercase tracking-wide">
                       ⚠️ CONFIRM DELETION
                     </AlertDialogTitle>
-                    <AlertDialogDescription className="text-muted-foreground font-bold">
+                    <AlertDialogDescription className="text-muted-foreground font-medium">
                       ARE YOU SURE YOU WANT TO PERMANENTLY REMOVE "{item.name}"? THIS ACTION CANNOT BE UNDONE!
                     </AlertDialogDescription>
                   </AlertDialogHeader>
                   <AlertDialogFooter className="gap-3">
-                    <AlertDialogCancel className="brutal-button bg-white text-black border-4 border-black font-bold uppercase">
+                    <AlertDialogCancel className="brutal-button bg-white text-black border-3 border-black font-semibold uppercase rounded-md">
                       CANCEL
                     </AlertDialogCancel>
                     <AlertDialogAction

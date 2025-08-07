@@ -18,15 +18,15 @@ export function Navigation({ activeTab, setActiveTab, user, variant = 'desktop' 
     if (variant === 'mobile') {
       return `flex flex-col items-center justify-center p-3 font-medium text-sm transition-colors ${
         isActive 
-          ? "bg-primary text-white shadow-md" 
-          : "bg-white text-foreground hover:bg-muted border border-border"
+          ? "bg-primary text-white shadow-[var(--shadow-brutal)] border-2 border-black rounded-md" 
+          : "bg-white text-foreground hover:bg-muted border-2 border-black shadow-[2px_2px_0px_0px_rgba(0,0,0,0.1)] rounded-md"
       }`;
     }
 
-    return `flex items-center justify-start w-full p-4 font-medium transition-colors rounded-lg ${
+    return `flex items-center justify-start w-full p-4 font-semibold transition-colors rounded-lg ${
       isActive 
-        ? "bg-primary text-white shadow-md" 
-        : "bg-white text-foreground hover:bg-muted border border-border"
+        ? "bg-primary text-white shadow-[var(--shadow-brutal)] border-2 border-black" 
+        : "bg-white text-foreground hover:bg-muted border-2 border-black shadow-[2px_2px_0px_0px_rgba(0,0,0,0.1)]"
     }`;
   };
 
@@ -39,7 +39,7 @@ export function Navigation({ activeTab, setActiveTab, user, variant = 'desktop' 
 
   if (variant === 'mobile') {
     return (
-      <div className="lg:hidden fixed bottom-0 left-0 right-0 bg-white border-t-2 border-border p-2 shadow-lg">
+      <div className="lg:hidden fixed bottom-0 left-0 right-0 bg-white border-t-3 border-black p-2 shadow-[var(--shadow-brutal-lg)]">
         <div className="flex justify-around items-center">
           {navigationItems.map(({ id, label, icon: Icon }) => (
             <Button
@@ -49,7 +49,7 @@ export function Navigation({ activeTab, setActiveTab, user, variant = 'desktop' 
               variant="ghost"
             >
               <Icon className="h-5 w-5 mb-1" />
-              <span className="text-xs">{variant === 'mobile' && id === 'dashboard' ? 'Dash' : label}</span>
+              <span className="text-xs font-semibold uppercase tracking-wide">{variant === 'mobile' && id === 'dashboard' ? 'Dash' : label}</span>
             </Button>
           ))}
         </div>
@@ -67,7 +67,7 @@ export function Navigation({ activeTab, setActiveTab, user, variant = 'desktop' 
           variant="ghost"
         >
           <Icon className="h-5 w-5 mr-3" />
-          <span>{label}</span>
+          <span className="uppercase tracking-wide">{label}</span>
         </Button>
       ))}
     </div>

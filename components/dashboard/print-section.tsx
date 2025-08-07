@@ -105,9 +105,9 @@ export function PrintSection({ items, user }: PrintSectionProps) {
 
   return (
     <div className="space-y-6">
-      <Card className="professional-card">
-        <CardHeader className="professional-header">
-          <CardTitle className="text-xl font-semibold text-white flex items-center">
+      <Card className="brutal-card">
+        <CardHeader className="brutal-header">
+          <CardTitle className="text-lg font-bold text-white flex items-center">
             <Printer className="h-5 w-5 mr-2" />
             Generate Reports
           </CardTitle>
@@ -118,12 +118,12 @@ export function PrintSection({ items, user }: PrintSectionProps) {
         <CardContent className="p-6 space-y-6">
           {/* Report Type Selection */}
           <div className="space-y-2">
-            <Label className="font-medium text-foreground">Report Type</Label>
+            <Label className="font-semibold text-foreground uppercase tracking-wide text-sm">Report Type</Label>
             <Select value={reportType} onValueChange={setReportType}>
-              <SelectTrigger className="professional-select">
+              <SelectTrigger className="brutal-select">
                 <SelectValue />
               </SelectTrigger>
-              <SelectContent>
+              <SelectContent className="brutal-select">
                 <SelectItem value="inventory">Inventory Report</SelectItem>
                 <SelectItem value="transactions">Transaction History</SelectItem>
               </SelectContent>
@@ -135,36 +135,36 @@ export function PrintSection({ items, user }: PrintSectionProps) {
             <>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div className="space-y-2">
-                  <Label className="font-medium text-foreground">Start Date</Label>
+                  <Label className="font-semibold text-foreground uppercase tracking-wide text-sm">Start Date</Label>
                   <Input
                     type="date"
                     value={dateRange.startDate}
                     onChange={(e) =>
                       setDateRange({ ...dateRange, startDate: e.target.value })
                     }
-                    className="professional-input"
+                    className="brutal-input"
                   />
                 </div>
                 <div className="space-y-2">
-                  <Label className="font-medium text-foreground">End Date</Label>
+                  <Label className="font-semibold text-foreground uppercase tracking-wide text-sm">End Date</Label>
                   <Input
                     type="date"
                     value={dateRange.endDate}
                     onChange={(e) =>
                       setDateRange({ ...dateRange, endDate: e.target.value })
                     }
-                    className="professional-input"
+                    className="brutal-input"
                   />
                 </div>
               </div>
 
               <div className="space-y-2">
-                <Label className="font-medium text-foreground">History Type</Label>
+                <Label className="font-semibold text-foreground uppercase tracking-wide text-sm">History Type</Label>
                 <Select value={historyType} onValueChange={setHistoryType}>
-                  <SelectTrigger className="professional-select">
+                  <SelectTrigger className="brutal-select">
                     <SelectValue />
                   </SelectTrigger>
-                  <SelectContent>
+                  <SelectContent className="brutal-select">
                     <SelectItem value="all">All Transactions</SelectItem>
                     <SelectItem value="add">Stock In Only</SelectItem>
                     <SelectItem value="reduce">Stock Out Only</SelectItem>
@@ -178,7 +178,7 @@ export function PrintSection({ items, user }: PrintSectionProps) {
           <Button
             onClick={handleGenerateReport}
             disabled={isGenerating}
-            className="w-full professional-button-secondary py-3"
+            className="w-full brutal-button-secondary py-3"
           >
             {isGenerating ? (
               <>
@@ -196,31 +196,31 @@ export function PrintSection({ items, user }: PrintSectionProps) {
       </Card>
 
       {/* Report Preview */}
-      <Card className="professional-card">
-        <CardHeader className="professional-header-secondary">
-          <CardTitle className="text-lg font-semibold text-white flex items-center">
+      <Card className="brutal-card">
+        <CardHeader className="brutal-header-secondary">
+          <CardTitle className="text-base font-bold text-white flex items-center">
             <FileText className="h-5 w-5 mr-2" />
             Report Preview
           </CardTitle>
         </CardHeader>
         <CardContent className="p-6">
           <div className="space-y-4">
-            <div className="p-4 bg-primary/10 border border-primary/20 rounded-lg">
-              <h3 className="font-semibold text-primary mb-2">Report Information</h3>
+            <div className="p-4 bg-primary/10 border-2 border-primary/20 rounded-lg shadow-[2px_2px_0px_0px_rgba(0,0,0,0.1)]">
+              <h3 className="font-bold text-primary mb-2 uppercase tracking-wide text-sm">Report Information</h3>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
                 <div>
-                  <span className="font-medium">Type:</span> {reportType === "inventory" ? "Inventory Report" : "Transaction History"}
+                  <span className="font-semibold">Type:</span> {reportType === "inventory" ? "Inventory Report" : "Transaction History"}
                 </div>
                 <div>
-                  <span className="font-medium">Generated by:</span> {user?.username}
+                  <span className="font-semibold">Generated by:</span> {user?.username}
                 </div>
                 {reportType === "transactions" && (
                   <>
                     <div>
-                      <span className="font-medium">Date Range:</span> {dateRange.startDate} to {dateRange.endDate}
+                      <span className="font-semibold">Date Range:</span> {dateRange.startDate} to {dateRange.endDate}
                     </div>
                     <div>
-                      <span className="font-medium">History Type:</span> {historyType === "all" ? "All Transactions" : historyType === "add" ? "Stock In Only" : "Stock Out Only"}
+                      <span className="font-semibold">History Type:</span> {historyType === "all" ? "All Transactions" : historyType === "add" ? "Stock In Only" : "Stock Out Only"}
                     </div>
                   </>
                 )}
@@ -228,17 +228,17 @@ export function PrintSection({ items, user }: PrintSectionProps) {
             </div>
 
             {reportType === "inventory" && (
-              <div className="p-4 bg-secondary/10 border border-secondary/20 rounded-lg">
-                <h3 className="font-semibold text-secondary mb-2">Inventory Summary</h3>
+              <div className="p-4 bg-secondary/10 border-2 border-secondary/20 rounded-lg shadow-[2px_2px_0px_0px_rgba(0,0,0,0.1)]">
+                <h3 className="font-bold text-secondary mb-2 uppercase tracking-wide text-sm">Inventory Summary</h3>
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-sm">
                   <div>
-                    <span className="font-medium">Total Items:</span> {items.length}
+                    <span className="font-semibold">Total Items:</span> {items.length}
                   </div>
                   <div>
-                    <span className="font-medium">Total Stock:</span> {items.reduce((sum, item) => sum + item.stock, 0)}
+                    <span className="font-semibold">Total Stock:</span> {items.reduce((sum, item) => sum + item.stock, 0)}
                   </div>
                   <div>
-                    <span className="font-medium">Total Value:</span> ₱{items.reduce((sum, item) => sum + item.stock * item.price, 0).toLocaleString()}
+                    <span className="font-semibold">Total Value:</span> ₱{items.reduce((sum, item) => sum + item.stock * item.price, 0).toLocaleString()}
                   </div>
                 </div>
               </div>
