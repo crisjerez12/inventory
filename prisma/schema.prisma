@@ -48,7 +48,7 @@ model Transaction {
   price        Float
   totalAmount  Float
   customerName String?
-  date         String
+  date         DateTime  // Change from String to DateTime
   invoiceNumber String?
   userId       String
   username     String

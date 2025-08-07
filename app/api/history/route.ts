@@ -6,7 +6,10 @@ export async function GET(request: NextRequest) {
   try {
     const user = await getCurrentUser();
     if (!user) {
-      return NextResponse.json({ success: false, error: "Unauthorized" }, { status: 401 });
+      return NextResponse.json(
+        { success: false, error: "Unauthorized" },
+        { status: 401 }
+      );
     }
 
     const { searchParams } = new URL(request.url);
@@ -16,11 +19,28 @@ export async function GET(request: NextRequest) {
 
     let whereClause: any = {};
 
+    // Since date is stored as string, we need to filter differently
     if (startDate && endDate) {
-      whereClause.date = {
-        gte: new Date(startDate).toISOString(),
-        lte: new Date(endDate).toISOString(),
-      };
+      // Get all transactions and filter in memory, or use string comparison
+      // For better performance, consider changing the schema to use DateTime
+      const transactions = await prisma.transaction.findMany({
+        where:
+          historyType && historyType !== "all" ? { type: historyType } : {},
+        orderBy: { createdAt: "desc" },
+      });
+
+      // Filter by date range in memory since date is stored as string
+      const filteredTransactions = transactions.filter((transaction) => {
+        const transactionDate = new Date(transaction.date);
+        const start = new Date(startDate);
+        const end = new Date(endDate);
+        return transactionDate >= start && transactionDate <= end;
+      });
+
+      return NextResponse.json({
+        success: true,
+        transactions: filteredTransactions,
+      });
     }
 
     if (historyType && historyType !== "all") {

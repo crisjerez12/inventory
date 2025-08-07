@@ -1,43 +1,57 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
-import { BarChart3, Box, Printer, User } from 'lucide-react';
+import { BarChart3, Box, Printer, User } from "lucide-react";
 import type { User as UserType } from "@/lib/types";
 
 interface NavigationProps {
   activeTab: string;
   setActiveTab: (tab: string) => void;
   user: UserType | null;
-  variant?: 'desktop' | 'mobile';
+  variant?: "desktop" | "mobile";
 }
 
-export function Navigation({ activeTab, setActiveTab, user, variant = 'desktop' }: NavigationProps) {
+export function Navigation({
+  activeTab,
+  setActiveTab,
+  user,
+  variant = "desktop",
+}: NavigationProps) {
+  // const isMobile = useIsMobile();
+
+  // Don't render anything if it's a very small device and mobile variant
+  // if (variant === "mobile" && isMobile && window.innerWidth < 480) {
+  //   return null;
+  // }
+
   const getTabButtonClass = (tabName: string) => {
     const isActive = activeTab === tabName;
 
-    if (variant === 'mobile') {
+    if (variant === "mobile") {
       return `flex flex-col items-center justify-center p-3 font-medium text-sm transition-colors ${
-        isActive 
-          ? "bg-primary text-white shadow-[var(--shadow-brutal)] border-2 border-black rounded-md" 
-          : "bg-white text-foreground hover:bg-muted border-2 border-black shadow-[2px_2px_0px_0px_rgba(0,0,0,0.1)] rounded-md"
+        isActive
+          ? "bg-primary text-white shadow-[var(--shadow-brutal)] border-2 border-black rounded-md"
+          : "bg-white text-foreground hover:bg-primary/20 hover:text-primary border-2 border-black shadow-[2px_2px_0px_0px_rgba(0,0,0,0.1)] rounded-md"
       }`;
     }
 
     return `flex items-center justify-start w-full p-4 font-semibold transition-colors rounded-lg ${
-      isActive 
-        ? "bg-primary text-white shadow-[var(--shadow-brutal)] border-2 border-black" 
-        : "bg-white text-foreground hover:bg-muted border-2 border-black shadow-[2px_2px_0px_0px_rgba(0,0,0,0.1)]"
+      isActive
+        ? "bg-primary text-white shadow-[var(--shadow-brutal)] border-2 border-black"
+        : "bg-white text-foreground hover:bg-primary/20 hover:text-primary border-2 border-black shadow-[2px_2px_0px_0px_rgba(0,0,0,0.1)]"
     }`;
   };
 
   const navigationItems = [
-    { id: 'dashboard', label: 'Dashboard', icon: BarChart3 },
-    { id: 'items', label: 'Items', icon: Box },
-    { id: 'print', label: 'Print', icon: Printer },
-    ...(user?.role === "Admin" ? [{ id: 'account', label: 'Account', icon: User }] : []),
+    { id: "dashboard", label: "Dashboard", icon: BarChart3 },
+    { id: "items", label: "Items", icon: Box },
+    { id: "print", label: "Print", icon: Printer },
+    ...(user?.role === "Admin"
+      ? [{ id: "account", label: "Account", icon: User }]
+      : []),
   ];
 
-  if (variant === 'mobile') {
+  if (variant === "mobile") {
     return (
       <div className="lg:hidden fixed bottom-0 left-0 right-0 bg-white border-t-3 border-black p-2 shadow-[var(--shadow-brutal-lg)]">
         <div className="flex justify-around items-center">
@@ -49,7 +63,9 @@ export function Navigation({ activeTab, setActiveTab, user, variant = 'desktop' 
               variant="ghost"
             >
               <Icon className="h-5 w-5 mb-1" />
-              <span className="text-xs font-semibold uppercase tracking-wide">{variant === 'mobile' && id === 'dashboard' ? 'Dash' : label}</span>
+              <span className="text-xs font-semibold uppercase tracking-wide">
+                {variant === "mobile" && id === "dashboard" ? "Dash" : label}
+              </span>
             </Button>
           ))}
         </div>

@@ -2,7 +2,6 @@
 
 import { useState, useEffect, useCallback } from "react";
 import { Sidebar } from "@/components/layout/sidebar";
-import { Navigation } from "@/components/navigation/navigation";
 import { DashboardStats } from "@/components/dashboard/dashboard-stats";
 import { ItemsSection } from "@/components/dashboard/items-section";
 import { PrintSection } from "@/components/dashboard/print-section";
@@ -60,7 +59,9 @@ export function Dashboard({ user, onLogout }: DashboardProps) {
       case "dashboard":
         return <DashboardStats items={items} />;
       case "items":
-        return <ItemsSection items={items} user={user} onItemsUpdate={fetchItems} />;
+        return (
+          <ItemsSection items={items} user={user} onItemsUpdate={fetchItems} />
+        );
       case "print":
         return <PrintSection items={items} user={user} />;
       case "account":
@@ -72,7 +73,7 @@ export function Dashboard({ user, onLogout }: DashboardProps) {
 
   return (
     <div className="flex h-screen bg-muted/20">
-      {/* Sidebar for desktop */}
+      {/* Sidebar for all device sizes */}
       <Sidebar
         activeTab={activeTab}
         setActiveTab={setActiveTab}
@@ -80,21 +81,11 @@ export function Dashboard({ user, onLogout }: DashboardProps) {
         onLogout={onLogout}
       />
 
-      {/* Main content */}
       <div className="flex-1 flex flex-col overflow-hidden">
-        {/* Main content area */}
-        <main className="flex-1 overflow-y-auto pb-20 lg:pb-6">
+        <main className="flex-1 overflow-y-auto p-3 sm:p-4 md:p-5 lg:p-6">
           {renderContent()}
         </main>
       </div>
-
-      {/* Mobile navigation */}
-      <Navigation
-        activeTab={activeTab}
-        setActiveTab={setActiveTab}
-        user={user}
-        variant="mobile"
-      />
     </div>
   );
 }
