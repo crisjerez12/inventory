@@ -1,12 +1,24 @@
 {
   "name": "inventory-management",
-  "version": "0.1.0",
+  "version": "1.0.0",
   "private": true,
+  "description": "Professional inventory management system for businesses",
+  "author": "MICROTEK",
+  "license": "MIT",
   "scripts": {
     "build": "next build",
     "dev": "next dev",
     "lint": "next lint",
-    "start": "next start"
+    "start": "next start",
+    "db:generate": "prisma generate",
+    "db:push": "prisma db push",
+    "db:migrate": "prisma migrate dev",
+    "db:studio": "prisma studio",
+    "docker:build": "docker build -t inventory-management .",
+    "docker:run": "docker run -p 3000:3000 inventory-management",
+    "docker:compose": "docker-compose up -d",
+    "docker:down": "docker-compose down",
+    "setup": "npm install && npx prisma generate && npx prisma db push"
   },
   "dependencies": {
     "@hookform/resolvers": "^3.9.1",
@@ -68,6 +80,8 @@
     "zod": "^3.24.1"
   },
   "devDependencies": {
+    "@types/bcryptjs": "^2.4.6",
+    "@types/jsonwebtoken": "^9.0.10",
     "@types/node": "^22",
     "@types/react": "^18",
     "@types/react-dom": "^18",

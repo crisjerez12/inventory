@@ -1,7 +1,7 @@
 "use client";
 
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Package, AlertTriangle, DollarSign, TrendingUp, Info } from 'lucide-react';
+import { Package, AlertTriangle, DollarSign, TrendingUp, Info, BarChart3 } from 'lucide-react';
 import type { InventoryItem } from "@/lib/types";
 
 interface DashboardStatsProps {
@@ -19,71 +19,92 @@ export function DashboardStats({ items }: DashboardStatsProps) {
 
   return (
     <div className="space-y-6">
+      {/* Welcome Section */}
+      <div className="professional-card card-padding gradient-background">
+        <div className="flex items-center justify-between">
+          <div>
+            <h1 className="heading-1 mb-2">Dashboard Overview</h1>
+            <p className="body-text">Monitor your inventory performance and key metrics</p>
+          </div>
+          <div className="hidden md:block">
+            <BarChart3 className="h-12 w-12 text-primary/20" />
+          </div>
+        </div>
+      </div>
+
       {/* Statistics Cards */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-        <Card className="brutal-card">
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-bold text-foreground uppercase tracking-wide">
+        <Card className="professional-card animate-fade-in">
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-3">
+            <CardTitle className="text-sm font-medium text-muted-foreground">
               Total Items
             </CardTitle>
-            <Package className="h-5 w-5 text-secondary" />
+            <div className="p-2 bg-primary/10 rounded-lg">
+              <Package className="h-5 w-5 text-primary" />
+            </div>
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold text-primary">
+            <div className="text-3xl font-bold text-foreground mb-1">
               {totalItems}
             </div>
-            <p className="text-xs text-muted-foreground mt-1">
-              Items in inventory
+            <p className="text-sm text-muted-foreground">
+              Products in stock
             </p>
           </CardContent>
         </Card>
 
-        <Card className="brutal-card">
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-bold text-foreground uppercase tracking-wide">
+        <Card className="professional-card animate-fade-in" style={{ animationDelay: '0.1s' }}>
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-3">
+            <CardTitle className="text-sm font-medium text-muted-foreground">
               Total Value
             </CardTitle>
-            <DollarSign className="h-5 w-5 text-secondary" />
+            <div className="p-2 bg-green-100 rounded-lg">
+              <DollarSign className="h-5 w-5 text-green-600" />
+            </div>
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold text-primary">
+            <div className="text-3xl font-bold text-foreground mb-1">
               ₱{totalInventoryValue.toLocaleString()}
             </div>
-            <p className="text-xs text-muted-foreground mt-1">
+            <p className="text-sm text-muted-foreground">
               Inventory value
             </p>
           </CardContent>
         </Card>
 
-        <Card className="brutal-card">
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-bold text-foreground uppercase tracking-wide">
+        <Card className="professional-card animate-fade-in" style={{ animationDelay: '0.2s' }}>
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-3">
+            <CardTitle className="text-sm font-medium text-muted-foreground">
               Low Stock
             </CardTitle>
-            <TrendingUp className="h-5 w-5 text-orange-500" />
+            <div className="p-2 bg-yellow-100 rounded-lg">
+              <TrendingUp className="h-5 w-5 text-yellow-600" />
+            </div>
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold text-orange-600">
+            <div className="text-3xl font-bold text-foreground mb-1">
               {lowStockItems}
             </div>
-            <p className="text-xs text-muted-foreground mt-1">
+            <p className="text-sm text-muted-foreground">
               Items ≤ 10 units
             </p>
           </CardContent>
         </Card>
 
-        <Card className="brutal-card">
-          <CardHeader className="bg-destructive text-white border-b-2 border-black">
-            <CardTitle className="text-sm font-bold text-white uppercase tracking-wide">
+        <Card className="professional-card animate-fade-in border-red-200" style={{ animationDelay: '0.3s' }}>
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-3">
+            <CardTitle className="text-sm font-medium text-muted-foreground">
               Out of Stock
             </CardTitle>
-            <AlertTriangle className="h-5 w-5 text-white" />
+            <div className="p-2 bg-red-100 rounded-lg">
+              <AlertTriangle className="h-5 w-5 text-red-600" />
+            </div>
           </CardHeader>
-          <CardContent className="bg-destructive text-white">
-            <div className="text-2xl font-bold text-white">
+          <CardContent>
+            <div className="text-3xl font-bold text-foreground mb-1">
               {outOfStockItems}
             </div>
-            <p className="text-xs text-white/90 mt-1">
+            <p className="text-sm text-muted-foreground">
               Items need restocking
             </p>
           </CardContent>
@@ -91,32 +112,33 @@ export function DashboardStats({ items }: DashboardStatsProps) {
       </div>
 
       {/* Inventory Summary */}
-      <Card className="brutal-card">
-        <CardHeader className="brutal-header">
-          <CardTitle className="text-lg font-bold text-white flex items-center">
-            <Info className="h-5 w-5 mr-2" /> Inventory Summary
+      <Card className="professional-card">
+        <CardHeader className="professional-header">
+          <CardTitle className="text-lg font-semibold text-white flex items-center">
+            <Info className="h-5 w-5 mr-2" />
+            Inventory Summary
           </CardTitle>
         </CardHeader>
-        <CardContent className="p-6">
+        <CardContent className="card-padding">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div className="space-y-4">
-              <h3 className="font-bold text-primary text-base uppercase tracking-wide">Stock Overview</h3>
+              <h3 className="heading-3 text-primary">Stock Overview</h3>
               <div className="space-y-3">
-                <div className="flex items-center justify-between p-4 bg-secondary/10 border-2 border-secondary/20 rounded-lg shadow-[2px_2px_0px_0px_rgba(0,0,0,0.1)]">
-                  <span className="font-semibold text-foreground">In Stock Items</span>
-                  <span className="font-bold text-primary text-base">
+                <div className="flex items-center justify-between p-4 bg-green-50 border border-green-200 rounded-lg">
+                  <span className="font-medium text-foreground">In Stock Items</span>
+                  <span className="font-bold text-green-600 text-lg">
                     {items.filter(item => item.stock > 0).length}
                   </span>
                 </div>
-                <div className="flex items-center justify-between p-4 bg-destructive/10 border-2 border-destructive/20 rounded-lg shadow-[2px_2px_0px_0px_rgba(0,0,0,0.1)]">
-                  <span className="font-semibold text-foreground">Out of Stock Items</span>
-                  <span className="font-bold text-destructive text-base">
+                <div className="flex items-center justify-between p-4 bg-red-50 border border-red-200 rounded-lg">
+                  <span className="font-medium text-foreground">Out of Stock Items</span>
+                  <span className="font-bold text-red-600 text-lg">
                     {outOfStockItems}
                   </span>
                 </div>
-                <div className="flex items-center justify-between p-4 bg-orange-50 border-2 border-orange-200 rounded-lg shadow-[2px_2px_0px_0px_rgba(0,0,0,0.1)]">
-                  <span className="font-semibold text-foreground">Low Stock Items</span>
-                  <span className="font-bold text-orange-600 text-base">
+                <div className="flex items-center justify-between p-4 bg-yellow-50 border border-yellow-200 rounded-lg">
+                  <span className="font-medium text-foreground">Low Stock Items</span>
+                  <span className="font-bold text-yellow-600 text-lg">
                     {lowStockItems}
                   </span>
                 </div>
@@ -124,23 +146,23 @@ export function DashboardStats({ items }: DashboardStatsProps) {
             </div>
 
             <div className="space-y-4">
-              <h3 className="font-bold text-primary text-base uppercase tracking-wide">Value & Pricing</h3>
+              <h3 className="heading-3 text-primary">Value & Pricing</h3>
               <div className="space-y-3">
-                <div className="flex items-center justify-between p-4 bg-primary/10 border-2 border-primary/20 rounded-lg shadow-[2px_2px_0px_0px_rgba(0,0,0,0.1)]">
-                  <span className="font-semibold text-foreground">Total Inventory Value</span>
-                  <span className="font-bold text-primary text-base">
+                <div className="flex items-center justify-between p-4 bg-blue-50 border border-blue-200 rounded-lg">
+                  <span className="font-medium text-foreground">Total Inventory Value</span>
+                  <span className="font-bold text-blue-600 text-lg">
                     ₱{totalInventoryValue.toLocaleString()}
                   </span>
                 </div>
-                <div className="flex items-center justify-between p-4 bg-primary/10 border-2 border-primary/20 rounded-lg shadow-[2px_2px_0px_0px_rgba(0,0,0,0.1)]">
-                  <span className="font-semibold text-foreground">Highest Price Item</span>
-                  <span className="font-bold text-primary text-base">
+                <div className="flex items-center justify-between p-4 bg-purple-50 border border-purple-200 rounded-lg">
+                  <span className="font-medium text-foreground">Highest Price Item</span>
+                  <span className="font-bold text-purple-600 text-lg">
                     ₱{highestPrice.toLocaleString()}
                   </span>
                 </div>
-                <div className="flex items-center justify-between p-4 bg-primary/10 border-2 border-primary/20 rounded-lg shadow-[2px_2px_0px_0px_rgba(0,0,0,0.1)]">
-                  <span className="font-semibold text-foreground">Average Item Price</span>
-                  <span className="font-bold text-primary text-base">
+                <div className="flex items-center justify-between p-4 bg-indigo-50 border border-indigo-200 rounded-lg">
+                  <span className="font-medium text-foreground">Average Item Price</span>
+                  <span className="font-bold text-indigo-600 text-lg">
                     ₱{averagePrice.toFixed(2)}
                   </span>
                 </div>

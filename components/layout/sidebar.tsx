@@ -3,10 +3,9 @@
 import { useState, useEffect } from "react";
 import { Navigation } from "@/components/navigation/navigation";
 import { Button } from "@/components/ui/button";
-import { LogOut, Menu, X, Clock } from 'lucide-react';
+import { LogOut, Menu, X, Clock, Building2 } from 'lucide-react';
 import { logout } from "@/app/actions/auth";
 import { useToast } from "@/hooks/use-toast";
-import Image from "next/image";
 import type { User } from "@/lib/types";
 
 interface SidebarProps {
@@ -65,21 +64,97 @@ export function Sidebar({ activeTab, setActiveTab, user, onLogout }: SidebarProp
         ${isMobileMenuOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'}
       `}>
         <div className="flex flex-col h-full">
-          {/* Header with Logo */}
-          <div className="p-6 brutal-header">
-            <div className="flex items-center justify-center mb-4">
-              <div className="bg-white p-4 border-3 border-black shadow-[var(--shadow-brutal)] rounded-lg">
-                <Image
-                  src="/logo.jpg"
-                  alt="Microtek Logo"
-                  width={200}
-                  height={60}
-                  className="object-contain"
-                />
+          {/* Professional Header with Branding */}
+          <div className="section-padding professional-header">
+            <div className="flex items-center justify-center mb-6">
+              <div className="bg-white/10 backdrop-blur-sm p-4 rounded-xl border border-white/20">
+                <Building2 className="w-8 h-8 text-white" />
               </div>
             </div>
-            <h1 className="text-lg font-bold text-center text-white uppercase tracking-wide">
-              Inventory System
+            <div className="text-center">
+              <h1 className="text-xl font-bold text-white mb-1">
+                MICROTEK
+              </h1>
+              <p className="text-white/80 text-sm font-medium">
+                Inventory Management
+              </p>
+            </div>
+            <div className="mt-4 pt-4 border-t border-white/20">
+              <p className="text-white/70 text-xs text-center">
+                Welcome back, <span className="font-medium text-white">{user?.username}</span>
+              </p>
+              <div className="flex items-center justify-center mt-2">
+                <div className="w-2 h-2 bg-green-400 rounded-full mr-2"></div>
+                <span className="text-white/70 text-xs">Online</span>
+              </div>
+            </div>
+          </div>
+
+          {/* Navigation */}
+          <div className="flex-1 px-4 py-2">
+            <Navigation
+              activeTab={activeTab}
+              setActiveTab={(tab) => {
+                setActiveTab(tab);
+                setIsMobileMenuOpen(false);
+              }}
+              user={user}
+              variant="desktop"
+            />
+          </div>
+
+          {/* System Status */}
+          <div className="px-4 py-3 border-t border-border bg-muted/30">
+            <div className="professional-card p-3">
+              <div className="flex items-center justify-between text-sm">
+                <span className="text-muted-foreground">System Status</span>
+                <div className="flex items-center">
+                  <div className="w-2 h-2 bg-green-500 rounded-full mr-2"></div>
+                  <span className="text-green-600 font-medium">Operational</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* Digital Clock */}
+          <div className="px-4 py-3 border-t border-border">
+            <div className="professional-card p-4">
+              <div className="text-center">
+                <div className="flex items-center justify-center mb-2">
+                  <Clock className="h-4 w-4 mr-2 text-primary" />
+                  <span className="text-sm font-medium text-primary">
+                    Live Time
+                  </span>
+                </div>
+                <div className="text-lg font-bold text-foreground">
+                  {currentTime.toLocaleTimeString()}
+                </div>
+                <div className="text-sm text-muted-foreground">
+                  {currentTime.toLocaleDateString('en-US', { 
+                    weekday: 'short', 
+                    month: 'short', 
+                    day: 'numeric' 
+                  })}
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* Logout Button */}
+          <div className="p-4 border-t border-border">
+            <Button
+              onClick={handleLogout}
+              className="w-full professional-button-destructive"
+            >
+              <LogOut className="h-4 w-4 mr-2" />
+              Sign Out
+            </Button>
+          </div>
+        </div>
+      </div>
+    </>
+  );
+}
             </h1>
             <p className="text-sm text-white/90 mt-1 text-center font-medium">
               Welcome, {user?.username}

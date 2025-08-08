@@ -10,9 +10,8 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { Eye, EyeOff, LogIn, Loader2 } from 'lucide-react';
+import { Eye, EyeOff, LogIn, Loader2, Building2, Shield } from 'lucide-react';
 import { useToast } from "@/hooks/use-toast";
-import Image from "next/image";
 import type { User } from "@/lib/types";
 
 interface LoginFormProps {
@@ -73,21 +72,116 @@ export function LoginForm({ onLogin }: LoginFormProps) {
 
   return (
     <div className="flex items-center justify-center">
-      <Card className="w-full max-w-md brutal-card">
-        <CardHeader className="brutal-header">
-          <div className="flex items-center justify-center mb-4">
-            <div className="bg-white p-4 border-3 border-black shadow-[var(--shadow-brutal)] rounded-lg">
-              <Image
-                src="/logo.jpg"
-                alt="Microtek Logo"
-                width={200}
-                height={60}
-                className="object-contain"
-              />
+      <Card className="w-full max-w-md professional-card animate-fade-in">
+        <CardHeader className="professional-header text-center">
+          <div className="flex items-center justify-center mb-6">
+            <div className="bg-white/10 backdrop-blur-sm p-4 rounded-xl border border-white/20">
+              <Building2 className="w-12 h-12 text-white" />
             </div>
           </div>
-          <CardTitle className="text-xl font-bold text-center text-white uppercase tracking-wide">
-            Sign In to Your Account
+          <div>
+            <CardTitle className="text-2xl font-bold text-white mb-2">
+              MICROTEK
+            </CardTitle>
+            <p className="text-white/80 text-sm">
+              Inventory Management System
+            </p>
+          </div>
+        </CardHeader>
+        <CardContent className="card-padding bg-white">
+          <div className="mb-6 text-center">
+            <h2 className="heading-2 mb-2">Welcome Back</h2>
+            <p className="caption-text">Sign in to access your dashboard</p>
+          </div>
+          
+          <form onSubmit={handleLogin} className="space-y-6">
+            <div className="space-y-4">
+              <div className="space-y-2">
+                <Label
+                  htmlFor="login-username"
+                  className="text-sm font-medium text-foreground"
+                >
+                  Username
+                </Label>
+                <Input
+                  id="login-username"
+                  name="username"
+                  type="text"
+                  placeholder="Enter your username"
+                  className="professional-input focus-ring"
+                  disabled={isLoading}
+                  value={formData.username}
+                  onChange={(e) => setFormData({ ...formData, username: e.target.value })}
+                  required
+                />
+              </div>
+              <div className="space-y-2">
+                <Label
+                  htmlFor="login-password"
+                  className="text-sm font-medium text-foreground"
+                >
+                  Password
+                </Label>
+                <div className="relative">
+                  <Input
+                    id="login-password"
+                    name="password"
+                    type={showPassword ? "text" : "password"}
+                    placeholder="Enter your password"
+                    className="professional-input focus-ring pr-12"
+                    disabled={isLoading}
+                    value={formData.password}
+                    onChange={(e) => setFormData({ ...formData, password: e.target.value })}
+                    required
+                  />
+                  <Button
+                    type="button"
+                    onClick={() => setShowPassword(!showPassword)}
+                    className="absolute right-2 top-1/2 transform -translate-y-1/2 p-2 h-auto hover:bg-muted rounded-md"
+                    disabled={isLoading}
+                    variant="ghost"
+                    size="sm"
+                  >
+                    {showPassword ? (
+                      <EyeOff className="h-4 w-4 text-muted-foreground" />
+                    ) : (
+                      <Eye className="h-4 w-4 text-muted-foreground" />
+                    )}
+                  </Button>
+                </div>
+              </div>
+            </div>
+            
+            <Button
+              type="submit"
+              className="w-full professional-button text-base py-3 disabled:opacity-50"
+              disabled={isLoading}
+            >
+              {isLoading ? (
+                <>
+                  <Loader2 className="h-5 w-5 mr-2 animate-spin" />
+                  Signing In...
+                </>
+              ) : (
+                <>
+                  <LogIn className="h-5 w-5 mr-2" />
+                  Sign In
+                </>
+              )}
+            </Button>
+          </form>
+          
+          <div className="mt-6 pt-6 border-t border-border">
+            <div className="flex items-center justify-center text-sm text-muted-foreground">
+              <Shield className="h-4 w-4 mr-2" />
+              Secure Login Protected
+            </div>
+          </div>
+        </CardContent>
+      </Card>
+    </div>
+  );
+}
           </CardTitle>
         </CardHeader>
         <CardContent className="p-8 bg-white">

@@ -10,70 +10,72 @@
 
 @layer base {
   :root {
-    --background: 0 0% 98%; /* Off-white for softer look */
-    --foreground: 142 50% 20%; /* Softer dark green */
+    --background: 0 0% 100%;
+    --foreground: 222.2 84% 4.9%;
 
-    --card: 0 0% 100%; /* Pure white for cards */
-    --card-foreground: 142 50% 20%; /* Softer dark green */
+    --card: 0 0% 100%;
+    --card-foreground: 222.2 84% 4.9%;
 
-    --popover: 0 0% 100%; /* Pure white */
-    --popover-foreground: 142 50% 20%; /* Softer dark green */
+    --popover: 0 0% 100%;
+    --popover-foreground: 222.2 84% 4.9%;
 
-    --primary: 142 70% 35%; /* Softer forest green */
-    --primary-foreground: 0 0% 100%; /* White */
+    --primary: 221.2 83.2% 53.3%;
+    --primary-foreground: 210 40% 98%;
 
-    --secondary: 142 60% 50%; /* Softer medium green */
-    --secondary-foreground: 0 0% 100%; /* White */
+    --secondary: 210 40% 96%;
+    --secondary-foreground: 222.2 84% 4.9%;
 
-    --muted: 142 15% 96%; /* Very light green */
-    --muted-foreground: 142 30% 45%; /* Softer muted green */
+    --muted: 210 40% 96%;
+    --muted-foreground: 215.4 16.3% 46.9%;
 
-    --accent: 142 60% 40%; /* Softer accent green */
-    --accent-foreground: 0 0% 100%; /* White */
+    --accent: 210 40% 96%;
+    --accent-foreground: 222.2 84% 4.9%;
 
-    --destructive: 0 70% 55%; /* Softer red */
-    --destructive-foreground: 0 0% 100%; /* White */
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 210 40% 98%;
 
-    --border: 0 0% 20%; /* Dark border for neobrutalism */
-    --input: 0 0% 100%; /* White */
-    --ring: 142 60% 50%; /* Softer ring color */
+    --border: 214.3 31.8% 91.4%;
+    --input: 214.3 31.8% 91.4%;
+    --ring: 221.2 83.2% 53.3%;
 
-    --radius: 0.5rem; /* Rounded corners */
+    --radius: 0.75rem;
 
-    /* Neobrutalism shadow variables */
-    --shadow-brutal: 4px 4px 0px 0px #000000;
-    --shadow-brutal-hover: 2px 2px 0px 0px #000000;
-    --shadow-brutal-lg: 6px 6px 0px 0px #000000;
+    /* Professional shadows */
+    --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+    --shadow: 0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1);
+    --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+    --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+    --shadow-xl: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
   }
 
   .dark {
-    --background: 142 50% 12%; /* Softer very dark green */
-    --foreground: 142 15% 92%; /* Softer light green */
+    --background: 222.2 84% 4.9%;
+    --foreground: 210 40% 98%;
 
-    --card: 142 50% 15%; /* Softer dark green card */
-    --card-foreground: 142 15% 92%; /* Softer light green */
+    --card: 222.2 84% 4.9%;
+    --card-foreground: 210 40% 98%;
 
-    --popover: 142 50% 15%; /* Softer dark green */
-    --popover-foreground: 142 15% 92%; /* Softer light green */
+    --popover: 222.2 84% 4.9%;
+    --popover-foreground: 210 40% 98%;
 
-    --primary: 142 60% 50%; /* Softer medium green */
-    --primary-foreground: 0 0% 100%; /* White */
+    --primary: 217.2 91.2% 59.8%;
+    --primary-foreground: 222.2 84% 4.9%;
 
-    --secondary: 142 70% 35%; /* Softer forest green */
-    --secondary-foreground: 0 0% 100%; /* White */
+    --secondary: 217.2 32.6% 17.5%;
+    --secondary-foreground: 210 40% 98%;
 
-    --muted: 142 30% 18%; /* Softer dark muted green */
-    --muted-foreground: 142 30% 65%; /* Softer light muted green */
+    --muted: 217.2 32.6% 17.5%;
+    --muted-foreground: 215 20.2% 65.1%;
 
-    --accent: 142 60% 50%; /* Softer medium green */
-    --accent-foreground: 0 0% 100%; /* White */
+    --accent: 217.2 32.6% 17.5%;
+    --accent-foreground: 210 40% 98%;
 
-    --destructive: 0 60% 50%; /* Softer dark red */
-    --destructive-foreground: 0 0% 100%; /* White */
+    --destructive: 0 62.8% 30.6%;
+    --destructive-foreground: 210 40% 98%;
 
-    --border: 0 0% 80%; /* Light border for dark mode */
-    --input: 142 50% 18%; /* Softer dark green input */
-    --ring: 142 60% 50%; /* Softer ring color */
+    --border: 217.2 32.6% 17.5%;
+    --input: 217.2 32.6% 17.5%;
+    --ring: 224.3 76.3% 94.1%;
   }
 }
 
@@ -82,160 +84,143 @@
     @apply border-border;
   }
   body {
-    @apply bg-background text-foreground;
+    @apply bg-background text-foreground font-sans antialiased;
   }
 }
 
-/* Neobrutalism Components */
-.brutal-card {
-  @apply bg-white border-2 border-black shadow-[var(--shadow-brutal)] hover:shadow-[var(--shadow-brutal-hover)] transition-all duration-200 rounded-lg;
-}
-
-.brutal-button {
-  @apply bg-primary text-white border-2 border-black shadow-[var(--shadow-brutal)] hover:shadow-[var(--shadow-brutal-hover)] hover:translate-x-1 hover:translate-y-1 transition-all duration-200 font-semibold uppercase tracking-wide rounded-md;
-}
-
-.brutal-button-primary {
-  @apply bg-primary text-white border-2 border-black shadow-[var(--shadow-brutal)] hover:shadow-[var(--shadow-brutal-hover)] hover:translate-x-1 hover:translate-y-1 transition-all duration-200 font-semibold uppercase tracking-wide rounded-md;
-}
-
-.brutal-button-secondary {
-  @apply bg-secondary text-white border-2 border-black shadow-[var(--shadow-brutal)] hover:shadow-[var(--shadow-brutal-hover)] hover:translate-x-1 hover:translate-y-1 transition-all duration-200 font-semibold uppercase tracking-wide rounded-md;
-}
-
-.brutal-button-destructive {
-  @apply bg-destructive text-white border-2 border-black shadow-[var(--shadow-brutal)] hover:shadow-[var(--shadow-brutal-hover)] hover:translate-x-1 hover:translate-y-1 transition-all duration-200 font-semibold uppercase tracking-wide rounded-md;
-}
-
-.brutal-button-warning {
-  @apply bg-yellow-500 text-white border-2 border-black shadow-[var(--shadow-brutal)] hover:shadow-[var(--shadow-brutal-hover)] hover:translate-x-1 hover:translate-y-1 transition-all duration-200 font-semibold uppercase tracking-wide rounded-md;
-}
-
-.brutal-button-success {
-  @apply bg-green-600 text-white border-2 border-black shadow-[var(--shadow-brutal)] hover:shadow-[var(--shadow-brutal-hover)] hover:translate-x-1 hover:translate-y-1 transition-all duration-200 font-semibold uppercase tracking-wide rounded-md;
-}
-
-.brutal-button-neutral {
-  @apply bg-gray-200 text-black border-2 border-black shadow-[var(--shadow-brutal)] hover:shadow-[var(--shadow-brutal-hover)] hover:translate-x-1 hover:translate-y-1 transition-all duration-200 font-semibold uppercase tracking-wide rounded-md;
-}
-
-.brutal-input {
-  @apply bg-white border-2 border-black shadow-[var(--shadow-brutal)] focus:shadow-[var(--shadow-brutal-hover)] focus:translate-x-1 focus:translate-y-1 transition-all duration-200 font-medium rounded-md;
-}
-
-.brutal-select {
-  @apply bg-white border-2 border-black shadow-[var(--shadow-brutal)] font-medium rounded-md;
-}
-
-.brutal-table {
-  @apply border-2 border-black shadow-[var(--shadow-brutal-lg)] rounded-lg overflow-hidden;
-}
-
-.brutal-header {
-  @apply bg-primary text-white border-b-2 border-black font-bold uppercase tracking-wider;
-}
-
-.brutal-header-secondary {
-  @apply bg-secondary text-white border-b-2 border-black font-bold uppercase tracking-wider;
-}
-
-.brutal-loading {
-  @apply animate-spin text-white;
-}
-
-/* Stock status colors with Neobrutalism */
-.stock-out {
-  @apply bg-destructive text-white border-2 border-black px-3 py-1 font-bold uppercase tracking-wide shadow-[var(--shadow-brutal)] rounded-md;
-}
-
-.stock-low {
-  @apply bg-yellow-400 text-black border-2 border-black px-3 py-1 font-bold uppercase tracking-wide shadow-[var(--shadow-brutal)] rounded-md;
-}
-
-.stock-good {
-  @apply bg-secondary text-white border-2 border-black px-3 py-1 font-bold uppercase tracking-wide shadow-[var(--shadow-brutal)] rounded-md;
-}
-
-/* Professional Components (Fallback) */
+/* Professional Components */
 .professional-card {
-  @apply bg-white border-2 border-border shadow-md hover:shadow-lg transition-shadow rounded-lg;
+  @apply bg-white border border-border shadow-md hover:shadow-lg transition-all duration-200 rounded-xl;
 }
 
 .professional-button {
-  @apply bg-primary hover:bg-primary/90 text-white font-medium border border-border shadow-sm hover:shadow-md transition-all rounded-md;
+  @apply bg-primary hover:bg-primary/90 text-primary-foreground font-medium border border-primary/20 shadow-sm hover:shadow-md transition-all duration-200 rounded-lg px-4 py-2;
 }
 
 .professional-button-secondary {
-  @apply bg-secondary hover:bg-secondary/90 text-white font-medium border border-border shadow-sm hover:shadow-md transition-all rounded-md;
+  @apply bg-secondary hover:bg-secondary/80 text-secondary-foreground font-medium border border-border shadow-sm hover:shadow-md transition-all duration-200 rounded-lg px-4 py-2;
 }
 
 .professional-button-destructive {
-  @apply bg-destructive hover:bg-destructive/90 text-white font-medium border border-border shadow-sm hover:shadow-md transition-all rounded-md;
+  @apply bg-destructive hover:bg-destructive/90 text-destructive-foreground font-medium border border-destructive/20 shadow-sm hover:shadow-md transition-all duration-200 rounded-lg px-4 py-2;
+}
+
+.professional-button-outline {
+  @apply bg-background hover:bg-accent text-foreground font-medium border border-border shadow-sm hover:shadow-md transition-all duration-200 rounded-lg px-4 py-2;
 }
 
 .professional-input {
-  @apply bg-white border-2 border-border focus:border-primary shadow-sm focus:shadow-md transition-all rounded-md;
+  @apply bg-background border border-border focus:border-primary focus:ring-2 focus:ring-primary/20 shadow-sm focus:shadow-md transition-all duration-200 rounded-lg px-3 py-2;
 }
 
 .professional-select {
-  @apply bg-white border-2 border-border shadow-sm rounded-md;
+  @apply bg-background border border-border shadow-sm rounded-lg;
 }
 
 .professional-table {
-  @apply border-2 border-border shadow-md rounded-lg overflow-hidden;
+  @apply border border-border shadow-md rounded-xl overflow-hidden bg-white;
 }
 
 .professional-header {
-  @apply bg-primary text-white border-b-2 border-border font-semibold rounded-t-lg;
+  @apply bg-gradient-to-r from-primary to-primary/90 text-primary-foreground border-b border-primary/20 font-semibold;
 }
 
 .professional-header-secondary {
-  @apply bg-secondary text-white border-b-2 border-border font-semibold rounded-t-lg;
+  @apply bg-gradient-to-r from-secondary to-secondary/90 text-secondary-foreground border-b border-secondary/20 font-semibold;
 }
 
-/* Toast styling */
-.toast-professional {
-  @apply professional-card;
+/* Stock status colors */
+.stock-out {
+  @apply bg-red-100 text-red-800 border border-red-200 px-3 py-1 font-medium rounded-full text-sm;
 }
 
-.toast-title {
-  @apply font-semibold text-foreground;
+.stock-low {
+  @apply bg-yellow-100 text-yellow-800 border border-yellow-200 px-3 py-1 font-medium rounded-full text-sm;
 }
 
-.toast-description {
-  @apply text-muted-foreground;
+.stock-good {
+  @apply bg-green-100 text-green-800 border border-green-200 px-3 py-1 font-medium rounded-full text-sm;
 }
 
-.toast-close {
-  @apply professional-button bg-white text-black border-2 border-border;
+/* Enhanced animations */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
 }
 
-/* Update hover effects for buttons and table headers */
-table th {
-  transition: background-color 0.2s;
+@keyframes slideIn {
+  from { opacity: 0; transform: translateX(-10px); }
+  to { opacity: 1; transform: translateX(0); }
 }
 
-table th:hover {
-  background-color: #000000 !important; /* Black on hover */
-  color: #ffffff !important; /* White text on hover */
+.animate-fade-in {
+  animation: fadeIn 0.3s ease-out;
 }
 
-.brutal-button:hover,
-.brutal-button-secondary:hover {
-  background-color: #000000 !important;
-  color: #ffffff !important;
-  transform: translate(1px, 1px);
+.animate-slide-in {
+  animation: slideIn 0.3s ease-out;
 }
 
-/* Mobile responsive brutal styles */
+/* Professional gradients */
+.gradient-primary {
+  @apply bg-gradient-to-r from-primary to-primary/80;
+}
+
+.gradient-secondary {
+  @apply bg-gradient-to-r from-secondary to-secondary/80;
+}
+
+.gradient-background {
+  @apply bg-gradient-to-br from-background via-background to-muted/30;
+}
+
+/* Enhanced focus states */
+.focus-ring {
+  @apply focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary;
+}
+
+/* Professional spacing */
+.section-padding {
+  @apply px-6 py-8;
+}
+
+.card-padding {
+  @apply p-6;
+}
+
+/* Mobile responsive improvements */
 @media (max-width: 768px) {
-  .brutal-card {
-    @apply shadow-[2px_2px_0px_0px_#000000] hover:shadow-[1px_1px_0px_0px_#000000];
+  .section-padding {
+    @apply px-4 py-6;
   }
+  
+  .card-padding {
+    @apply p-4;
+  }
+}
 
-  .brutal-button,
-  .brutal-button-secondary,
-  .brutal-button-destructive {
-    @apply shadow-[2px_2px_0px_0px_#000000] hover:shadow-[1px_1px_0px_0px_#000000];
-  }
+/* Loading states */
+.loading-shimmer {
+  @apply animate-pulse bg-gradient-to-r from-muted via-muted/50 to-muted;
+}
+
+/* Professional typography */
+.heading-1 {
+  @apply text-3xl font-bold tracking-tight text-foreground;
+}
+
+.heading-2 {
+  @apply text-2xl font-semibold tracking-tight text-foreground;
+}
+
+.heading-3 {
+  @apply text-xl font-semibold text-foreground;
+}
+
+.body-text {
+  @apply text-base text-muted-foreground leading-relaxed;
+}
+
+.caption-text {
+  @apply text-sm text-muted-foreground;
 }
