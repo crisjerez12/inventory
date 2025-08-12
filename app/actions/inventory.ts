@@ -95,7 +95,7 @@ export async function updateInventoryStock(
         price: item.price,
         totalAmount: quantity * item.price,
         customerName: customerInfo?.customerName || null,
-        date: customerInfo?.date || new Date().toISOString(),
+        date: customerInfo?.date ? new Date(customerInfo.date) : new Date(),
         invoiceNumber: customerInfo?.invoiceNumber || null,
         userId: user.id,
         username: user.username,

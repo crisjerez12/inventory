@@ -12,7 +12,6 @@ export function DashboardStats({ items }: DashboardStatsProps) {
   const totalItems = items.length;
   const outOfStockItems = items.filter((item) => item.stock === 0).length;
   const lowStockItems = items.filter((item) => item.stock > 0 && item.stock <= 10).length;
-  const totalInventoryValue = items.reduce((sum, item) => sum + (item.stock * item.price), 0);
   const highestPrice = items.length > 0 ? Math.max(...items.map(item => item.price)) : 0;
   const lowestPrice = items.length > 0 ? Math.min(...items.map(item => item.price)) : 0;
   const averagePrice = items.length > 0 ? (items.reduce((sum, item) => sum + item.price, 0) / items.length) : 0;
@@ -34,23 +33,6 @@ export function DashboardStats({ items }: DashboardStatsProps) {
             </div>
             <p className="text-xs text-muted-foreground mt-1">
               Items in inventory
-            </p>
-          </CardContent>
-        </Card>
-
-        <Card className="brutal-card">
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-bold text-foreground uppercase tracking-wide">
-              Total Value
-            </CardTitle>
-            <DollarSign className="h-5 w-5 text-secondary" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold text-primary">
-              ₱{totalInventoryValue.toLocaleString()}
-            </div>
-            <p className="text-xs text-muted-foreground mt-1">
-              Inventory value
             </p>
           </CardContent>
         </Card>
@@ -126,12 +108,6 @@ export function DashboardStats({ items }: DashboardStatsProps) {
             <div className="space-y-4">
               <h3 className="font-bold text-primary text-base uppercase tracking-wide">Value & Pricing</h3>
               <div className="space-y-3">
-                <div className="flex items-center justify-between p-4 bg-primary/10 border-2 border-primary/20 rounded-lg shadow-[2px_2px_0px_0px_rgba(0,0,0,0.1)]">
-                  <span className="font-semibold text-foreground">Total Inventory Value</span>
-                  <span className="font-bold text-primary text-base">
-                    ₱{totalInventoryValue.toLocaleString()}
-                  </span>
-                </div>
                 <div className="flex items-center justify-between p-4 bg-primary/10 border-2 border-primary/20 rounded-lg shadow-[2px_2px_0px_0px_rgba(0,0,0,0.1)]">
                   <span className="font-semibold text-foreground">Highest Price Item</span>
                   <span className="font-bold text-primary text-base">

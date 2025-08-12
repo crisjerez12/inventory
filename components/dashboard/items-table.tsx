@@ -64,7 +64,6 @@ return (
               <TableHead className="font-bold text-white text-base uppercase tracking-wide py-4">PRODUCT NAME</TableHead>
               <TableHead className="font-bold text-white text-base uppercase tracking-wide py-4">PRICE</TableHead>
               <TableHead className="font-bold text-white text-base uppercase tracking-wide py-4">STOCK</TableHead>
-              <TableHead className="font-bold text-white text-base uppercase tracking-wide py-4">TOTAL VALUE</TableHead>
               <TableHead className="font-bold text-white text-base uppercase tracking-wide py-4">ACTIONS</TableHead>
             </TableRow>
           </TableHeader>
@@ -77,9 +76,6 @@ return (
                 </TableCell>
                 <TableCell className="font-semibold py-4">
                   {getStockDisplay(item.stock)}
-                </TableCell>
-                <TableCell className="font-semibold text-foreground text-base py-4">
-                  ₱{(item.stock * item.price).toLocaleString()}
                 </TableCell>
                 <TableCell className="py-4">
                   <div className="flex space-x-3">
@@ -175,13 +171,6 @@ return (
                 <div className="font-bold text-xl">
                   {getStockDisplay(item.stock)}
                 </div>
-              </div>
-            </div>
-
-            <div className="text-center p-4 brutal-card bg-muted/50 mb-6 rounded-lg">
-              <div className="text-sm font-bold text-muted-foreground mb-2 uppercase tracking-wide">TOTAL VALUE</div>
-              <div className="font-bold text-foreground text-2xl">
-                ₱{(item.stock * item.price).toLocaleString()}
               </div>
             </div>
 
