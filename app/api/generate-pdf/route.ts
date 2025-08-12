@@ -131,40 +131,44 @@ export async function POST(request: NextRequest) {
       headers = [
         "Date",
         "Product Name",
-        "Type",
+        "Action",
         "Quantity",
-        "Amount",
         "Customer",
+        "Transaction Date",
+        "Amount",
+        "Invoice",
       ];
-      // In the transaction data mapping section, around line 130
       tableData = data.map((transaction: any) => [
-        // Better date handling
         (() => {
           try {
-            return new Date(transaction.date).toLocaleDateString();
+            return new Date(transaction.createdAt).toLocaleDateString();
           } catch {
-            return transaction.date || "Invalid Date";
+            return new Date().toLocaleDateString();
           }
         })(),
         transaction.itemName?.length > 30
           ? transaction.itemName.substring(0, 27) + "..."
           : transaction.itemName || "N/A",
-        transaction.type
-          ? transaction.type.charAt(0).toUpperCase() + transaction.type.slice(1)
-          : "N/A",
+        transaction.type === "add" ? "Stock In" : "Stock Out",
         transaction.quantity?.toString() || "0",
-        `₱${(transaction.totalAmount || 0).toFixed(2)}`,
         transaction.customerName || "-",
+        (() => {
+          try {
+            return new Date(transaction.date).toLocaleDateString();
+          } catch {
+            return "-";
+          }
+        })(),
+        `₱${(transaction.totalAmount || 0).toFixed(2)}`,
+        transaction.invoiceNumber || "-",
       ]);
     } else if (reportType === "inventory" && data.length > 0) {
-      headers = ["Product Name", "Price", "Stock", "Total Value"];
+      headers = ["Product Name", "Stock Quantity"];
       tableData = data.map((item: any) => [
         item.name?.length > 35
           ? item.name.substring(0, 32) + "..."
           : item.name || "N/A",
-        `₱${(item.price || 0).toLocaleString()}`,
         (item.stock || 0).toString(),
-        `₱${((item.price || 0) * (item.stock || 0)).toFixed(2)}`,
       ]);
     }
 
@@ -201,18 +205,18 @@ export async function POST(request: NextRequest) {
         columnStyles:
           reportType === "transactions"
             ? {
-                0: { cellWidth: 25, halign: "center" },
-                1: { cellWidth: 40 },
-                2: { cellWidth: 20, halign: "center" },
-                3: { cellWidth: 20, halign: "center" },
-                4: { cellWidth: 25, halign: "center" },
-                5: { cellWidth: 40 },
+                0: { cellWidth: 20, halign: "center" }, // Date
+                1: { cellWidth: 35 }, // Product Name
+                2: { cellWidth: 18, halign: "center" }, // Action
+                3: { cellWidth: 15, halign: "center" }, // Quantity
+                4: { cellWidth: 25 }, // Customer
+                5: { cellWidth: 20, halign: "center" }, // Transaction Date
+                6: { cellWidth: 20, halign: "center" }, // Amount
+                7: { cellWidth: 20, halign: "center" }, // Invoice
               }
             : {
-                0: { cellWidth: 80 },
-                1: { cellWidth: 30, halign: "center" },
-                2: { cellWidth: 20, halign: "center" },
-                3: { cellWidth: 40, halign: "center" },
+                0: { cellWidth: 120 }, // Product Name
+                1: { cellWidth: 40, halign: "center" }, // Stock Quantity
               },
         didDrawPage: (data) => {
           const pageCount = doc.internal.pages.length - 1;

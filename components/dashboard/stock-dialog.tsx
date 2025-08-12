@@ -192,7 +192,6 @@ export function StockDialog({
                       setCustomerInfo({ ...customerInfo, date: e.target.value })
                     }
                     className="col-span-3 brutal-input"
-                    max={new Date().toISOString().split("T")[0]}
                   />
                 </div>
                 <div className="grid grid-cols-4 items-center gap-4">
