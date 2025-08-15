@@ -30,15 +30,15 @@ export function Navigation({
     if (variant === "mobile") {
       return `flex flex-col items-center justify-center p-3 font-medium text-sm transition-colors ${
         isActive
-          ? "bg-primary text-white shadow-[var(--shadow-brutal)] border-2 border-black rounded-md"
-          : "bg-white text-foreground hover:bg-primary/20 hover:text-primary border-2 border-black shadow-[2px_2px_0px_0px_rgba(0,0,0,0.1)] rounded-md"
+          ? "bg-primary text-white shadow-[var(--shadow-brutal)] border-4 border-black rounded-none font-black"
+          : "bg-white text-foreground hover:bg-primary/20 hover:text-primary border-4 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] rounded-none font-bold"
       }`;
     }
 
-    return `flex items-center justify-start w-full p-4 font-semibold transition-colors rounded-lg ${
+    return `flex items-center justify-start w-full p-4 font-black transition-colors rounded-none ${
       isActive
-        ? "bg-primary text-white shadow-[var(--shadow-brutal)] border-2 border-black"
-        : "bg-white text-foreground hover:bg-primary/20 hover:text-primary border-2 border-black shadow-[2px_2px_0px_0px_rgba(0,0,0,0.1)]"
+        ? "bg-primary text-white shadow-[var(--shadow-brutal)] border-4 border-black"
+        : "bg-white text-foreground hover:bg-primary/20 hover:text-primary border-4 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]"
     }`;
   };
 
@@ -53,7 +53,7 @@ export function Navigation({
 
   if (variant === "mobile") {
     return (
-      <div className="lg:hidden fixed bottom-0 left-0 right-0 bg-white border-t-3 border-black p-2 shadow-[var(--shadow-brutal-lg)]">
+      <div className="lg:hidden fixed bottom-0 left-0 right-0 bg-white border-t-6 border-black p-2 shadow-[var(--shadow-brutal-xl)]">
         <div className="flex justify-around items-center">
           {navigationItems.map(({ id, label, icon: Icon }) => (
             <Button
@@ -63,7 +63,7 @@ export function Navigation({
               variant="ghost"
             >
               <Icon className="h-5 w-5 mb-1" />
-              <span className="text-xs font-semibold uppercase tracking-wide">
+              <span className="text-xs font-black uppercase tracking-widest">
                 {variant === "mobile" && id === "dashboard" ? "Dash" : label}
               </span>
             </Button>
@@ -83,7 +83,7 @@ export function Navigation({
           variant="ghost"
         >
           <Icon className="h-5 w-5 mr-3" />
-          <span className="uppercase tracking-wide">{label}</span>
+          <span className="uppercase tracking-widest font-black">{label}</span>
         </Button>
       ))}
     </div>

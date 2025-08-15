@@ -76,6 +76,17 @@ const config: Config = {
               md: 'calc(var(--radius) - 2px)',
               sm: 'calc(var(--radius) - 4px)'
           },
+          fontFamily: {
+              'brutal': ['Inter', 'system-ui', 'sans-serif'],
+              'mono-brutal': ['JetBrains Mono', 'Courier New', 'monospace'],
+          },
+          fontSize: {
+              'brutal-xs': ['0.75rem', { lineHeight: '1', letterSpacing: '0.1em', fontWeight: '900' }],
+              'brutal-sm': ['0.875rem', { lineHeight: '1.1', letterSpacing: '0.08em', fontWeight: '800' }],
+              'brutal-base': ['1rem', { lineHeight: '1.2', letterSpacing: '0.06em', fontWeight: '700' }],
+              'brutal-lg': ['1.125rem', { lineHeight: '1.2', letterSpacing: '0.04em', fontWeight: '800' }],
+              'brutal-xl': ['1.25rem', { lineHeight: '1.1', letterSpacing: '0.02em', fontWeight: '900' }],
+          },
           keyframes: {
               'accordion-down': {
                   from: {
@@ -92,11 +103,22 @@ const config: Config = {
                   to: {
                       height: '0'
                   }
+              },
+              'brutal-shake': {
+                  '0%, 100%': { transform: 'translateX(0)' },
+                  '25%': { transform: 'translateX(-2px)' },
+                  '75%': { transform: 'translateX(2px)' }
+              },
+              'brutal-pulse': {
+                  '0%, 100%': { transform: 'scale(1)' },
+                  '50%': { transform: 'scale(1.05)' }
               }
           },
           animation: {
               'accordion-down': 'accordion-down 0.2s ease-out',
-              'accordion-up': 'accordion-up 0.2s ease-out'
+              'accordion-up': 'accordion-up 0.2s ease-out',
+              'brutal-shake': 'brutal-shake 0.5s ease-in-out',
+              'brutal-pulse': 'brutal-pulse 1s ease-in-out infinite'
           }
       }
   },

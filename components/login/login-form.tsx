@@ -73,10 +73,10 @@ export function LoginForm({ onLogin }: LoginFormProps) {
 
   return (
     <div className="flex items-center justify-center">
-      <Card className="w-full max-w-md brutal-card">
-        <CardHeader className="brutal-header">
+      <Card className="w-full max-w-md brutal-card-intense">
+        <CardHeader className="brutal-header border-b-6 border-black">
           <div className="flex items-center justify-center mb-4">
-            <div className="bg-white p-4 border-3 border-black shadow-[var(--shadow-brutal)] rounded-lg">
+            <div className="bg-white p-6 border-6 border-black shadow-[var(--shadow-brutal-xl)] rounded-none">
               <Image
                 src="/logo.jpg"
                 alt="Microtek Logo"
@@ -86,7 +86,7 @@ export function LoginForm({ onLogin }: LoginFormProps) {
               />
             </div>
           </div>
-          <CardTitle className="text-xl font-bold text-center text-white uppercase tracking-wide">
+          <CardTitle className="brutal-typography-lg text-center text-white">
             Sign In to Your Account
           </CardTitle>
         </CardHeader>
@@ -95,7 +95,7 @@ export function LoginForm({ onLogin }: LoginFormProps) {
             <div className="space-y-3">
               <Label
                 htmlFor="login-username"
-                className="font-semibold text-foreground text-base uppercase tracking-wide"
+                className="brutal-text-subheader text-base"
               >
                 Username
               </Label>
@@ -104,7 +104,7 @@ export function LoginForm({ onLogin }: LoginFormProps) {
                 name="username"
                 type="text"
                 placeholder="Enter your username"
-                className="brutal-input font-medium text-base p-4"
+                className="brutal-input font-bold text-base p-4"
                 disabled={isLoading}
                 value={formData.username}
                 onChange={(e) => setFormData({ ...formData, username: e.target.value })}
@@ -114,7 +114,7 @@ export function LoginForm({ onLogin }: LoginFormProps) {
             <div className="space-y-3">
               <Label
                 htmlFor="login-password"
-                className="font-semibold text-foreground text-base uppercase tracking-wide"
+                className="brutal-text-subheader text-base"
               >
                 Password
               </Label>
@@ -124,7 +124,7 @@ export function LoginForm({ onLogin }: LoginFormProps) {
                   name="password"
                   type={showPassword ? "text" : "password"}
                   placeholder="Enter your password"
-                  className="brutal-input font-medium text-base p-4 pr-16"
+                  className="brutal-input font-bold text-base p-4 pr-16"
                   disabled={isLoading}
                   value={formData.password}
                   onChange={(e) => setFormData({ ...formData, password: e.target.value })}
@@ -133,7 +133,7 @@ export function LoginForm({ onLogin }: LoginFormProps) {
                 <Button
                   type="button"
                   onClick={() => setShowPassword(!showPassword)}
-                  className="absolute right-2 top-1/2 transform -translate-y-1/2 p-2 h-auto brutal-button"
+                  className="absolute right-2 top-1/2 transform -translate-y-1/2 p-2 h-auto brutal-button-neutral"
                   disabled={isLoading}
                 >
                   {showPassword ? (
@@ -146,18 +146,18 @@ export function LoginForm({ onLogin }: LoginFormProps) {
             </div>
             <Button
               type="submit"
-              className="w-full brutal-button font-semibold py-4 text-lg disabled:opacity-50"
+              className="w-full brutal-button-primary py-6 text-lg disabled:opacity-50 font-black"
               disabled={isLoading}
             >
               {isLoading ? (
                 <>
                   <Loader2 className="h-5 w-5 mr-3 animate-spin" />
-                  Signing In...
+                  SIGNING IN...
                 </>
               ) : (
                 <>
                   <LogIn className="h-5 w-5 mr-3" />
-                  Sign In
+                  SIGN IN
                 </>
               )}
             </Button>

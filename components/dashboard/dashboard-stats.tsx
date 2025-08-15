@@ -20,52 +20,52 @@ export function DashboardStats({ items }: DashboardStatsProps) {
     <div className="space-y-6">
       {/* Statistics Cards */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-        <Card className="brutal-card">
+        <Card className="brutal-card-intense">
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-bold text-foreground uppercase tracking-wide">
+            <CardTitle className="brutal-typography-sm text-foreground">
               Total Items
             </CardTitle>
             <Package className="h-5 w-5 text-secondary" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold text-primary">
+            <div className="brutal-typography-xl text-primary">
               {totalItems}
             </div>
-            <p className="text-xs text-muted-foreground mt-1">
+            <p className="text-xs text-muted-foreground mt-1 font-bold uppercase tracking-wide">
               Items in inventory
             </p>
           </CardContent>
         </Card>
 
-        <Card className="brutal-card">
+        <Card className="brutal-card-intense">
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-bold text-foreground uppercase tracking-wide">
+            <CardTitle className="brutal-typography-sm text-foreground">
               Low Stock
             </CardTitle>
             <TrendingUp className="h-5 w-5 text-orange-500" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold text-orange-600">
+            <div className="brutal-typography-xl text-orange-600">
               {lowStockItems}
             </div>
-            <p className="text-xs text-muted-foreground mt-1">
+            <p className="text-xs text-muted-foreground mt-1 font-bold uppercase tracking-wide">
               Items ≤ 10 units
             </p>
           </CardContent>
         </Card>
 
-        <Card className="brutal-card">
-          <CardHeader className="bg-destructive text-white border-b-2 border-black">
-            <CardTitle className="text-sm font-bold text-white uppercase tracking-wide">
+        <Card className="brutal-card-intense">
+          <CardHeader className="bg-destructive text-white border-b-6 border-black">
+            <CardTitle className="brutal-typography-sm text-white">
               Out of Stock
             </CardTitle>
             <AlertTriangle className="h-5 w-5 text-white" />
           </CardHeader>
           <CardContent className="bg-destructive text-white">
-            <div className="text-2xl font-bold text-white">
+            <div className="brutal-typography-xl text-white">
               {outOfStockItems}
             </div>
-            <p className="text-xs text-white/90 mt-1">
+            <p className="text-xs text-white/90 mt-1 font-bold uppercase tracking-wide">
               Items need restocking
             </p>
           </CardContent>
@@ -73,32 +73,32 @@ export function DashboardStats({ items }: DashboardStatsProps) {
       </div>
 
       {/* Inventory Summary */}
-      <Card className="brutal-card">
-        <CardHeader className="brutal-header">
-          <CardTitle className="text-lg font-bold text-white flex items-center">
+      <Card className="brutal-card-intense">
+        <CardHeader className="brutal-header border-b-6 border-black">
+          <CardTitle className="brutal-typography-lg text-white flex items-center">
             <Info className="h-5 w-5 mr-2" /> Inventory Summary
           </CardTitle>
         </CardHeader>
         <CardContent className="p-6">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div className="space-y-4">
-              <h3 className="font-bold text-primary text-base uppercase tracking-wide">Stock Overview</h3>
+              <h3 className="brutal-text-header text-primary text-base">Stock Overview</h3>
               <div className="space-y-3">
-                <div className="flex items-center justify-between p-4 bg-secondary/10 border-2 border-secondary/20 rounded-lg shadow-[2px_2px_0px_0px_rgba(0,0,0,0.1)]">
-                  <span className="font-semibold text-foreground">In Stock Items</span>
-                  <span className="font-bold text-primary text-base">
+                <div className="flex items-center justify-between p-4 bg-green-100 border-4 border-black rounded-none shadow-[var(--shadow-brutal)]">
+                  <span className="font-black text-foreground uppercase tracking-wide">In Stock Items</span>
+                  <span className="brutal-typography-md text-primary">
                     {items.filter(item => item.stock > 0).length}
                   </span>
                 </div>
-                <div className="flex items-center justify-between p-4 bg-destructive/10 border-2 border-destructive/20 rounded-lg shadow-[2px_2px_0px_0px_rgba(0,0,0,0.1)]">
-                  <span className="font-semibold text-foreground">Out of Stock Items</span>
-                  <span className="font-bold text-destructive text-base">
+                <div className="flex items-center justify-between p-4 bg-red-100 border-4 border-black rounded-none shadow-[var(--shadow-brutal)]">
+                  <span className="font-black text-foreground uppercase tracking-wide">Out of Stock Items</span>
+                  <span className="brutal-typography-md text-destructive">
                     {outOfStockItems}
                   </span>
                 </div>
-                <div className="flex items-center justify-between p-4 bg-orange-50 border-2 border-orange-200 rounded-lg shadow-[2px_2px_0px_0px_rgba(0,0,0,0.1)]">
-                  <span className="font-semibold text-foreground">Low Stock Items</span>
-                  <span className="font-bold text-orange-600 text-base">
+                <div className="flex items-center justify-between p-4 bg-yellow-100 border-4 border-black rounded-none shadow-[var(--shadow-brutal)]">
+                  <span className="font-black text-foreground uppercase tracking-wide">Low Stock Items</span>
+                  <span className="brutal-typography-md text-orange-600">
                     {lowStockItems}
                   </span>
                 </div>
@@ -106,17 +106,17 @@ export function DashboardStats({ items }: DashboardStatsProps) {
             </div>
 
             <div className="space-y-4">
-              <h3 className="font-bold text-primary text-base uppercase tracking-wide">Value & Pricing</h3>
+              <h3 className="brutal-text-header text-primary text-base">Value & Pricing</h3>
               <div className="space-y-3">
-                <div className="flex items-center justify-between p-4 bg-primary/10 border-2 border-primary/20 rounded-lg shadow-[2px_2px_0px_0px_rgba(0,0,0,0.1)]">
-                  <span className="font-semibold text-foreground">Highest Price Item</span>
-                  <span className="font-bold text-primary text-base">
+                <div className="flex items-center justify-between p-4 bg-blue-100 border-4 border-black rounded-none shadow-[var(--shadow-brutal)]">
+                  <span className="font-black text-foreground uppercase tracking-wide">Highest Price Item</span>
+                  <span className="brutal-typography-md text-primary">
                     ₱{highestPrice.toLocaleString()}
                   </span>
                 </div>
-                <div className="flex items-center justify-between p-4 bg-primary/10 border-2 border-primary/20 rounded-lg shadow-[2px_2px_0px_0px_rgba(0,0,0,0.1)]">
-                  <span className="font-semibold text-foreground">Average Item Price</span>
-                  <span className="font-bold text-primary text-base">
+                <div className="flex items-center justify-between p-4 bg-purple-100 border-4 border-black rounded-none shadow-[var(--shadow-brutal)]">
+                  <span className="font-black text-foreground uppercase tracking-wide">Average Item Price</span>
+                  <span className="brutal-typography-md text-primary">
                     ₱{averagePrice.toFixed(2)}
                   </span>
                 </div>
