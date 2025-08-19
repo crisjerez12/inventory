@@ -4,13 +4,8 @@ import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import {
-  Card,
-  CardContent,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
-import { Eye, EyeOff, LogIn, Loader2 } from 'lucide-react';
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Eye, EyeOff, LogIn, Loader2 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import Image from "next/image";
 import type { User } from "@/lib/types";
@@ -107,7 +102,9 @@ export function LoginForm({ onLogin }: LoginFormProps) {
                 className="brutal-input font-bold text-base p-4"
                 disabled={isLoading}
                 value={formData.username}
-                onChange={(e) => setFormData({ ...formData, username: e.target.value })}
+                onChange={(e) =>
+                  setFormData({ ...formData, username: e.target.value })
+                }
                 required
               />
             </div>
@@ -127,13 +124,15 @@ export function LoginForm({ onLogin }: LoginFormProps) {
                   className="brutal-input font-bold text-base p-4 pr-16"
                   disabled={isLoading}
                   value={formData.password}
-                  onChange={(e) => setFormData({ ...formData, password: e.target.value })}
+                  onChange={(e) =>
+                    setFormData({ ...formData, password: e.target.value })
+                  }
                   required
                 />
                 <Button
                   type="button"
                   onClick={() => setShowPassword(!showPassword)}
-                  className="absolute right-2 top-1/2 transform -translate-y-1/2 p-2 h-auto brutal-button-neutral"
+                  className="absolute right-2 top-1/2 transform -translate-y-1/2 p-2 h-auto bg-gray-100 text-black border-2 border-black hover:bg-black hover:text-white transition-colors duration-150 font-bold rounded-none"
                   disabled={isLoading}
                 >
                   {showPassword ? (
