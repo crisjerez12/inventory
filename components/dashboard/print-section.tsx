@@ -33,7 +33,7 @@ export function PrintSection({ items, user }: PrintSectionProps) {
     startDate: new Date().toISOString().split("T")[0],
     endDate: new Date().toISOString().split("T")[0],
   });
-  const [historyType, setHistoryType] = useState("all");
+  const [historyType, setHistoryType] = useState("reduce"); // Changed from "all" to "reduce"
   const [isGenerating, setIsGenerating] = useState(false);
   const { toast } = useToast();
 
@@ -168,7 +168,7 @@ export function PrintSection({ items, user }: PrintSectionProps) {
                   />
                 </div>
               </div>
-
+              // In the History Type selection section:
               <div className="space-y-2">
                 <Label className="font-semibold text-foreground uppercase tracking-wide text-sm">
                   History Type
@@ -179,7 +179,7 @@ export function PrintSection({ items, user }: PrintSectionProps) {
                   </SelectTrigger>
                   <SelectContent className="brutal-select">
                     <SelectItem value="all">All Transactions</SelectItem>
-                    <SelectItem value="add">Stock In Only</SelectItem>
+                    {/* Removed: <SelectItem value="add">Stock In Only</SelectItem> */}
                     <SelectItem value="reduce">Stock Out Only</SelectItem>
                   </SelectContent>
                 </Select>
@@ -243,13 +243,13 @@ export function PrintSection({ items, user }: PrintSectionProps) {
                       <span className="font-semibold">Date Range:</span>{" "}
                       {dateRange.startDate} to {dateRange.endDate}
                     </div>
+                    // In the preview section:
                     <div>
                       <span className="font-semibold">History Type:</span>{" "}
                       {historyType === "all"
                         ? "All Transactions"
-                        : historyType === "add"
-                        ? "Stock In Only"
-                        : "Stock Out Only"}
+                        : "Stock Out Only"}{" "}
+                      {/* Removed stock in reference */}
                     </div>
                   </>
                 )}

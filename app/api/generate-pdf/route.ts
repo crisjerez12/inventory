@@ -25,50 +25,20 @@ export async function POST(request: NextRequest) {
     const { jsPDF } = await import("jspdf");
     const autoTable = (await import("jspdf-autotable")).default;
 
-    const doc = new jsPDF("p", "mm", "a4"); // A4 size for professional look
+    const doc = new jsPDF("p", "mm", "a4");
 
-    // Professional header with company branding (Black and White)
-    doc.setFillColor(240, 240, 240); // Light gray background
-    doc.rect(0, 0, 210, 35, "F");
+    // Remove the entire header section (lines 25-65)
+    // Remove: Professional header with company branding
+    // Remove: Company logo area
+    // Remove: Company information
+    // Remove: Contact information
+    // Remove: Line separator
 
-    // Company logo area (White background, dark text)
-    doc.setFillColor(255, 255, 255); // White
-    doc.rect(15, 8, 50, 20, "F");
-    doc.setDrawColor(0, 0, 0); // Black border
-    doc.setLineWidth(1);
-    doc.rect(15, 8, 50, 20);
+    // Start directly with document title
     doc.setTextColor(0, 0, 0);
-    doc.setFontSize(8);
-    doc.text("MICROTEK", 18, 18);
-    doc.text("LOGO", 18, 24);
-
-    // Company information (Dark text on light background)
-    doc.setTextColor(0, 0, 0);
-    doc.setFontSize(22);
-    doc.setFont("helvetica", "bold");
-    doc.text("MICROTEK", 75, 20);
-
-    doc.setFontSize(12);
-    doc.setFont("helvetica", "normal");
-    doc.text("Animal Feed Solutions", 75, 26);
-
-    // Contact information (right aligned, dark text)
-    doc.setFontSize(8);
-    doc.text("Email: info@microtek.com", 150, 18);
-    doc.text("Phone: +1 (555) 123-4567", 150, 22);
-    doc.text("www.microtek.com", 150, 26);
-
-    // Simple line separator
-    doc.setDrawColor(0, 0, 0);
-    doc.setLineWidth(0.5);
-    doc.line(15, 35, 195, 35);
-
-    // Reset text color for document body
-    doc.setTextColor(0, 0, 0);
-
-    // Document title
     doc.setFontSize(16);
     doc.setFont("helvetica", "bold");
+
     let reportTitle = "";
     switch (reportType) {
       case "inventory":
@@ -81,12 +51,11 @@ export async function POST(request: NextRequest) {
         reportTitle = "SYSTEM REPORT";
     }
 
-    // Center the title
+    // Center the title at the top of the page
     const titleWidth = doc.getTextWidth(reportTitle);
     const pageWidth = doc.internal.pageSize.width;
     const titleX = (pageWidth - titleWidth) / 2;
-
-    doc.text(reportTitle, titleX, 50);
+    doc.text(reportTitle, titleX, 20); // Changed from 50 to 20
 
     // Document metadata box (Light background, simple border)
     doc.setFillColor(255, 255, 255);
